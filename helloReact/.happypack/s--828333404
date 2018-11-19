@@ -1,0 +1,91 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _message2 = require('antd/lib/message');
+
+var _message3 = _interopRequireDefault(_message2);
+
+var _notification2 = require('antd/lib/notification');
+
+var _notification3 = _interopRequireDefault(_notification2);
+
+var _modal = require('antd/lib/modal');
+
+var _modal2 = _interopRequireDefault(_modal);
+
+exports.reqInform = reqInform;
+exports.messageInform = messageInform;
+exports.showConfirm = showConfirm;
+
+require('antd/lib/message/style');
+
+require('antd/lib/notification/style');
+
+require('antd/lib/modal/style');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var confirm = _modal2.default.confirm;
+
+/*
+* 请求提示信息
+* @param msgObj {obj} msgObj = {
+*         title: 'titile'
+*         description: 'description'
+*       }
+*  @param type {string} error/warn/info/success
+* */
+function reqInform(msgObj) {
+  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+  var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
+
+  var msgTypeList = ['info', 'success', 'error', 'warn'];
+  if (!msgTypeList.includes(type)) {
+    type = 'info';
+  }
+
+  _notification3.default[type]({
+    message: msgObj.title,
+    description: msgObj.description,
+    //icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
+    duration: duration
+  });
+}
+
+/*
+ * 提示信息
+ * @param msgObj {obj} msgObj = {
+ *         title: 'titile'
+ *         description: 'description'
+ *       }
+ *  @param type {string} error/warn/info/success
+ * */
+function messageInform(msg) {
+  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+  var duration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
+
+  var msgTypeList = ['info', 'success', 'error', 'warn'];
+  if (!msgTypeList.includes(type)) {
+    type = 'info';
+  }
+  _message3.default[type](msg, duration);
+}
+
+// 打开确认对话框
+function showConfirm(obj) {
+  return new Promise(function (resolve, reject) {
+    confirm({
+      title: obj ? obj.title : '登录信息失效提示',
+      content: obj ? obj.content : '登录信息失效，请重新登录',
+      onOk: function onOk() {
+        resolve('1');
+      },
+      onCancel: function onCancel() {
+        resolve('2');
+      }
+    });
+  });
+}

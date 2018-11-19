@@ -1,0 +1,18 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var result = {
+  "resultCode": "0",
+  "resultMsg": "查询成功",
+  "data": {
+    "list": [{}, {}],
+    "pageNum": 1,
+    "pageSize": 10,
+    "pages": 1,
+    "total": 2
+  }
+};
+exports.default = result;
+module.exports = exports["default"];

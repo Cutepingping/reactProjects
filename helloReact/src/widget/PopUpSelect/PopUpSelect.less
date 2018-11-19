@@ -1,0 +1,58 @@
+@import '../../config/basic.less';
+
+.del i{
+  cursor: pointer;
+  color: @uiColor_1;
+}
+
+.selected {
+  // height: 100%;
+  margin-left: 16px;
+  .title {
+    padding: 6px 16px;
+    border-bottom: 1px @uiColor_7 solid;
+    a {
+      margin-right: 8px;
+    }
+  }
+  img {
+    width: 60px;
+    height: 56px;
+  }
+  .scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.textNoWrap{
+  thead{
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
+.table {
+  :global  {
+    .table-thead > tr > th {
+      min-width: auto !important;
+    }
+    .ant-table-thead > tr > th {
+      min-width: auto !important;
+    }
+    .ant-table-fixed-right .ant-table-header{
+      background: white;
+    }
+    .ant-pagination-simple .ant-pagination-prev .ant-pagination-item-link, .ant-pagination-simple .ant-pagination-next .ant-pagination-item-link {
+      height: 22px;
+    }
+    .ant-table-pagination.ant-pagination {
+      margin-right: 16px;
+    }
+  }
+}
+
+.emptyTitle {
+  height: 31px;
+}
+

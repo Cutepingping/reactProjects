@@ -1,0 +1,235 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+require('antd/lib/form/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _dva = require('dva');
+
+var _router = require('dva/router');
+
+var _config = require('config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _ListPage = require('widget/PageTmpl/ListPage');
+
+var _ListPage2 = _interopRequireDefault(_ListPage);
+
+var _view_utils = require('utils/view_utils');
+
+var _myPageStyle = require('./myPageStyle.less');
+
+var _myPageStyle2 = _interopRequireDefault(_myPageStyle);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * description 路由视图及事件处理
+ * dispatch 分发到models中的effects对应事件名
+ * model 用于获取models中state定义的数据
+ * form 表单对象
+ */
+
+
+// 引入model取值工具方法
+
+// 导入项目全局配置文件
+
+// dva 连接组件 - 连接route和model
+var routeView = function routeView(_ref) {
+  var dispatch = _ref.dispatch,
+      model = _ref.model,
+      form = _ref.form;
+
+  // 表单的子函数
+  var resetFields = form.resetFields,
+      getFieldDecorator = form.getFieldDecorator,
+      validateFields = form.validateFields,
+      setFieldsValue = form.setFieldsValue;
+  // 取出model对象，命名空间
+
+  var modelObj = model.modelObj,
+      namespace = model.namespace;
+
+  // modelObj.xxx获取model中状态机的值
+
+  // 点击处理事件
+
+  var clickHandler = function clickHandler(e) {
+    // 分发到model文件中effects的xxx方法
+    dispatch({
+      type: namespace + '/xxx',
+      payload: {}
+    });
+  };
+
+  var modalVis = function modalVis(vis) {
+    var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : modelObj.title;
+
+    // 分发到model文件中effects的xxx方法
+    dispatch({
+      type: namespace + '/vis',
+      payload: {
+        vis: vis,
+        title: title
+      }
+    });
+  };
+
+  var pageProps = {
+    ui: {
+      api_url: 'caf/mgmt/items/car/list-by-page', // 接口地址
+      method: 'GET', // 接口请求方式
+      params: 'pageNum=1&pageSize=10', // 接口默认参数
+      mockData: null, // 模拟数据
+      search_bar: { // 查询栏
+        fields: [{
+          en_name: 'carCode', // 字段英文名
+          zh_name: '车型编号', // 字段中文名
+          elem_type: 'Input', // 页面元素类型
+          elem_valid_type: 'string' // 页面元素校验类型，使用antd的校验类型，支持正则表达式
+        }],
+        searchHandler: function searchHandler() {
+          // 自定义搜索按钮回调函数，点击搜索时触发
+          console.log('search click');
+        },
+        resetHandler: function resetHandler() {
+          // 自定义重置按钮回调函数，点击重置时触发
+          console.log('reset click');
+        },
+        searchCallback: function searchCallback(params) {
+          // 自定义搜索完成后的后调函数, 搜索完成后触发, 并将本次搜索的参数传入
+          console.log('search finish', params);
+        },
+        pasteTargetList: [// 列表组件中将输入框的en_name作为默认id(也可以通过id另外设置)
+        'carName']
+      },
+      action_bar: [// 顶部操作栏
+      {
+        func_name: 'onAdd', // 按钮的函数名称，约定为on开头的驼峰
+        label: '新增车型', // 按钮名称
+        type: 'primary', // 高亮按钮
+        icon: 'plus', // 图标为加号
+        onClick: function onClick(e, rows) {
+          // 自定义点击事件，第二个参数rows为当rowSelection: '1'时，返回选中行的数据
+          console.log('e:', e, 'rows:', rows);
+        }
+      }, {
+        func_name: 'onDelete', // 按钮的函数名称，约定为on开头的驼峰
+        label: '删除车型', // 按钮名称
+        type: 'primary', // 高亮按钮
+        icon: 'delete', // 图标为加号
+        rowSelection: '1', // 开启表格第一列前面为单选、复选框时，设置此字段
+        onClick: function onClick(e, rows) {
+          // 自定义点击事件，第二个参数rows为当rowSelection: '1'时，返回选中行的数据
+          console.log('e:', e, 'rows:', rows);
+        }
+      }],
+      // 表格配置项
+      table: {
+        fields: [// 表头字段列，兼容antd的其它字段
+        {
+          en_name: 'code', // 字段英文名
+          zh_name: '车型编号' // 字段中文名
+        }, {
+          en_name: 'name',
+          zh_name: '车型名称'
+        }, {
+          en_name: 'propName',
+          zh_name: '分类'
+        }, {
+          en_name: 'isDirectSale',
+          zh_name: '标签'
+        }, {
+          en_name: 'itemPrice',
+          zh_name: '指导价',
+          render: function render(text, item) {
+            // 自定义渲染列
+            return _react2.default.createElement(
+              'span',
+              null,
+              item.minGuidePrice,
+              ' '
+            );
+          }
+        }, {
+          en_name: 'updatePerson',
+          zh_name: '销售状态',
+          render: function render(text) {
+            return text == 1 ? '在售' : '停售';
+          }
+        }],
+        actions: [// 表格操作
+        {
+          func_name: 'onViewOrder',
+          label: '查看订单',
+          url: '/order/list',
+          params: 'id=&status=' // id、status为每一行数据返回的字段，组件会自动获取该行的值附加到请求参数中，支持多层级的取值和附加值
+        }, {
+          func_name: 'onDetail',
+          label: '查看',
+          render: function render(record) {
+            // 自定义渲染操作
+            return _react2.default.createElement(
+              _router.Link,
+              { to: '/home/modelsManage/modelDetails?id=' + record.id },
+              '\u67E5\u770B'
+            );
+          }
+        }, {
+          func_name: 'onEdit',
+          label: '编辑',
+          onClick: function onClick(e, record) {
+            // 自定义点击事件
+            console.log('e:', e, 'record:', record);
+          }
+        }, {
+          func_name: 'onDelete', // 组件内部已对onDelete做了处理(只要传删除的接口地址 api_url)，也可以自定义处理点击
+          api_url: '/model/remove',
+          method: 'DELETE',
+          params: 'id=&user.status', // id为每一行数据返回的字段，组件会自动获取该行的值附加到请求参数中，支持多层级的取值和附加值
+          label: '编辑',
+          onClick: function onClick(e, record) {
+            // 自定义点击事件
+            console.log('e:', e, 'record:', record);
+          }
+        }]
+      }
+    }
+  };
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'a',
+      { type: 'primary', onClick: function onClick() {
+          return modalVis(true, '标题2');
+        } },
+      '\u6253\u5F00\u4E00\u4E2A\u5217\u8868\u6846'
+    ),
+    _react2.default.createElement(_ListPage2.default, { pageProps: pageProps, visible: modelObj.vis })
+  );
+};
+
+// 连接视图(view)和模型(model)
+
+// 当前组件样式
+
+//导入路由组件，用于跳转等
+
+// 引入antd的组件
+// React基础组件
+exports.default = (0, _dva.connect)(_view_utils.mapStateToProps)(_form2.default.create()(routeView));
+module.exports = exports['default'];

@@ -1,0 +1,25 @@
+/**
+ * @(#)CustomCard..less 0.7.0 2017-11-14
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+@import "../../config/basic.less";
+.title {
+  .fontColor_1;
+  position: relative;
+  height: 32px;
+  line-height: 32px;
+  padding-left: 8px;
+  font-size: 14px;
+  &:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 3px;
+    height: 14px;
+    background-color: @uiColor_1;
+    border-radius: 5px;
+  }
+}

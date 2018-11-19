@@ -1,0 +1,263 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+exports.default = request;
+
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _qs = require('qs');
+
+var _qs2 = _interopRequireDefault(_qs);
+
+var _config = require('../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _notification = require('./notification');
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _router = require('dva/router');
+
+var _lodash = require('lodash');
+
+var _notification2 = require('../utils/notification');
+
+var _globalScope = require('../utils/globalScope');
+
+var _toBase = require('./toBase64');
+
+var _toBase2 = _interopRequireDefault(_toBase);
+
+var _redirect_utils = require('../utils/redirect_utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 弹窗次数
+var confirmCount = 0;
+// 登录跳转的方法
+
+
+var fetch = function fetch(options) {
+  var _options$method = options.method,
+      method = _options$method === undefined ? 'post' : _options$method,
+      data = options.data,
+      url = options.url,
+      _options$auth = options.auth,
+      auth = _options$auth === undefined ? _jsCookie2.default.get(_config2.default.cookie.auth) : _options$auth,
+      _options$timeout = options.timeout,
+      timeout = _options$timeout === undefined ? _config2.default.reqTimeout : _options$timeout;
+  // 取出headers
+
+  var headers = options.headers;
+
+  headers = headers ? headers : {};
+  //解决ie不重新请求问题
+  headers = (0, _extends3.default)({}, headers, {
+    'auth': auth,
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': -1
+  });
+
+  if (!headers['Content-type']) {
+    headers['Content-type'] = 'application/x-www-form-urlencoded';
+  }
+  var hasUrl = function hasUrl(arr, url) {
+    var flag = false;
+    arr.map(function (k, i) {
+      if (url.indexOf(k) !== -1) {
+        flag = true;
+      }
+    });
+    return flag;
+  };
+  var exAuthArr = ['restapi.amap.com', _config2.default.requestApiUrl.getValidateImg];
+  // 请求headers中移除auth
+  if (hasUrl(exAuthArr, url)) {
+    delete headers['auth'];
+  }
+
+  var exAppIdArr = ['verify/img/get', '/huieryun-identity/', 'restapi.amap.com'];
+
+  // 请求headers中增加appId
+  if (!hasUrl(exAppIdArr, url)) {
+    headers["appId"] = _config2.default.appId;
+  }
+
+  //过滤获取经纬度报错问题
+  var exAuthArr1 = ['restapi.amap.com'];
+  // 请求headers中移除Pragma  Expires
+  if (hasUrl(exAuthArr1, url)) {
+    delete headers['Pragma'];
+    delete headers['Expires'];
+    delete headers['unitId'];
+  }
+
+  if (_config2.default.mock) {
+    headers = {};
+  }
+  // console.log('headers:', headers);
+  switch (method.toLowerCase()) {
+    case 'get':
+      return _axios2.default.get('' + url + (options.data ? '?' + _qs2.default.stringify(options.data) : ''), { headers: headers, timeout: timeout });
+    case 'delete':
+      return _axios2.default.delete('' + url + (options.data ? '?' + _qs2.default.stringify(options.data) : ''), { headers: headers, timeout: timeout });
+    case 'head':
+      return _axios2.default.head(url, data, { headers: headers, timeout: timeout });
+    case 'post':
+      var newData = data;
+      if ('' + headers['Content-type'] === 'application/x-www-form-urlencoded') {
+        newData = _qs2.default.stringify(data);
+      }
+      return _axios2.default.post(url, newData, { headers: headers, timeout: timeout });
+    case 'put':
+      var putData = data;
+      if ('' + headers['Content-type'] === 'application/x-www-form-urlencoded') {
+        putData = _qs2.default.stringify(data);
+      }
+      return _axios2.default.put(url, putData, { headers: headers, timeout: timeout });
+    case 'patch':
+      return _axios2.default.patch(url, data, { headers: headers, timeout: timeout });
+    default:
+      return (0, _axios2.default)(options);
+  }
+};
+
+// 跳转到登录
+var go2Login = function go2Login(isReload) {
+  confirmCount = 1;
+  localStorage.removeItem('antdAdminSiderFold');
+  sessionStorage.removeItem('SIDER_OPEN_KEY');
+  sessionStorage.removeItem('SIDER_SELECTED_KEY');
+  _jsCookie2.default.remove(_config2.default.cookie.userName);
+  _jsCookie2.default.remove(_config2.default.cookie.auth);
+  //企业中心
+  if (_config2.default.sysType === 'entCenter') {
+    localStorage.removeItem(_config2.default.userInfoKey);
+  }
+  // 自定义登录跳转方法
+  (0, _redirect_utils.customLoginRedirect)();
+
+  // if(!!isReload){
+  //   window.location.reload();
+  // }
+};
+
+// 检测登录处理, isReload 未登录是否刷新
+var checkLogin = function checkLogin(isReload) {
+  var auth = _jsCookie2.default.get(_config2.default.cookie.auth);
+  // Cookie中无auth令牌，直接跳转到登录页面
+  if (!auth) {
+    // 跳转登录
+    go2Login(isReload);
+  }
+  return false;
+};
+
+//isHandCommErr： 是否需要request方法做统一全局报错处理
+function request(options, isHandCommErr) {
+
+  if (!options || !options.url) {
+    (0, _notification.reqInform)({
+      title: '无效的url',
+      description: '请求选项中的url是无效的'
+    }, 'error');
+    return Promise.reject({ resultCode: 1, resultMsg: '无效的url：' + options.url, data: null });
+  }
+
+  options.url = _config2.default.apiAppName(options.url);
+
+  //判断是否存在表情等特殊字符
+  if (options.data) {
+    var emojiData = JSON.stringify(options.data);
+    var emojiRegRule = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g;
+    if (emojiData && emojiData.match(emojiRegRule)) {
+      (0, _notification2.messageInform)('参数包含了特殊表情符号或其它不可辨识的符号', 'error');
+      return false;
+    }
+  }
+
+  return fetch(options).then(function (response) {
+    var statusText = response.statusText,
+        status = response.status;
+
+    var data = options.isCross ? response.data.query.results.json : response.data;
+
+    // Cookie中有auth令牌，表示已登录，但是auth失效的，则弹出窗口提示
+    if ('' + 401 === '' + response.status) {
+      // 检测是否登录
+      checkLogin(false);
+      // 若已登录，则检测auth是否失效
+      if (confirmCount < 1) {
+        (0, _notification.showConfirm)().then(function (cRes) {
+          if ('1' === '' + cRes) {
+            go2Login(false);
+          } else {
+            confirmCount = 0;
+          }
+        });
+        confirmCount++;
+      }
+      return { resultCode: 0, resultMsg: '登录信息失效提示', data: null };
+    }
+
+    if (response.status !== '401' && isHandCommErr && response.data.resultCode !== 0) {
+      (0, _notification.reqInform)({
+        title: '系统提示',
+        description: response.data.resultMsg || '接口服务故障'
+      }, 'warn');
+    }
+
+    return (0, _extends3.default)({
+      resultCode: 0,
+      status: status,
+      resultMsg: statusText
+    }, data);
+  }).catch(function (error) {
+    var _error$response = error.response,
+        response = _error$response === undefined ? { statusText: 'Network Error' } : _error$response;
+
+    var errDesc = response.statusText || '接口服务故障';
+
+    // Cookie中有auth令牌，表示已登录，但是auth失效的，则弹出窗口提示 '1' === '' + error.errCode ||
+    if ('401' === '' + response.status) {
+      // 检测是否登录
+      checkLogin(true);
+      // 已登录，则检测auth是否失效
+      if (confirmCount < 1) {
+        (0, _notification.showConfirm)().then(function (cRes) {
+          if ('1' === '' + cRes) {
+            go2Login(true);
+          } else {
+            confirmCount = 0;
+          }
+        });
+        confirmCount++;
+      }
+      return { resultCode: 0, resultMsg: '登录信息失效提示', data: null };
+    } else if ('' + 406 === '' + response.status) {
+      // 如果服务接口响应406，一般是带有sql注入风险的关键字
+      errDesc = '查询内容包含sql注入风险的关键字';
+    }
+
+    (0, _notification.reqInform)({
+      title: '出现请求错误',
+      description: errDesc
+    }, 'error');
+
+    return { resultCode: 1, resultMsg: response.statusText, data: null };
+  });
+}
+module.exports = exports['default'];

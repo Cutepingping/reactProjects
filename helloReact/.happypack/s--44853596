@@ -1,0 +1,370 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Category = undefined;
+
+var _row = require('antd/lib/row');
+
+var _row2 = _interopRequireDefault(_row);
+
+var _col = require('antd/lib/col');
+
+var _col2 = _interopRequireDefault(_col);
+
+var _pagination = require('antd/lib/pagination');
+
+var _pagination2 = _interopRequireDefault(_pagination);
+
+var _message2 = require('antd/lib/message');
+
+var _message3 = _interopRequireDefault(_message2);
+
+var _popover = require('antd/lib/popover');
+
+var _popover2 = _interopRequireDefault(_popover);
+
+var _popconfirm = require('antd/lib/popconfirm');
+
+var _popconfirm2 = _interopRequireDefault(_popconfirm);
+
+var _button = require('antd/lib/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _input = require('antd/lib/input');
+
+var _input2 = _interopRequireDefault(_input);
+
+var _tree = require('antd/lib/tree');
+
+var _tree2 = _interopRequireDefault(_tree);
+
+require('antd/lib/row/style');
+
+require('antd/lib/col/style');
+
+require('antd/lib/pagination/style');
+
+require('antd/lib/message/style');
+
+require('antd/lib/popover/style');
+
+require('antd/lib/popconfirm/style');
+
+require('antd/lib/button/style');
+
+require('antd/lib/icon/style');
+
+require('antd/lib/input/style');
+
+require('antd/lib/tree/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _Category = require('./Category.less');
+
+var _Category2 = _interopRequireDefault(_Category);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @(#)Category.jsx 0.5.1 2017-09-13
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+var TreeNode = _tree2.default.TreeNode;
+var Search = _input2.default.Search;
+
+/*
+ * 类目树
+ *
+ * @author 苏离
+ * @since 0.5.1
+ */
+var Category = exports.Category = function Category(_ref) {
+  var categoryList = _ref.categoryList,
+      contentHeight = _ref.contentHeight,
+      autoExpandParent = _ref.autoExpandParent,
+      searchValue = _ref.searchValue,
+      expandedKeys = _ref.expandedKeys,
+      children = _ref.children,
+      selectedKeys = _ref.selectedKeys,
+      selectCategory = _ref.selectCategory,
+      leftSpan = _ref.leftSpan,
+      rightSpan = _ref.rightSpan,
+      width = _ref.width,
+      dispatch = _ref.dispatch,
+      nameSpace = _ref.nameSpace,
+      originalCategoryList = _ref.originalCategoryList,
+      deleteItem = _ref.deleteItem,
+      create = _ref.create,
+      pageConfig = _ref.pageConfig,
+      sort = _ref.sort,
+      isSort = _ref.isSort,
+      isFinalNode = _ref.isFinalNode;
+
+
+  // 自定义树形title
+  function genTreeTitle(title, item) {
+    return _react2.default.createElement(
+      'div',
+      { style: { height: '24px' } },
+      _react2.default.createElement(
+        _popover2.default,
+        { placement: 'leftTop', content: item.id === '0' ? _react2.default.createElement(
+            'span',
+            { className: (0, _classnames2.default)(_Category2.default.btnContent) },
+            _react2.default.createElement(
+              _button2.default,
+              { onClick: function onClick(e) {
+                  // 阻止事件冒泡
+                  e.stopPropagation();
+                  create(item.id);
+                } },
+              _react2.default.createElement(_icon2.default, { type: 'plus' }),
+              '\u65B0\u589E'
+            )
+          ) : _react2.default.createElement(
+            'span',
+            { className: (0, _classnames2.default)(_Category2.default.btnContent) },
+
+            //如果是最后节点，不予许新增
+            isFinalNode && isFinalNode(item) && _react2.default.createElement(
+              'p',
+              null,
+              _react2.default.createElement(
+                _button2.default,
+                { className: _Category2.default.btnFirst, onClick: function onClick(e) {
+                    // 阻止事件冒泡
+                    e.stopPropagation();
+                    create(item.id);
+                  } },
+                _react2.default.createElement(_icon2.default, { type: 'plus' }),
+                '\u65B0\u589E'
+              )
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              _react2.default.createElement(
+                _popconfirm2.default,
+                { Collapse: true, title: '\u786E\u5B9A\u8981\u5220\u9664\u5417\uFF1F', okText: '\u786E\u5B9A', cancelText: '\u53D6\u6D88', onConfirm: function onConfirm() {
+                    return deleteItem(item.id);
+                  } },
+                _react2.default.createElement(
+                  _button2.default,
+                  { className: (0, _classnames2.default)(_Category2.default.btn, 'mg1t'), onClick: function onClick(e) {
+                      // 阻止事件冒泡
+                      e.stopPropagation();
+                    } },
+                  _react2.default.createElement(_icon2.default, { type: 'delete' }),
+                  '\u5220\u9664'
+                )
+              )
+            ),
+            isSort && _react2.default.createElement(
+              'span',
+              null,
+              _react2.default.createElement(
+                'p',
+                null,
+                _react2.default.createElement(
+                  _button2.default,
+                  { className: (0, _classnames2.default)(_Category2.default.btn, 'mg1t'), onClick: function onClick(e) {
+                      // 阻止事件冒泡
+                      e.stopPropagation();
+                      sort(item.id, 1);
+                    } },
+                  _react2.default.createElement('i', { className: 'iconfont icon-shu-shangyi' }),
+                  '\u4E0A\u79FB'
+                )
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                _react2.default.createElement(
+                  _button2.default,
+                  { className: (0, _classnames2.default)(_Category2.default.btn, 'mg1t'), onClick: function onClick(e) {
+                      // 阻止事件冒泡
+                      e.stopPropagation();
+                      sort(item.id, -1);
+                    } },
+                  _react2.default.createElement('i', { className: 'iconfont icon-shu-xiayi' }),
+                  '\u4E0B\u79FB'
+                )
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                _react2.default.createElement(
+                  _button2.default,
+                  { className: (0, _classnames2.default)(_Category2.default.btn, 'mg1t'), onClick: function onClick(e) {
+                      // 阻止事件冒泡
+                      e.stopPropagation();
+                      sort(item.id, 2);
+                    } },
+                  _react2.default.createElement('i', { className: 'iconfont icon-shu-zhiding' }),
+                  '\u7F6E\u9876'
+                )
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                _react2.default.createElement(
+                  _button2.default,
+                  { className: (0, _classnames2.default)(_Category2.default.btn, 'mg1t'), onClick: function onClick(e) {
+                      // 阻止事件冒泡
+                      sort(item.id, -2);
+                    } },
+                  _react2.default.createElement('i', { className: 'iconfont icon-shu-zhidi' }),
+                  '\u7F6E\u5E95'
+                )
+              )
+            )
+          ), title: null },
+        _react2.default.createElement(
+          'span',
+          null,
+          title
+        )
+      )
+    );
+  }
+
+  function loop(data) {
+    return data.map(function (item) {
+      item.key = item.id + '';
+      var name = item.name;
+      var index = name.search(searchValue);
+      var beforeStr = name.substr(0, index);
+      var afterStr = name.substr(index + searchValue.length);
+      var title = index > -1 ? _react2.default.createElement(
+        'span',
+        null,
+        beforeStr,
+        _react2.default.createElement(
+          'span',
+          { style: { color: '#f50' } },
+          searchValue
+        ),
+        afterStr
+      ) : _react2.default.createElement(
+        'span',
+        null,
+        name
+      );
+      if (item.children) {
+        return _react2.default.createElement(
+          TreeNode,
+          { key: item.id, title: genTreeTitle(title, item) },
+          loop(item.children)
+        );
+      }
+      return _react2.default.createElement(TreeNode, { key: item.id, title: genTreeTitle(title, item) });
+    });
+  };
+
+  function getParentKey(key, tree) {
+    var parentKey = void 0;
+    for (var i = 0; i < tree.length; i++) {
+      var node = tree[i];
+      if (node.children) {
+        if (node.children.some(function (item) {
+          return item.name === key;
+        })) {
+          parentKey = node.key;
+        } else if (getParentKey(key, node.children)) {
+          parentKey = getParentKey(key, node.children);
+        }
+      }
+    }
+    return parentKey;
+  };
+
+  function onSearch(v) {
+    var value = _lodash2.default.trim(v);
+    if (_lodash2.default.isEmpty(originalCategoryList)) {
+      _lodash2.default.isEmpty(originalCategoryList) && _message3.default.error('没有数据！');
+      return;
+    }
+    dispatch({
+      type: nameSpace + '/pageChange',
+      payload: { searchValue: _lodash2.default.trim(value), isReExpand: true, page: 1 }
+    });
+  }
+
+  function pageChange(page, pageSize) {
+    dispatch({ type: nameSpace + '/pageChange', payload: { page: page } });
+  }
+
+  return _react2.default.createElement(
+    'div',
+    { className: (0, _classnames2.default)('txtcenter') },
+    _react2.default.createElement(
+      _row2.default,
+      { style: { width: width }, className: (0, _classnames2.default)(_Category2.default.content, 'iblock', 'txtleft') },
+      _react2.default.createElement(
+        _col2.default,
+        { span: leftSpan, className: _Category2.default.conetentLeft },
+        _react2.default.createElement(
+          'div',
+          { className: _Category2.default.area1 },
+          _react2.default.createElement(Search, { style: { width: '100%' }, placeholder: '\u641C\u7D22', onSearch: onSearch }),
+          _react2.default.createElement(
+            'div',
+            { className: 'mg2t text-info' },
+            _react2.default.createElement(_icon2.default, { type: 'exclamation-circle fsize14' }),
+            ' \u70B9\u51FB\u8282\u70B9\u53EF\u663E\u793A\u8BE6\u60C5'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: _Category2.default.area2 },
+          _react2.default.createElement(
+            'div',
+            { className: _Category2.default.tree, style: { height: contentHeight } },
+            _react2.default.createElement(
+              _tree2.default,
+              { onSelect: selectCategory, autoExpandParent: autoExpandParent, selectedKeys: selectedKeys,
+                onExpand: function onExpand(expandedKeys) {
+                  return dispatch({
+                    type: nameSpace + '/updateStore',
+                    payload: { expandedKeys: expandedKeys, autoExpandParent: false }
+                  });
+                },
+                expandedKeys: expandedKeys, showLine: true },
+              loop(categoryList)
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: (0, _classnames2.default)('txtcenter', 'mg2b', _Category2.default.pagination) },
+          _react2.default.createElement(_pagination2.default, { simple: true, onChange: pageChange, current: pageConfig.current, total: pageConfig.total,
+            defaultPageSize: pageConfig.size })
+        )
+      ),
+      _react2.default.createElement(
+        _col2.default,
+        { span: rightSpan, className: (0, _classnames2.default)(_Category2.default.conetentRight, 'treeRight') },
+        children
+      )
+    )
+  );
+};

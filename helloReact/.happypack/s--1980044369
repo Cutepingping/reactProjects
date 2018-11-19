@@ -1,0 +1,29 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getSellerInfo = getSellerInfo;
+
+var _utils = require("../../../utils");
+
+var requestApiUrl = _utils.config.requestApiUrl;
+
+// 获取商户信息
+
+function getSellerInfo(params) {
+  // return request({
+  //   url: requestApiUrl.getSeller,
+  //   method: 'GET',
+  //   data: params
+  // });
+
+  var data = {
+    "resultCode": 0,
+    "resultMsg": "success",
+    "data": {
+      "sellerName": ""
+    }
+  };
+  return Promise.resolve(data);
+}

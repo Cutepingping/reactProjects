@@ -1,0 +1,518 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _spin = require('antd/lib/spin');
+
+var _spin2 = _interopRequireDefault(_spin);
+
+var _row = require('antd/lib/row');
+
+var _row2 = _interopRequireDefault(_row);
+
+var _button = require('antd/lib/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _input = require('antd/lib/input');
+
+var _input2 = _interopRequireDefault(_input);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+require('antd/lib/spin/style');
+
+require('antd/lib/row/style');
+
+require('antd/lib/button/style');
+
+require('antd/lib/input/style');
+
+require('antd/lib/form/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _router = require('dva/router');
+
+var _qs = require('qs');
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _bodyClass = require('../bodyClass');
+
+var _bodyClass2 = _interopRequireDefault(_bodyClass);
+
+var _utils = require('../../../utils');
+
+var _md = require('../../../utils/md5');
+
+var _notification = require('../../../utils/notification');
+
+var _LoginStyle = require('./LoginStyle.less');
+
+var _LoginStyle2 = _interopRequireDefault(_LoginStyle);
+
+var _LoginServ = require('./LoginServ');
+
+var _lodash = require('lodash');
+
+var _updatePwdView = require('../UpdatePwd/updatePwdView');
+
+var _updatePwdView2 = _interopRequireDefault(_updatePwdView);
+
+var _logo = require('../../../assets/img/logo.png');
+
+var _logo2 = _interopRequireDefault(_logo);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var FormItem = _form2.default.Item;
+var formItemLayout = {
+  labelCol: {
+    span: 0
+  },
+  wrapperCol: {
+    span: 24
+  }
+};
+
+var loginView = function (_Component) {
+  (0, _inherits3.default)(loginView, _Component);
+
+  function loginView(props, context) {
+    (0, _classCallCheck3.default)(this, loginView);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (loginView.__proto__ || Object.getPrototypeOf(loginView)).call(this, props, context));
+
+    _this.state = {
+      uniqueId: '',
+      //登录验证码
+      validateImgUrl: '',
+      loginButtonLoading: false,
+      updatePwdFlag: false
+    };
+    return _this;
+  }
+
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(loginView, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {}
+    //准备：即将被重新渲染，状态未变化
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {}
+    // 已插入真实DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var self = this;
+      // 给文档body加样式
+      (0, _bodyClass2.default)();
+      // 请求图形验证码
+      self.getValidateImg();
+      // 监听键盘敲击事件
+      self.regKeyDown();
+    }
+
+    //组件将被卸载
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      //重写组件的setState方法，直接返回空
+      this.setState = function (state, callback) {
+        return;
+      };
+    }
+
+    // 登录按钮点击
+
+  }, {
+    key: 'handleOk',
+    value: function handleOk(e) {
+      var _this2 = this;
+
+      this.props.form.validateFieldsAndScroll(function (errors, values) {
+        if (errors) {
+          return;
+        }
+        _this2.doLogin(values);
+      });
+    }
+
+    // 设置登录按钮的loading
+
+  }, {
+    key: 'setButtonLoading',
+    value: function setButtonLoading(flag) {
+      // 设置按钮加载中
+      this.setState({
+        loginButtonLoading: flag
+      });
+    }
+
+    // 存储登录结果到Cookie
+
+  }, {
+    key: 'saveResToCookie',
+    value: function saveResToCookie(data) {
+      Object.keys(data).forEach(function (key) {
+        _jsCookie2.default.set(key, data[key], { expires: _utils.config.loginTimeout });
+      });
+    }
+
+    // 执行登录处理
+
+  }, {
+    key: 'doLogin',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(payload) {
+        var self, password, validateCode, username, loginParam, resp, _self$saveResToCookie;
+
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                self = this;
+                password = payload.password, validateCode = payload.validateCode, username = payload.username;
+                loginParam = {
+                  //用户名
+                  userCode: username,
+                  //密码MD5加密
+                  userPassword: (0, _md.rstr2b64)(password),
+                  //企业中心开发过程需要使用经销商门户的登录
+                  loginType: 'name',
+                  //1:pc ,2 :经销商门户
+                  loginSource: _utils.config.sysType === 'entCenter' ? 2 : 1,
+                  trench: 'pc',
+                  verifyCode: validateCode,
+                  uniqueId: self.state.uniqueId
+
+                  // 登录加载中
+                };
+                self.setButtonLoading(true);
+
+                _context.prev = 4;
+                _context.next = 7;
+                return (0, _LoginServ.reqLogin)((0, _qs.parse)(loginParam));
+
+              case 7:
+                resp = _context.sent;
+
+                if ('0' === '' + resp.resultCode) {
+                  // 存储登录结果到Cookie
+                  self.saveResToCookie((_self$saveResToCookie = {}, (0, _defineProperty3.default)(_self$saveResToCookie, _utils.config.cookie.userName, username), (0, _defineProperty3.default)(_self$saveResToCookie, _utils.config.cookie.auth, resp.data.auth), _self$saveResToCookie));
+
+                  // 指定了登录之后跳转
+                  if (!!_utils.config.isRedirect) {
+                    _router.hashHistory.push(_utils.config.homePath);
+                    // 默认跳转到首页
+                  } else {
+                    _router.hashHistory.push('/');
+                  }
+                } else {
+                  self.getValidateImg();
+                }
+                _context.next = 15;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context['catch'](4);
+
+                (0, _notification.messageInform)(_context.t0 || '未知的登录异常', 'error');
+                self.getValidateImg();
+
+              case 15:
+                // 关闭登录加载中
+                self.setButtonLoading(false);
+
+              case 16:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[4, 11]]);
+      }));
+
+      function doLogin(_x) {
+        return _ref.apply(this, arguments);
+      }
+
+      return doLogin;
+    }()
+
+    // 注册键盘监听事件
+
+  }, {
+    key: 'regKeyDown',
+    value: function regKeyDown() {
+      var _this3 = this;
+
+      document.onkeydown = function (e) {
+        var self = _this3;
+        // 兼容FF和IE和Opera
+        var theEvent = e || window.event;
+        // 键盘的二进制编码
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        // 13 回车键
+        if (code == 13) {
+          self.handleOk(e);
+        }
+      };
+    }
+    // 请求验证码
+
+  }, {
+    key: 'getValidateImg',
+    value: function () {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+        var self, time, result;
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                self = this;
+                time = Math.random();
+                _context2.next = 4;
+                return (0, _LoginServ.queryValidateImg)({ time: time });
+
+              case 4:
+                result = _context2.sent;
+
+
+                if ('0' === '' + result.resultCode) {
+                  self.setState({
+                    validateImgUrl: 'data:image/jpeg;base64,' + result.data.image,
+                    uniqueId: result.data.uniqueId
+                  });
+                }
+
+              case 6:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getValidateImg() {
+        return _ref2.apply(this, arguments);
+      }
+
+      return getValidateImg;
+    }()
+
+    // 打开密码对话框
+
+  }, {
+    key: 'showPwdDlg',
+    value: function showPwdDlg(e) {
+      this.setState({
+        updatePwdFlag: true
+      });
+    }
+
+    // 关闭密码对话框
+
+  }, {
+    key: 'hidePwdDlg',
+    value: function hidePwdDlg(e) {
+      this.setState({
+        updatePwdFlag: false
+      });
+    }
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render(ReactElement, DOMElement, callback) {
+      var _this4 = this;
+
+      var getFieldDecorator = this.props.form.getFieldDecorator;
+
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.state.updatePwdFlag && _react2.default.createElement(_updatePwdView2.default, { titleName: '\u91CD\u7F6E\u5BC6\u7801', visible: this.state.updatePwdFlag, onClose: function onClose(e) {
+            _this4.hidePwdDlg(e);
+          } }),
+        _react2.default.createElement(
+          'div',
+          { className: _LoginStyle2.default.startsContent },
+          _react2.default.createElement('div', { className: (0, _classnames2.default)(_LoginStyle2.default.starts) })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: (0, _classnames2.default)(_LoginStyle2.default.spin) },
+          _react2.default.createElement(
+            _spin2.default,
+            { tip: '\u52A0\u8F7D\u7528\u6237\u4FE1\u606F...', spinning: false, size: 'large' },
+            _react2.default.createElement(
+              'div',
+              { className: _LoginStyle2.default.bgColor },
+              _react2.default.createElement(
+                'div',
+                { className: _LoginStyle2.default.contentStyle },
+                _react2.default.createElement(
+                  'div',
+                  { className: _LoginStyle2.default.logo },
+                  _react2.default.createElement('img', { alt: 'logo', src: _logo2.default }),
+                  _react2.default.createElement(
+                    'p',
+                    null,
+                    '欢迎登录' + _utils.config.appName
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: _LoginStyle2.default.form },
+                  _react2.default.createElement(
+                    'form',
+                    { className: 'formItemNone' },
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, formItemLayout, { hasFeedback: true }),
+                      getFieldDecorator('username', {
+                        rules: [{
+                          required: true,
+                          message: '请填写用户名'
+                        }]
+                      })(_react2.default.createElement(_input2.default, { size: 'large', onPressEnter: function onPressEnter(e) {
+                          return _this4.handleOk(e);
+                        }, placeholder: '\u7528\u6237\u540D', prefix: _react2.default.createElement(
+                          'i',
+                          { className: 'iconfont' },
+                          '\uE684'
+                        ) }))
+                    ),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, formItemLayout, { hasFeedback: true }),
+                      getFieldDecorator('password', {
+                        rules: [{
+                          required: true,
+                          message: '请填写密码'
+                        }]
+                      })(_react2.default.createElement(_input2.default, { size: 'large', type: 'password', onPressEnter: function onPressEnter(e) {
+                          return _this4.handleOk(e);
+                        }, placeholder: '\u5BC6\u7801', prefix: _react2.default.createElement(
+                          'i',
+                          { className: 'iconfont' },
+                          '\uE683'
+                        ) }))
+                    ),
+                    _react2.default.createElement(
+                      'div',
+                      { className: _LoginStyle2.default.validateCode },
+                      _react2.default.createElement(
+                        FormItem,
+                        formItemLayout,
+                        getFieldDecorator('validateCode', {
+                          rules: [{
+                            required: true,
+                            message: '请填写验证码'
+                          }]
+                        })(_react2.default.createElement(_input2.default, { size: 'large', placeholder: '\u9A8C\u8BC1\u7801', className: 'width175' })),
+                        _react2.default.createElement('img', { className: _LoginStyle2.default.imgStyle, src: this.state.validateImgUrl, onClick: function onClick(e) {
+                            return _this4.getValidateImg(e);
+                          } })
+                      )
+                    ),
+                    _react2.default.createElement(
+                      _row2.default,
+                      null,
+                      _react2.default.createElement(
+                        _button2.default,
+                        { className: _LoginStyle2.default.buttonStyle, type: 'primary', size: 'large', onClick: function onClick(e) {
+                            return _this4.handleOk(e);
+                          }, loading: this.state.loginButtonLoading },
+                        '\u767B\u5F55'
+                      )
+                    ),
+                    _react2.default.createElement(
+                      'div',
+                      { className: (0, _classnames2.default)('txtright', 'mg2t') },
+                      _react2.default.createElement(
+                        'a',
+                        { href: 'javascript:;', onClick: function onClick(e) {
+                            return _this4.showPwdDlg(e);
+                          } },
+                        '\u5FD8\u8BB0\u5BC6\u7801'
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+  return loginView;
+}(_react.Component);
+
+exports.default = _form2.default.create()(loginView);
+module.exports = exports['default'];

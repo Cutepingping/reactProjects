@@ -1,0 +1,42 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getPhoneCode = getPhoneCode;
+exports.updateLoginPwd = updateLoginPwd;
+exports.forgetLoginPwd = forgetLoginPwd;
+
+var _utils = require('../../../utils');
+
+var _request = require('../../../config/request');
+
+var requestApiUrl = _utils.config.requestApiUrl;
+
+
+// 请求短信验证码
+function getPhoneCode(params) {
+  return (0, _request.request)({
+    url: requestApiUrl.phoneCode,
+    method: 'GET',
+    data: params
+  });
+}
+
+// 修改密码 - 提交
+function updateLoginPwd(params) {
+  return (0, _request.request)({
+    url: requestApiUrl.updatedPassword,
+    method: 'PUT',
+    data: params
+  });
+}
+
+// 重置密码
+function forgetLoginPwd(params) {
+  return (0, _request.request)({
+    url: requestApiUrl.forgetPassword,
+    method: 'POST',
+    data: params
+  });
+}

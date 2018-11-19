@@ -1,0 +1,182 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _reactHelmet = require('react-helmet');
+
+var _skin = require('css/skin.less');
+
+var skinStyle = _interopRequireWildcard(_skin);
+
+require('css/common.less');
+
+require('css/theme.less');
+
+require('./AppStyle.less');
+
+var _bodyClass = require('../bodyClass');
+
+var _bodyClass2 = _interopRequireDefault(_bodyClass);
+
+var _utils = require('utils');
+
+var _BannerView = require('../Banner/BannerView');
+
+var _BannerView2 = _interopRequireDefault(_BannerView);
+
+var _SiderView = require('../Sider/SiderView');
+
+var _SiderView2 = _interopRequireDefault(_SiderView);
+
+var _PageTabs = require('widget/PageTabs');
+
+var _PageTabs2 = _interopRequireDefault(_PageTabs);
+
+var _router = require('dva/router');
+
+var _FooterView = require('../Footer/FooterView');
+
+var _FooterView2 = _interopRequireDefault(_FooterView);
+
+var _Bread = require('../Bread/Bread');
+
+var _Bread2 = _interopRequireDefault(_Bread);
+
+var _dva = require('dva');
+
+var _lodash = require('lodash');
+
+var _globalScope = require('utils/globalScope');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 设置当前tab的key
+
+// 引入面包屑
+
+// 引入DVA路由组件
+
+// 左侧栏组件
+
+// 站点配置
+
+// 公共样式
+
+// 主题样式
+
+// 当前组件样式
+
+// 定义html head
+
+// 加载Component
+var setCurrTabKey = function setCurrTabKey(location) {
+  window.CURR_TAB_KEY = location.pathname;
+};
+
+// 导出组件
+
+
+// 引入底部组件
+
+// 页签组件
+
+// 头部组件
+
+// 给文档添加皮肤样式
+
+// 全局皮肤样式
+
+// 样式管理器
+// 加载React
+function AppView(_ref) {
+  var children = _ref.children,
+      location = _ref.location,
+      dispatch = _ref.dispatch,
+      app = _ref.app,
+      loading = _ref.loading;
+
+  if ((0, _lodash.has)(_utils.config, 'noTab')) {
+    // 设置当前tab的key
+    setCurrTabKey(location);
+  }
+
+  // 当前选项卡 - 标题 + 路由对象
+  var currTabTitle = app.currTabTitle;
+  // 给文档添加皮肤样式
+
+  (0, _bodyClass2.default)();
+  //企业中心，需判断是否有门户传来的auth
+  if (_utils.config.isB2bLogin) {
+    var tmpAuth = (0, _lodash.get)((0, _globalScope.getLocalData)(_utils.config.userInfoKey), 'auth', '');
+    tmpAuth || (window.location.href = _utils.config.redirectLoginUrl);
+  }
+
+  // 渲染内容
+  return _react2.default.createElement(
+    'div',
+    { className: 'layout-ns-g' },
+    _react2.default.createElement(
+      _reactHelmet.Helmet,
+      null,
+      _react2.default.createElement(
+        'title',
+        null,
+        _utils.config.appName
+      )
+    ),
+    _react2.default.createElement(
+      'div',
+      { className: 'layout', id: 'layoutCont' },
+      _react2.default.createElement(_BannerView2.default, null),
+      _react2.default.createElement(
+        'aside',
+        { className: 'sider' },
+        _react2.default.createElement(_SiderView2.default, null)
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'main' },
+        (0, _lodash.has)(_utils.config, 'noTab') && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(_Bread2.default, { location: location, currTabTitle: currTabTitle }),
+          _react2.default.createElement(
+            'div',
+            { name: 'tabContainer', style: { 'margin': '16px', 'minHeight': 'calc(100vh - 180px)' } },
+            _react2.default.createElement(
+              'div',
+              { key: location.pathname },
+              children
+            )
+          ),
+          _react2.default.createElement(_FooterView2.default, null)
+        ),
+        !(0, _lodash.has)(_utils.config, 'noTab') && _react2.default.createElement(_PageTabs2.default, {
+          tabProps: children,
+          headerProps: null,
+          location: location,
+          currTabTitle: currTabTitle
+        })
+      )
+    )
+  );
+}
+
+exports.default = (0, _dva.connect)(function (_ref2) {
+  var app = _ref2.app,
+      loading = _ref2.loading;
+  return { app: app, loading: loading.models.app };
+})(AppView);
+module.exports = exports['default'];

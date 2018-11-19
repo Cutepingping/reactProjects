@@ -1,0 +1,221 @@
+@import "../../../css/vars.less";
+@import "../../../config/basic.less";
+
+
+
+//皮肤方案1，默认皮肤
+/*
+  风格，红色为主要色，
+*/
+:global {
+  .skinProgramme_1 {
+    // 搜索按钮
+    .siderSearchBtn{
+      padding: 16px 0;
+      //background: #1F2543;
+      input{
+        color: #CCC;
+        //47,54,88
+        background: @uiColor_6;
+        border: none !important;
+        width: 178px;
+        &:focus,&:hover{
+          background: #fff;
+          border: @uiColor_21 !important;
+          box-shadow: 0 0 1px 0 @uiColor_21;
+        }
+      }
+      .ant-input-affix-wrapper:hover {
+        .ant-input:not(.ant-input-disabled) {
+          border: @uiColor_21 !important;
+          box-shadow: 0 0 1px 0 @uiColor_21;
+        }
+      }
+    }
+    //侧边栏
+    .siderBlueSkin {
+      background-color: @uiColor_3;
+      &.siderBlueFold{
+        .ant-menu .ant-menu-submenu-title i{
+          font-size: 16px;
+          margin-right: 4px;
+        }
+
+        .ant-menu .ant-menu-submenu-title{
+          height: 40px;
+          line-height: 40px;
+        }
+
+        .ant-menu-dark .ant-menu-submenu-active{
+          background-color: @uiColor_3;
+        }
+
+        .ant-menu-dark .ant-menu-item > a{
+          opacity: 0.8;
+        }
+      }
+
+      .ant-menu-submenu-vertical.ant-menu-submenu-selected.ant-menu-submenu{
+        .ant-menu.ant-menu-vertical.ant-menu-sub:before{
+          border-color: transparent @uiColor_3 transparent transparent;
+        }
+      }
+
+      .ant-menu-dark .ant-menu-submenu-selected{
+        color: #fff;
+      }
+
+      .ant-menu-dark .ant-menu-submenu-selected:not(.ant-menu-submenu-open){
+        background-color: @uiColor_4;
+      }
+
+      .ant-menu-dark .ant-menu-submenu-selected:not(.ant-menu-submenu-open):hover{
+        background-color: @uiColor_1;
+      }
+      .changeFold{
+        line-height: 30px;
+        background-color: @uiColor_4;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .ant-menu-dark,
+      .ant-menu-dark .ant-menu-sub {
+        .fontSize_6;
+        color: @uiColor_20;
+        background-color: @uiColor_3;
+      }
+      .ant-menu-submenu-inline > .ant-menu-submenu-title:after {
+        display: none;
+      }
+
+      .ant-menu-dark .ant-menu-item > a {
+        opacity: 0.6;
+        color: @uiColor_20;
+      }
+
+      .ant-menu-dark .ant-menu-item-selected > a {
+        color: @uiColor_21;
+        opacity: 1;
+      }
+
+      .ant-menu-dark .ant-menu-item > a:hover {
+        opacity: 1;
+        color: @uiColor_21;
+      }
+      .ant-menu-dark .ant-menu-inline.ant-menu-sub {
+        background-color: @uiColor_4;
+      }
+
+      .ant-menu-sub.ant-menu-inline > .ant-menu-item, .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+        height: 40px;
+        line-height: 40px;
+        font-size: 12px;
+        padding-left: 32px!important;
+      }
+
+      .ant-menu-root {
+        height: e("calc(100vh - 100px)");
+        overflow-x: hidden;
+        border-right: none;
+
+        &::-webkit-scrollbar-thumb {
+          background-color: transparent;
+        }
+
+        &:hover {
+          &::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+          }
+        }
+
+        &.ant-menu-vertical {
+          .ant-menu-sub {
+            height: 0;
+            opacity: 0;
+            transition: none;
+            background-color: @uiColor_4;
+            .ant-menu-item > a {
+              left: 0;
+            }
+          }
+
+          .ant-menu-submenu-active {
+            .ant-menu-sub {
+              height: auto;
+              opacity: 1;
+              margin-left: 12px;
+              background-color: @uiColor_24;
+              &:before {
+                content: '';
+                position: absolute;
+                border: 7px solid;
+                border-color: transparent @uiColor_24 transparent transparent !important;
+                width: 0;
+                height: 0;
+                top: 15px;
+                left: -14px;
+
+              }
+            }
+
+          }
+        }
+      }
+
+      .ant-menu {
+        transition: @transition-ease-out;
+
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+          overflow: hidden;
+          white-space: normal;
+          font-size: 12px;
+          height: 40px;
+          line-height: 40px;
+        }
+
+        .ant-menu-item {
+          i {
+            font-size: 16px;
+            margin-right: 16px;
+          }
+        }
+
+        .ant-menu-submenu-title {
+          font-size: 12px;
+          i {
+            color: @uiColor_20;
+            margin-right: 16px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.trackVertical{
+	position: absolute;
+	width: 6px;
+	right: 2px;
+	bottom: 2px;
+	top: 2px;
+	border-radius: 3px;
+	z-index: 99;
+}
+
+.thumbVertical{
+	position: relative;
+	display: block;
+	width: 100%;
+	cursor: pointer;
+	background-color: rgba(205,205,205, 0.5);
+	transform: translateY(0px);
+}
+
+.fixScrollHeight{
+	//修正滚动条显示，必须减掉搜索框的高度
+	//原值为height: e("calc(100vh - 65px)")
+	height: e("calc(100vh - 129px)") !important;
+}

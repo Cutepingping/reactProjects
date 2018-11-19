@@ -1,0 +1,1 @@
+{"version":3,"sources":["src\\widget\\ScrollBar\\utils\\isString.js"],"names":["isString","maybe"],"mappings":";;;;;kBAAwBA,Q;AAAT,SAASA,QAAT,CAAkBC,KAAlB,EAAyB;AACpC,WAAO,OAAOA,KAAP,KAAiB,QAAxB;AACH","file":"isString.js","sourceRoot":"C:/Users/liu.ping/helloReact","sourcesContent":["export default function isString(maybe) {\r\n    return typeof maybe === 'string';\r\n}\r\n"]}

@@ -1,0 +1,40 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _lodash = require('lodash');
+
+var _config = require('../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _router = require('dva/router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 自定义跳转
+
+// 站点配置
+var customLoginRedirect = function customLoginRedirect() {
+  // 自定义跳转登录地址
+  var redirectLoginUrl = (0, _lodash.get)(_config2.default, 'redirectLoginUrl', '');
+
+  if (_config2.default.isB2bLogin) {
+    // 若已配置登录地址，则跳转
+    if (!!redirectLoginUrl) {
+      window.location.href = redirectLoginUrl;
+    } else {
+      // 跳转到登录页
+      _router.hashHistory.push('/login');
+      window.location.reload();
+    }
+  } else {
+    _router.hashHistory.push('/login');
+    window.location.reload();
+  }
+};
+// 路由对象
+exports.default = { customLoginRedirect: customLoginRedirect };
+module.exports = exports['default'];

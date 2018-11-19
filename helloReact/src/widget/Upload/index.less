@@ -1,0 +1,111 @@
+/**
+ * @(#)problemAddStyle.less 0.1.0 2018-01-30
+ * Copyright (c) 2018, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+
+ @import "../../config/basic.less";
+
+// 默认样式
+.modalUpBtn{
+  display: inline-block;
+  margin-left: 25px;
+  float: left;
+  p{
+    color: #b4b0b0;
+  }
+}
+.shopImg{
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    float: left;
+  }
+  .modalP{
+    padding: 2px;
+    // overflow: hidden;
+    float: left;
+    border: 1px solid @uiColor_5;
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 6px;
+    :global {
+      .anticon.anticon-close-circle {
+        position: absolute;
+        font-size: 20px;
+        color: red;
+        right: -10px;
+        top: -10px;
+      }
+      .anticon.anticon-close-circle:hover {
+        font-size: 24px;
+        right: -12px;
+        top: -12px;
+        cursor: pointer;
+      }
+    .modalImg{
+      font-size: 36px !important;
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      background-color: #fbfbfb;
+      //border: 1px dotted #D7E0F1;
+      color: #cbcbcb;
+      float: left;
+    }
+  }
+
+  .label_offsetY {
+    :global .ant-form-item-label {
+      margin-top: 30px;
+    }
+  }
+}
+
+// 头像样式
+.avatarUploader,
+.avatarUploaderTrigger,
+.avatar {
+  width: 94px;
+  height: 94px;
+}
+.avatarUploader {
+  display: block;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.avatarUploaderTrigger {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 28px;
+  color: #999;
+}
+
+// 自定义头像样式
+.customAvatar{
+  .avatarUploader{
+    width: 94px;
+  }
+}
+
+.logoImg{
+  width: 144px;
+  height: 144px;
+}
+
+.closeBtn{
+    position: absolute;
+    font-size: 20px;
+    color: red;
+    left: 84px;
+    top: -15px;
+    &:hover{
+      font-size: 24px;
+      left: 84px;
+      top: -15px;
+      cursor: pointer;
+    }
+}

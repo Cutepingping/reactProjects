@@ -1,0 +1,85 @@
+@import "../../../config/basic.less";
+
+.tophead{
+  height: 50px;
+  background: @uiColor_22;
+  position: fixed;
+  top:0; left:0;
+  width: 100%;
+  z-index: 300;
+  .headLeft{
+    float: left;
+    height: 50px;
+    margin-left: 40px;
+    color: #fff;
+    font-size: 16px;
+    display: table;
+    .tableCell {
+      display: table-cell;
+      vertical-align: middle;
+      padding-right: 8px;
+    }
+    .headLogo{
+      color: #FFF;
+      font-size: 50px;
+      height: 40px;
+    }
+    .line{
+      color: white;
+      float: left;
+      margin-top: 16px;
+      margin-left: 20px;
+      opacity: 0.38;
+    }
+  }
+  .headRight{
+    position: absolute; right:0; top:0;
+    //float: right;
+    width: 600px;
+    height: 50px;
+    font-size: 14px;
+    :global{
+      .ant-dropdown.ant-dropdown-placement-bottomRight,
+      .ant-dropdown.ant-dropdown-placement-topRight{
+        left: auto!important;
+        right: 0!important;
+        top: 50px!important;
+      }
+      .ant-dropdown.ant-dropdown-placement-bottomLeft{
+        top: 50px!important;
+      }
+    }
+    .user{
+      height: 50px;
+      float: right;
+      color: white;
+      display: table;
+      a{
+        color: white;
+        margin-left: 20px;
+      }
+      :global {
+        .block {
+          display: table-cell;
+          vertical-align: middle;
+        }
+        .ant-dropdown-link i {
+          padding-top: 6px;
+          margin-right: 5px;
+          float: right;
+        }
+      }
+      &>img{
+        margin-top:5px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+    }
+    .enterpriseInfo {
+      height: 50px;
+      line-height: 50px;
+      color: white;
+    }
+  }
+}

@@ -1,0 +1,89 @@
+@import '../../config/basic.less';
+
+.tabContainer {
+
+}
+
+.tabListContainer {
+  height: 47px;
+  line-height: 47px;
+  overflow: hidden;
+}
+
+.tabList {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  li{
+    border-right: 1px @uiColor_5 solid;
+  }
+}
+
+.tabItems{
+  padding: 0 8px;
+  display: inline-block;
+  height: 47px;
+  line-height: 47px;
+  vertical-align: top;
+}
+.tabItems{
+  .title {
+    padding: 6px 10px 10px 10px;
+  }
+}
+
+.tabItems .link{
+  padding-top: 10px;
+  .fontColor_3;
+  .fontSize_4;
+}
+
+.active{
+  margin-top: 5px;
+  border-top: 2px @uiColor_1 solid;
+  height: 43px;
+  line-height: 43px;
+  border-left: 0px;
+  background-color: #fff;
+  position: relative;
+  &:before{
+    content: "";
+    width: 2px;
+    left:-2px;
+    top:-7px;
+    height: 0px;
+    background: #fff;
+    position: absolute;
+  }
+  &:after{
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: #fff;
+    position: absolute; bottom:1px; left:0; z-index: 1;
+  }
+}
+
+
+.active .link{
+  color: @uiColor_1;
+  position: relative;
+  top: -5px;
+  text-decoration: none;
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.fade {
+  display: none;
+}
+
+.fade.in {
+  display: block;
+}
+
+.container {
+  margin: 16px;
+}

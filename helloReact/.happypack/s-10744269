@@ -1,0 +1,447 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Grid = exports.QueryCondition = undefined;
+
+var _table = require('antd/lib/table');
+
+var _table2 = _interopRequireDefault(_table);
+
+var _row = require('antd/lib/row');
+
+var _row2 = _interopRequireDefault(_row);
+
+var _inputNumber = require('antd/lib/input-number');
+
+var _inputNumber2 = _interopRequireDefault(_inputNumber);
+
+var _cascader = require('antd/lib/cascader');
+
+var _cascader2 = _interopRequireDefault(_cascader);
+
+var _treeSelect = require('antd/lib/tree-select');
+
+var _treeSelect2 = _interopRequireDefault(_treeSelect);
+
+var _input = require('antd/lib/input');
+
+var _input2 = _interopRequireDefault(_input);
+
+var _col = require('antd/lib/col');
+
+var _col2 = _interopRequireDefault(_col);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _select = require('antd/lib/select');
+
+var _select2 = _interopRequireDefault(_select);
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+var _datePicker = require('antd/lib/date-picker');
+
+var _datePicker2 = _interopRequireDefault(_datePicker);
+
+require('antd/lib/table/style');
+
+require('antd/lib/row/style');
+
+require('antd/lib/input-number/style');
+
+require('antd/lib/cascader/style');
+
+require('antd/lib/tree-select/style');
+
+require('antd/lib/input/style');
+
+require('antd/lib/col/style');
+
+require('antd/lib/select/style');
+
+require('antd/lib/form/style');
+
+require('antd/lib/date-picker/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _dva = require('dva');
+
+var _Grid = require('./Grid.less');
+
+var _Grid2 = _interopRequireDefault(_Grid);
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _globalScope = require('../../utils/globalScope');
+
+var _config = require('../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var RangePicker = _datePicker2.default.RangePicker,
+    MonthPicker = _datePicker2.default.MonthPicker; /**
+                                                     * @(#)Grid.jsx 0.5.1 2017-09-13
+                                                     * Copyright (c) 2017, YUNXI. All rights reserved.
+                                                     * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+                                                     */
+
+var FormItem = _form2.default.Item;
+var Option = _select2.default.Option;
+var formItemLayout = {
+  labelCol: {
+    xs: { span: 8 },
+    sm: { span: 8 }
+  },
+  wrapperCol: {
+    xs: { span: 16 },
+    sm: { span: 16 }
+  }
+};
+var bigFormItemLayout = {
+  labelCol: {
+    xs: { span: 4 },
+    sm: { span: 4 }
+  },
+  wrapperCol: {
+    xs: { span: 10 },
+    sm: { span: 10 }
+  }
+};
+
+/*
+ * 动态生成搜索框组件
+ *
+ * @author 苏离
+ * @since 0.5.1
+ */
+var QueryCondition = exports.QueryCondition = function QueryCondition(_ref) {
+  var data = _ref.data,
+      inputChange = _ref.inputChange,
+      searchBtn = _ref.searchBtn;
+
+
+  function _disabledDate(type, value, item) {
+    var result = false;
+    if ((0, _lodash.isEmpty)(item)) {
+      result = false;
+    } else {
+      if (type === 'start') {
+        //如果是开始时间，需要校验结束时间
+        if (item[1]) {
+          result = value.startOf('month').valueOf() >= (0, _moment2.default)(item[1]).valueOf();
+        }
+      } else {
+        //如果是结束时间，需要校验开始时间
+        if (item[0]) {
+          result = value.startOf('month').valueOf() <= (0, _moment2.default)(item[0]).valueOf();
+        }
+      }
+    }
+
+    return result;
+  }
+
+  var list = [];
+  if (!(0, _lodash.isEmpty)(data)) {
+    list = data.map(function (item, index) {
+      var cascaderList = (0, _lodash.cloneDeep)(item.list);
+      item.type === 'cascader' && cascaderList.unshift({ label: '请选择', value: 'all', key: 'all' });
+      if (item.type === 'date') {
+        return _react2.default.createElement(
+          _col2.default,
+          { xl: 6, lg: 8, md: 12, xs: 12, key: 'Col-' + index },
+          _react2.default.createElement(
+            FormItem,
+            (0, _extends3.default)({}, formItemLayout, { label: item.name, className: (0, _classnames2.default)(_Grid2.default.inputComponent, _Grid2.default.rangePicker) }),
+            item.type === 'date' && _react2.default.createElement(RangePicker, { style: { width: '100%' }, allowClear: false,
+              showTime: { format: 'HH:mm' }, format: 'YYYY-MM-DD HH:mm', placeholder: ['开始时间', '结束时间'],
+              onChange: function onChange(dates, dateStrings) {
+                return inputChange(item.key, dateStrings);
+              },
+              value: !(0, _lodash.isEmpty)(item.value) ? [(0, _moment2.default)(item.value[0]), (0, _moment2.default)(item.value[1])] : [] })
+          )
+        );
+      }
+      if (item.type === 'select') {
+        return _react2.default.createElement(
+          _col2.default,
+          { xl: 6, lg: 8, md: 12, xs: 12, key: 'Col-' + index },
+          _react2.default.createElement(
+            FormItem,
+            (0, _extends3.default)({}, formItemLayout, { label: item.name, className: (0, _classnames2.default)(_Grid2.default.inputComponent) }),
+            _react2.default.createElement(_input2.default, { type: 'hidden' }),
+            _react2.default.createElement(
+              _select2.default,
+              { value: item.value ? item.value + '' : item.notNeedAll ? '' : 'all', placeholder: '请选择' + item.name,
+                onChange: function onChange(v) {
+                  return inputChange(item.key, v === 'all' ? '' : v);
+                } },
+              item.notNeedAll || _react2.default.createElement(
+                Option,
+                { value: 'all' },
+                '\u8BF7\u9009\u62E9'
+              ),
+              item.list.map(function (d, i) {
+                return _react2.default.createElement(
+                  Option,
+                  { key: '' + item.key + i, value: d.id + '' },
+                  d.name
+                );
+              })
+            )
+          )
+        );
+      }
+      return _react2.default.createElement(
+        _col2.default,
+        { xl: 6, lg: 8, md: 12, xs: 12, key: 'Col-' + index },
+        _react2.default.createElement(
+          FormItem,
+          (0, _extends3.default)({}, formItemLayout, { label: item.name, className: (0, _classnames2.default)(_Grid2.default.inputComponent) }),
+          item.type === 'time' && _react2.default.createElement(RangePicker, { style: { width: '100%' }, allowClear: false,
+            onChange: function onChange(dates, dateStrings) {
+              return inputChange(item.key, dateStrings);
+            },
+            value: !(0, _lodash.isEmpty)(item.value) ? [(0, _moment2.default)(item.value[0]), (0, _moment2.default)(item.value[1])] : [] }),
+          item.type === 'date' && _react2.default.createElement(RangePicker, { style: { width: '100%' }, allowClear: false,
+            showTime: { format: 'HH:mm' }, format: 'YYYY-MM-DD HH:mm', placeholder: ['开始时间', '结束时间'],
+            onChange: function onChange(dates, dateStrings) {
+              return inputChange(item.key, dateStrings);
+            },
+            value: !(0, _lodash.isEmpty)(item.value) ? [(0, _moment2.default)(item.value[0]), (0, _moment2.default)(item.value[1])] : [] }),
+          item.type === 'month' && _react2.default.createElement(
+            'span',
+            null,
+            _react2.default.createElement(MonthPicker, { style: { width: '47%' }, placeholder: '\u5F00\u59CB\u65E5\u671F', onChange: function onChange(dates, dateString) {
+                var value = item.value;
+                value ? value[0] = dateString : value = [dateString];
+                inputChange(item.key, value);
+              }, disabledDate: function disabledDate(v) {
+                return _disabledDate('start', v, item.value);
+              }, value: !(0, _lodash.isEmpty)(item.value[0]) ? (0, _moment2.default)(item.value[0]) : null, format: 'YYYY-MM' }),
+            _react2.default.createElement(
+              'span',
+              { className: (0, _classnames2.default)(_Grid2.default.monthSpliter) },
+              '-'
+            ),
+            _react2.default.createElement(MonthPicker, { placeholder: '\u7ED3\u675F\u65E5\u671F', style: { width: '47%' }, onChange: function onChange(dates, dateString) {
+                var value = item.value;
+                value ? value[1] = dateString : value = [null, dateString];
+                inputChange(item.key, value);
+              }, disabledDate: function disabledDate(v) {
+                return _disabledDate('end', v, item.value);
+              }, value: !(0, _lodash.isEmpty)(item.value[1]) ? (0, _moment2.default)(item.value[1]) : null, format: 'YYYY-MM' })
+          ),
+          item.type === 'comboSelect' && _react2.default.createElement(
+            _select2.default,
+            { mode: 'combobox', value: item.value ? item.value + '' : '', filterOption: function filterOption(inputValue, option) {
+                return option.props.searchValue.includes(inputValue);
+              }, placeholder: item.placeholder || '请输入' + item.name,
+              onSelect: function onSelect(v) {
+                inputChange(item.key, v.split(' ')[1] || v, v);
+              },
+              onSearch: function onSearch(v) {
+                return inputChange(item.key, v);
+              } },
+            item.list.map(function (d, i) {
+              var value = item.isUniqueName ? d.name : d.id + ' ' + d.name;
+              var name = item.isUniqueName ? d.name : d.id + ' ' + d.name;
+              return _react2.default.createElement(
+                Option,
+                { searchValue: d.searchValue, key: '' + item.key + i, value: value },
+                name
+              );
+            })
+          ),
+          item.type === 'mulSelect' && _react2.default.createElement(
+            _select2.default,
+            { value: item.value || [], placeholder: '请选择' + item.name, mode: 'multiple',
+              onChange: function onChange(v) {
+                return inputChange(item.key, v);
+              } },
+            item.list.map(function (d, i) {
+              return _react2.default.createElement(
+                Option,
+                { key: '' + item.key + i, value: d.id + '' },
+                d.name
+              );
+            })
+          ),
+          item.type === 'text' && _react2.default.createElement(_input2.default, { onChange: function onChange(e) {
+              return e.target.value.length < 36 && inputChange(item.key, _lodash2.default.trim(e.currentTarget.value));
+            },
+            value: item.value,
+            placeholder: item.placeholder ? item.placeholder : '请输入' + item.name
+          }),
+          item.type === 'treeSelect' && _react2.default.createElement(_treeSelect2.default, { value: item.value ? item.value + '' : null, dropdownStyle: { maxHeight: 400, overflow: 'auto' },
+            treeCheckStrictly: true,
+            treeData: item.list, placeholder: '请选择' + item.name, treeDefaultExpandAll: true,
+            onChange: function onChange(v) {
+              return inputChange(item.key, v);
+            } }),
+          item.type === 'cascader' && _react2.default.createElement(_cascader2.default, { style: { width: '100%' }, value: item.value ? item.value : ['all'], placeholder: '请选择' + item.name, options: cascaderList,
+            onChange: function onChange(v) {
+              return inputChange(item.key, v);
+            }, changeOnSelect: true }),
+          item.type === 'numRange' && _react2.default.createElement(
+            'span',
+            null,
+            _react2.default.createElement(_inputNumber2.default, { min: 0, precision: item.precision ? item.precision : 0, style: { width: 80, marginRight: 0 }, onChange: function onChange(v) {
+                item.value[0] = v;
+                inputChange(item.key, item.value, 0);
+              }, value: item.value && item.value[0] ? item.value[0] : '' }),
+            _react2.default.createElement(
+              'span',
+              { className: 'mg2l mg2r' },
+              '~'
+            ),
+            _react2.default.createElement(_inputNumber2.default, { min: 0, precision: item.precision ? item.precision : 0, style: { width: 80, marginRight: 0 }, onChange: function onChange(v) {
+                item.value[1] = v;
+                inputChange(item.key, item.value);
+              }, value: item.value && item.value[1] ? item.value[1] : '' })
+          )
+        )
+      );
+    });
+  }
+  return _react2.default.createElement(
+    _row2.default,
+    null,
+    list,
+    searchBtn
+  );
+};
+
+//分页控件
+var pagination = function pagination(_ref2) {
+  var pageChange = _ref2.pageChange,
+      total = _ref2.total,
+      pageConfig = _ref2.pageConfig,
+      nameSpace = _ref2.nameSpace,
+      dispatch = _ref2.dispatch;
+
+  var pageChangeEvent = void 0;
+  //当前路径
+  var path = location.hash.split('?')[0].slice(1);
+  if (!(typeof pageChange === 'function')) {
+    pageChangeEvent = function pageChangeEvent(pageIndex, pageSize) {
+      return dispatch({
+        type: nameSpace + '/' + pageChange,
+        payload: { pageIndex: pageIndex, pageSize: pageSize, key: 'tableData' }
+      });
+    };
+  } else {
+    pageChangeEvent = pageChange;
+  }
+  (0, _globalScope.setLocalData)(path, pageConfig.pageSize);
+  return {
+    pageSize: pageConfig.pageSize,
+    showTotal: function showTotal(total) {
+      return '\u5171 ' + total + ' \u6761';
+    },
+    showQuickJumper: true,
+    current: pageConfig.current || 1,
+    total: total,
+    showSizeChanger: true,
+    onChange: function onChange(current, pageSize) {
+      return pageChangeEvent(current, pageSize);
+    },
+    pageSizeOptions: pageConfig.pageSizeOptions || _config2.default.largePageSizeList,
+    onShowSizeChange: function onShowSizeChange(current, pageSize) {
+      return pageChangeEvent(current, pageSize);
+    }
+  };
+};
+
+/*
+ *columns: array，对应表格头部
+ *dataSource：array，表格主体内容
+ *pageChange: 翻页时触发的方法
+ *selectedRowKeys: 选中项的 key 数组
+ *selectedKeysChange: 选中项改变时触发
+ *total：分页数据总条数
+ */
+//通用table组件
+var TableComponent = function TableComponent(_ref3) {
+  var dispatch = _ref3.dispatch,
+      nameSpace = _ref3.nameSpace,
+      data = _ref3.data,
+      selectedKeysChange = _ref3.selectedKeysChange,
+      pageChange = _ref3.pageChange,
+      _ref3$conditionLine = _ref3.conditionLine,
+      conditionLine = _ref3$conditionLine === undefined ? 1 : _ref3$conditionLine,
+      _ref3$scroll = _ref3.scroll,
+      scroll = _ref3$scroll === undefined ? { x: 1500 } : _ref3$scroll,
+      loading = _ref3.loading,
+      disableVerify = _ref3.disableVerify,
+      _ref3$paginationFlag = _ref3.paginationFlag,
+      paginationFlag = _ref3$paginationFlag === undefined ? true : _ref3$paginationFlag,
+      _ref3$isDisplayOrder = _ref3.isDisplayOrder,
+      isDisplayOrder = _ref3$isDisplayOrder === undefined ? false : _ref3$isDisplayOrder;
+  var columns = data.columns,
+      tableData = data.tableData,
+      selectedRowKeys = data.selectedRowKeys,
+      pageConfig = data.pageConfig;
+  var total = tableData.total,
+      dataSource = tableData.dataSource;
+
+
+  var rowSelection = {
+    selectedRowKeys: selectedRowKeys,
+    onChange: function onChange(selectedRowKeys) {
+      dispatch({ type: nameSpace + '/' + selectedKeysChange, payload: { selectedRowKeys: selectedRowKeys } });
+    },
+    getCheckboxProps: function getCheckboxProps(record) {
+      return {
+        disabled: disableVerify ? disableVerify(record) : false
+      };
+    }
+  };
+  !(0, _lodash.isEmpty)(dataSource) && dataSource.forEach(function (item, index) {
+    (0, _lodash.isEmpty)(item.key) && (item.key = item.id || index);
+  });
+  //查询条件行的高度
+  var queryLine = 52;
+
+  var current = pageConfig.current,
+      pageSize = pageConfig.pageSize;
+
+  var copyColumns = (0, _lodash.cloneDeep)(columns);
+  isDisplayOrder && copyColumns.unshift({
+    title: '序号',
+    width: 60,
+    dataIndex: 'commonOrder',
+    key: 'commonOrder',
+    render: function render(data, record, index) {
+      return (current - 1) * pageSize + index + 1;
+    }
+  });
+  return _react2.default.createElement(_table2.default, { className: (0, _classnames2.default)(_Grid2.default.textNoWrap, _Grid2.default.table), columns: copyColumns,
+    rowSelection: selectedRowKeys ? rowSelection : null,
+    dataSource: dataSource, loading: loading, scroll: (0, _extends3.default)({}, scroll, { y: !(0, _lodash.isEmpty)(dataSource) && dataSource.length > 15 ? 500 : '' }),
+    pagination: paginationFlag ? pagination({ pageChange: pageChange, nameSpace: nameSpace, total: total, pageConfig: pageConfig, dispatch: dispatch }) : false });
+};
+
+//导出可编辑表格、通用表格
+var Grid = exports.Grid = (0, _dva.connect)()(TableComponent);

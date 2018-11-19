@@ -1,0 +1,59 @@
+@import '../../../config/basic.less';
+
+.treeTransferContainer {
+  display: flex;
+}
+.transferList {
+  flex: 1;
+  font-size: 13px;
+  border: 1px solid #e5e5e5;
+  display: inline-block;
+  border-radius: 3px;
+  vertical-align: middle;
+  position: relative;
+  // width: 180px;
+  height: 300px;
+  padding-top: 33px;
+  .transferHeader {
+    padding: 7px 15px;
+    border-radius: 3px 3px 0 0;
+    background: #fff;
+    color: #666;
+    border-bottom: 1px solid #f4f4f4;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: right;
+  }
+  .transferBody {
+    font-size: 13px;
+    position: relative;
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.transferOperation {
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0 8px;
+  justify-content: center;
+  button {
+    width: 30px;
+    padding: 0;
+    height: 32px;
+    line-height: 30px;
+    margin-bottom: 4px;
+  }
+}
+
+.notFound {
+  color: rgba(0, 0, 0, 0.25);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

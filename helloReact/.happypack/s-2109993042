@@ -1,0 +1,184 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _HeaderStyle = require('./HeaderStyle.less');
+
+var _HeaderStyle2 = _interopRequireDefault(_HeaderStyle);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 导出组件
+
+// 加载Component
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {};
+    return _this;
+  }
+
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {}
+
+    //准备：即将被重新渲染，状态未变化
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {}
+
+    // 已插入真实DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {}
+
+    //组件将被卸载
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {}
+
+    // 渲染选项卡
+
+  }, {
+    key: 'renderTabs',
+    value: function renderTabs() {
+      return _react2.default.Children.map(this.props.children, function (child, i) {
+        return _react2.default.cloneElement(child);
+      });
+    }
+
+    // 左滑
+
+  }, {
+    key: 'goLeft',
+    value: function goLeft(e) {
+      // 阻止事件冒泡
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      if (!!this.props.doGoLeft) {
+        this.props.doGoLeft();
+      }
+    }
+
+    // 右滑
+
+  }, {
+    key: 'goRight',
+    value: function goRight(e) {
+      // 阻止事件冒泡
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      if (!!this.props.doGoRight) {
+        this.props.doGoRight();
+      }
+    }
+
+    // 全部关闭
+
+  }, {
+    key: 'closeAllTabs',
+    value: function closeAllTabs(e) {
+      // 阻止事件冒泡
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      if (!!this.props.doCloseAll) {
+        this.props.doCloseAll();
+      }
+    }
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render(ReactElement, DOMElement, callback) {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        'div',
+        { className: _HeaderStyle2.default.header, style: { paddingLeft: '16px' } },
+        _react2.default.createElement(
+          'div',
+          { className: _HeaderStyle2.default.tabBarStyle },
+          this.renderTabs()
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: _HeaderStyle2.default.rightWarpper },
+          _react2.default.createElement(
+            'div',
+            { className: _HeaderStyle2.default.scroll, onClick: function onClick(e) {
+                _this2.closeAllTabs(e);
+              }, title: '\u5173\u95ED\u5168\u90E8' },
+            _react2.default.createElement('i', { className: 'iconfont icon-guanbiquanbu', style: { 'fontSize': '22px', 'color': '#999' } })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: _HeaderStyle2.default.scroll, onClick: function onClick(e) {
+                _this2.goLeft(e);
+              }, title: '\u5411\u5DE6\u6ED1\u52A8' },
+            _react2.default.createElement('i', { className: 'iconfont icon-back', style: { 'fontSize': '18px', 'color': '#999' } })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: _HeaderStyle2.default.scroll, onClick: function onClick(e) {
+                _this2.goRight(e);
+              }, title: '\u5411\u53F3\u6ED1\u52A8' },
+            _react2.default.createElement('i', { className: 'iconfont icon-forward', style: { 'fontSize': '18px', 'color': '#999' } })
+          )
+        )
+      );
+    }
+  }]);
+  return _default;
+}(_react.Component); // 加载React
+
+
+exports.default = _default;
+module.exports = exports['default'];

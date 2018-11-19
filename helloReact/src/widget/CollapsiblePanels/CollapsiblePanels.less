@@ -1,0 +1,36 @@
+@import "../../config/basic.less";
+.dlMain{
+  padding:0 !important;
+  :global{
+    dt{
+      line-height: 40px; padding:0 16px; .fontSize_3; .fontColor_2;
+      background: @uiColor_8; border-bottom: 1px @uiColor_7 solid;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      span{
+        float: right; .fontSize_6; .fontColor_3;
+        cursor: pointer;
+        i{transition:0.4s;}
+      }
+    }
+    dd{
+      transition: 0.4s;
+      overflow: hidden;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    dd.slideHide{
+      height: 0;
+      padding: 0;
+      padding-bottom: 4px;
+      transition: 0.4s;
+    }
+    dt.slideHide{
+      i{
+        transform: rotate(180deg);
+        transition:0.4s;
+        position: relative; top:-2px;
+      }
+    }
+  }
+}

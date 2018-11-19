@@ -1,0 +1,262 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _carousel = require('antd/lib/carousel');
+
+var _carousel2 = _interopRequireDefault(_carousel);
+
+var _badge = require('antd/lib/badge');
+
+var _badge2 = _interopRequireDefault(_badge);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+require('antd/lib/carousel/style');
+
+require('antd/lib/badge/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _qs = require('qs');
+
+var _router = require('dva/router');
+
+var _config = require('../../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _notification = require('../../../utils/notification');
+
+var _msgListStyle = require('./msgListStyle.less');
+
+var _msgListStyle2 = _interopRequireDefault(_msgListStyle);
+
+var _msgListServ = require('./msgListServ');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 导出组件
+
+
+// 站点配置
+// 加载React
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      // 我的消息列表
+      myMsgList: []
+    };
+    return _this;
+  }
+
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {}
+
+    //准备：即将被重新渲染，状态未变化
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {}
+
+    // 已插入真实DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var self = this;
+      self.getMsgList();
+    }
+
+    // 是否触发render函数
+
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      var self = this;
+      // 若不配置消息开关，则不渲染
+      if (!_config2.default.isMsgNotify) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    //组件将被卸载
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {}
+
+    // 获取消息列表
+
+  }, {
+    key: 'getMsgList',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        var result;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+
+                if (_config2.default.isMsgNotify) {
+                  _context.next = 3;
+                  break;
+                }
+
+                return _context.abrupt('return', false);
+
+              case 3:
+                _context.next = 5;
+                return (0, _msgListServ.myList)((0, _qs.parse)({ status: 0, pageNum: 1, pageSize: 5 }));
+
+              case 5:
+                result = _context.sent;
+
+
+                if ('0' === '' + result.resultCode) {
+                  // 设置到状态机
+                  this.setState({ myMsgList: result.data.list });
+                }
+
+                _context.next = 12;
+                break;
+
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context['catch'](0);
+
+                (0, _notification.messageInform)(_context.t0 || '未知的查询消息异常', 'error');
+
+              case 12:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 9]]);
+      }));
+
+      function getMsgList() {
+        return _ref.apply(this, arguments);
+      }
+
+      return getMsgList;
+    }()
+
+    // 渲染消息列表
+
+  }, {
+    key: 'renderMsgList',
+    value: function renderMsgList() {
+      // 消息列表不为空时
+      if (0 !== this.state.myMsgList.length) {
+        return _react2.default.createElement(
+          'div',
+          { className: _msgListStyle2.default.notice },
+          _react2.default.createElement('i', { className: 'iconfont icon-xiaoxi' }),
+          _react2.default.createElement(_badge2.default, { count: this.state.myMsgList.length, style: { backgroundColor: '#FFB840', right: '-13px', top: '-19px', width: '30px', boxShadow: 'none' } }),
+          _react2.default.createElement(
+            _carousel2.default,
+            { vertical: true, autoplay: true },
+            this.state.myMsgList && this.state.myMsgList.length > 0 && this.state.myMsgList.map(function (item, i) {
+              return _react2.default.createElement(
+                'div',
+                { key: 'msg_' + i },
+                _react2.default.createElement(
+                  _router.Link,
+                  { to: '/messageManage/myMessage' },
+                  item.title
+                )
+              );
+            })
+          )
+        );
+      } else {
+        if (_config2.default.isMsgNotify) {
+          return _react2.default.createElement(
+            'div',
+            { className: _msgListStyle2.default.notice, style: { width: 51 } },
+            _react2.default.createElement('i', { className: 'iconfont icon-xiaoxi' }),
+            _react2.default.createElement(_badge2.default, { count: this.state.myMsgList.length, style: { backgroundColor: '#FFB840', right: '-13px', top: '-19px', width: '30px', boxShadow: 'none' } })
+          );
+        } else {
+          return '';
+        }
+      }
+    }
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render(ReactElement, DOMElement, callback) {
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.renderMsgList()
+      );
+    }
+  }]);
+  return _default;
+}(_react.Component);
+// 弹出提示框
+
+// 引入antd的组件
+
+// 加载Component
+
+
+exports.default = _default;
+module.exports = exports['default'];

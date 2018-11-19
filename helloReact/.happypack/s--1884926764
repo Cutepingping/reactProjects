@@ -1,0 +1,142 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _defaultServ = require('./defaultServ.js');
+
+var _qs = require('qs');
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _lodash = require('lodash');
+
+var _router = require('dva/router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 初始默认状态
+
+/* isEmpty 对象是否为空
+ * isArray 对象是否数组
+ * cloneDeep 对象深拷贝
+ */
+
+
+// 对象和JSON字符串互转
+var defultState = {
+  xxx: '1'
+
+  // 声明module
+};
+// 引入路由对象
+
+// 日期处理对象
+
+// 弹出消息框
+// 引入接口文件
+var tmpModule = {
+  namespace: 'defaultModel',
+  // 默认状态
+  state: (0, _lodash.cloneDeep)(defultState),
+  // 入口函数(先执行)
+  subscriptions: {
+    setup: function setup(_ref) {
+      var dispatch = _ref.dispatch,
+          history = _ref.history;
+
+      history.listen(function (_ref2) {
+        var pathname = _ref2.pathname,
+            query = _ref2.query;
+
+        // 页面路由匹配时执行
+        if ('' + tmpModule.pathname === '' + pathname) {
+          // 执行业务操作
+          dispatch({
+            type: 'queryInfo',
+            payload: {}
+          }); // end dispatch
+        } // end if
+      }); // end listen
+    }
+  },
+
+  // 方法列表
+  effects: {
+    // 查询记录
+    queryInfo: /*#__PURE__*/_regenerator2.default.mark(function queryInfo(_ref3, _ref4) {
+      var payload = _ref3.payload;
+      var put = _ref4.put,
+          call = _ref4.call,
+          select = _ref4.select;
+
+      var tmpState, _ref5, data, resultCode, resultMsg;
+
+      return _regenerator2.default.wrap(function queryInfo$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+
+              // 中断往下执行，以下是示例代码，代码生成后去掉 return false可继续执行
+              console.log('this is default');
+              // 获取当前组件状态机中的数据，也可以获取其他组件的状态机数据，只要他们被创建过
+              _context.next = 4;
+              return select(function (state) {
+                return state[tmpModule.namespace];
+              });
+
+            case 4:
+              tmpState = _context.sent;
+              _context.next = 7;
+              return call(_defaultServ.getMember, (0, _qs.parse)({ xxx: "1" }));
+
+            case 7:
+              _ref5 = _context.sent;
+              data = _ref5.data;
+              resultCode = _ref5.resultCode;
+              resultMsg = _ref5.resultMsg;
+              _context.next = 13;
+              return put({ // 调用reducers中方法，把新数据与状态机数据合并更新
+                type: 'updateStore', // 方法名，也可以调用effects中的方法
+                payload: {
+                  xxx: data
+                }
+              });
+
+            case 13:
+              _context.next = 18;
+              break;
+
+            case 15:
+              _context.prev = 15;
+              _context.t0 = _context['catch'](0);
+
+              console.error(_context.t0);
+
+            case 18:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, queryInfo, this, [[0, 15]]);
+    })
+  },
+
+  // 存入状态机
+  reducers: {
+    updateStore: function updateStore(preState, action) {
+      return Object.assign({}, preState, action.payload);
+    }
+  }
+};
+
+exports.default = tmpModule;
+module.exports = exports['default'];

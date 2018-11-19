@@ -1,0 +1,104 @@
+/**
+ * @(#) 0.1.0 2018-01-01
+ * Copyright (c) 2018, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+@import '~config/basic.less';
+
+/* 清除浮动 */
+.content{
+  margin:0px;
+  padding: 20px;
+  text-align:left;
+  img{
+     border-style: none; 
+     display: inline-block;
+  }
+}
+.ksClear,.clear{
+    &:after, &:after {
+        content: '\20';
+        display: block;
+        height: 0;
+        clear: both;
+      }
+    .topImg{
+        width: 500px;
+        height: 500px;
+        float: left;
+        background-color: aliceblue
+    }
+    *zoom: 1;
+}
+
+.topContent{
+    float: left;
+    padding: 10px 0 10px 50px;
+    h3{
+        font-size: 22px;
+        margin:0 auto 30px 10px;
+    }
+    h2{
+        font-size: 32px;
+        color: coral;
+        margin: auto auto 30px 20px;
+    }
+    p{
+        font-size: 15px;
+        color: #a49d9d;
+        margin-top: 20px;
+        span{
+            background-color: #F8F8FF;
+            margin-right: 30px;
+            padding: 10px;
+        }
+    }
+}
+.goodsDetails{
+    background-color: #F8F8FF;
+    padding: 20px 0 10px 30px;
+    font-size: 15px;
+    color: #a49d9d;
+    width: 450px;
+    .goodsItems{
+        margin-bottom: 20px; 
+    }
+}
+.imgShows{
+    margin-top: 20px;
+    img{
+        width: 100px;
+        height: 100px;
+        margin-right: 15px;
+        background-color: aliceblue;
+    }
+}
+.goodsInfo, .brandInfo{
+    h5{
+        font-size: 18px;
+        font-weight: bold;
+    }
+    p{
+        font-size: 16px;
+    }
+    .title{
+        background-color: #F8F8FF;
+        padding: 10px 15px;
+        margin-top: 15px;
+    }
+    .content{
+        height: 200px;
+    }
+}
+.brandInfo{
+    margin-top: 20px;
+    img{
+        width: 100%;
+        height:300px;
+        background-color: aliceblue;
+        margin-top: 15px;
+    }
+}
+
+
+  

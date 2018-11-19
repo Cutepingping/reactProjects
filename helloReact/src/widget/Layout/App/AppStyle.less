@@ -1,0 +1,223 @@
+@import "../../../css/vars.less";
+@import "../../../css/basic.less";
+
+:global {
+  .layout-ns-g {
+    .layout {
+      position: relative;
+      height: 100vh;
+
+      &.withnavbar {
+        .main {
+          margin-left: 0;
+        }
+      }
+
+      &.fold {
+        .sider {
+          width: 48px;
+
+          .logo {
+            img {
+              width: 28px;
+              margin: 6px 7px;
+            }
+          }
+
+          .button.down{
+            width: 48px;
+            height: 68px;
+            position: absolute;
+            bottom: -38px;
+            //background-color: #2B3150;
+            //color: #fff;
+            text-align: center;
+            line-height: 49px;
+            cursor: pointer;
+          }
+
+          :global {
+            .ant-menu-root {
+              width: 100%;
+              overflow: visible;
+              position: absolute;
+              z-index: -1;
+
+              & > .ant-menu-item {
+                padding: 0;
+                text-align: center;
+
+                .anticon {
+                  font-size: 14px;
+                  margin-right: 0;
+                }
+              }
+
+              & > .ant-menu-submenu {
+                & > .ant-menu-submenu-title {
+                  padding: 0;
+                  text-align: center;
+
+                  .anticon {
+                    font-size: 14px;
+                    margin-right: 0;
+                  }
+
+                  &::after {
+                    display: none;
+                  }
+
+                }
+              }
+            }
+          }
+        }
+
+        .main {
+          margin-left: 48px;
+        }
+      }
+
+      .main {
+        margin-left: 220px;
+        transition: @transition-ease-out;
+        padding-top:65px;
+
+        :global {
+          .content-inner {
+            background: #fff;
+            padding: 24px;
+            box-shadow: @shadow-1;
+            min-height: e("calc(100vh - 184px)");
+          }
+        }
+
+        .container {
+          margin: 16px;
+        }
+
+        .content {
+          min-height: e("calc(100vh - 184px)");
+          position: relative;
+        }
+      }
+      .sider {
+        width: 220px;
+        background: #1F2543;
+        position: fixed;
+        top:65px; left:0;
+        overflow: visible;
+        padding-bottom: 24px;
+        height: e("calc(100vh - 100px)");
+        transition: @transition-ease-out;
+        box-shadow: @shadow-1;
+        z-index: 299;
+        color: #999;
+
+        :global{
+          .ant-menu-root {
+            height: e("calc(100vh - 65px)");
+            overflow-x: hidden;
+            border-right: none;
+
+
+            &::-webkit-scrollbar-thumb {
+              background-color: transparent;
+            }
+
+            &:hover {
+              &::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.2);
+              }
+            }
+
+            &.ant-menu-vertical {
+              .ant-menu-sub {
+                height: 0;
+                opacity: 0;
+                transition: none;
+                background-color: @uiColor_4;
+                .ant-menu-item > a{
+                  left: 0;
+                }
+              }
+
+              .ant-menu-submenu-active {
+                .ant-menu-sub {
+                  height: auto;
+                  opacity: 1;
+                  margin-left: 12px;
+                  &:before{
+                    content: '';
+                    position: absolute;
+                    border: 7px solid;
+                    border-color: transparent @uiColor_4 transparent transparent;
+                    width: 0;
+                    height: 0;
+                    top: 15px;
+                    left: -14px;
+
+
+                  }
+                }
+
+              }
+            }
+          }
+        }
+      }
+    }
+
+    :global .ant-menu.white-theme {
+      color: @blue;
+      .ant-menu-submenu-title {
+        color: @blue;
+      }
+      .ant-menu-item > a {
+        color: rgba(255, 255, 255, 0.5)
+      }
+    }
+
+    @media (max-width: 767px) {
+      .layout {
+        .sider{
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          .container {
+            margin: 12px;
+          }
+
+          .bread {
+            padding: 0 12px;
+          }
+
+          .content {
+            min-height: e("calc(100vh - 160px)");
+          }
+
+          :global {
+            .content-inner {
+              padding: 12px;
+              min-height: e("calc(100vh - 160px)");
+            }
+          }
+        }
+      }
+    }
+
+    .hide{
+      display: none;
+    }
+    .show{
+      display: block;
+    }
+  } // end layout-ns-g
+}
+
+
+.container {
+  margin: 16px;
+  min-height:e('calc(100vh - 162px)');
+}

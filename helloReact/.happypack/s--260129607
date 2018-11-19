@@ -1,0 +1,354 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _dropdown = require('antd/lib/dropdown');
+
+var _dropdown2 = _interopRequireDefault(_dropdown);
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _menu = require('antd/lib/menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+require('antd/lib/dropdown/style');
+
+require('antd/lib/icon/style');
+
+require('antd/lib/menu/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _config = require('../../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _orgListStyle = require('./orgListStyle.less');
+
+var _orgListStyle2 = _interopRequireDefault(_orgListStyle);
+
+var _orgListServ = require('./orgListServ');
+
+var _globalScope = require('../../../utils/globalScope');
+
+var _notification = require('../../../utils/notification');
+
+var _lodash = require('lodash');
+
+var _router = require('dva/router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 导出组件
+
+// 样式管理器
+
+
+// 引入antd的组件
+// 加载React
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      // 组织机构列表
+      userOrgList: [],
+      // 当前组织机构
+      currentOrg: ''
+    };
+    return _this;
+  }
+
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {}
+
+    //准备：即将被重新渲染，状态未变化
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {}
+
+    // 已插入真实DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.getOrgList();
+    }
+
+    //组件将被卸载
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {}
+
+    // 是否触发render函数
+
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      var self = this;
+      // 若不配置组织机构开关，则不渲染
+      if (!_config2.default.isMultiOrg) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    // 获取组织机构列表
+
+  }, {
+    key: 'getOrgList',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        var userInfo, orgList, currOrgId, result;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+
+                if (_config2.default.isMultiOrg) {
+                  _context.next = 3;
+                  break;
+                }
+
+                return _context.abrupt('return', false);
+
+              case 3:
+                if (!_config2.default.isB2bLogin) {
+                  _context.next = 10;
+                  break;
+                }
+
+                userInfo = (0, _globalScope.getLocalData)(_config2.default.userInfoKey);
+                orgList = (0, _lodash.get)(userInfo, 'data.orgList', []);
+                currOrgId = (0, _lodash.get)(userInfo, 'data.orgId', '');
+
+                this.setState({
+                  userOrgList: orgList,
+                  currentOrg: currOrgId
+                });
+                _context.next = 14;
+                break;
+
+              case 10:
+                _context.next = 12;
+                return (0, _orgListServ.getUserOrg)();
+
+              case 12:
+                result = _context.sent;
+
+
+                if ('0' === '' + result.resultCode) {
+                  this.setState({
+                    userOrgList: result.data,
+                    currentOrg: (0, _lodash.get)(result, 'data.orgInfo.orgName', '')
+                  });
+                }
+
+              case 14:
+                _context.next = 19;
+                break;
+
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context['catch'](0);
+
+                (0, _notification.messageInform)(_context.t0 || '未知的查询组织异常', 'error');
+
+              case 19:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 16]]);
+      }));
+
+      function getOrgList() {
+        return _ref.apply(this, arguments);
+      }
+
+      return getOrgList;
+    }()
+    //组织切换
+
+  }, {
+    key: 'orgChange',
+    value: function orgChange(v) {
+      var currentOrg = this.state.currentOrg;
+
+      if (currentOrg + '' === v + '') {
+        return;
+      }
+      var userInfo = (0, _globalScope.getLocalData)(_config2.default.userInfoKey);
+      var orgList = (0, _lodash.get)(userInfo, 'data.orgList', []);
+      if (userInfo) {
+        userInfo.data.orgId = v;
+        (0, _globalScope.setLocalData)(_config2.default.userInfoKey, userInfo);
+        //刷新页面
+        location.reload();
+      }
+    }
+
+    // 渲染组织机构列表
+
+  }, {
+    key: 'renderOrgList',
+    value: function renderOrgList() {
+      var _this2 = this;
+
+      var _state = this.state,
+          userOrgList = _state.userOrgList,
+          currentOrg = _state.currentOrg;
+
+
+      if (_config2.default.isMultiOrg) {
+        var orgListMenu = _react2.default.createElement(
+          _menu2.default,
+          { onClick: function onClick(e) {
+              return _this2.orgChange(e.key);
+            } },
+          currentOrg && userOrgList && userOrgList.length > 0 ? userOrgList.map(function (item, index) {
+            return _react2.default.createElement(
+              _menu2.default.Item,
+              { key: item.id + '' },
+              item.name
+            );
+          }) : _react2.default.createElement(
+            _menu2.default.Item,
+            { key: 'default' },
+            '\u96C6\u56E2'
+          )
+        );
+
+        return _react2.default.createElement(
+          'div',
+          { className: (0, _classnames2.default)(_orgListStyle2.default.org, 'mg2r') },
+          _config2.default.sysType === 'entCenter' || _react2.default.createElement(
+            'div',
+            { className: _orgListStyle2.default.tableCell },
+            _react2.default.createElement('span', { className: (0, _classnames2.default)('ant-divider') })
+          ),
+          _config2.default.sysType === 'entCenter' ? _react2.default.createElement(
+            'div',
+            { className: _orgListStyle2.default.tableCell },
+            '\u60A8\u597D\uFF0C',
+            _react2.default.createElement(
+              _dropdown2.default,
+              { overlay: orgListMenu,
+                getPopupContainer: function getPopupContainer() {
+                  return document.getElementById('routerApp_headRight');
+                } },
+              _react2.default.createElement(
+                'span',
+                null,
+                currentOrg ? (0, _lodash.get)((0, _lodash.find)(userOrgList, function (item) {
+                  return item.id + '' === currentOrg + '';
+                }), 'name', '集团') : '集团',
+                _react2.default.createElement(_icon2.default, { className: 'mg1l', style: { fontSize: 10 }, type: 'caret-down' })
+              )
+            )
+          ) : _react2.default.createElement(
+            'div',
+            { className: _orgListStyle2.default.tableCell },
+            _react2.default.createElement(
+              'a',
+              { className: 'ant-dropdown-link block', title: currentOrg, style: { maxWidth: 240, paddingLeft: 8 } },
+              _react2.default.createElement(
+                'span',
+                { style: { maxWidth: 210 }, className: 'ellipsis iblock' },
+                currentOrg
+              )
+            )
+          )
+        );
+      } else {
+        return '';
+      }
+    }
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render(ReactElement, DOMElement, callback) {
+      return _react2.default.createElement(
+        'div',
+        null,
+        ' ',
+        this.renderOrgList(),
+        ' '
+      );
+    }
+  }]);
+  return _default;
+}(_react.Component);
+// 弹出提示框
+
+
+// 站点配置
+
+// 加载Component
+
+
+exports.default = _default;
+module.exports = exports['default'];

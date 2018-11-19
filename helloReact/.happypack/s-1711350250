@@ -1,0 +1,73 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TableMove = function (_Component) {
+  (0, _inherits3.default)(TableMove, _Component);
+
+  function TableMove(props) {
+    (0, _classCallCheck3.default)(this, TableMove);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (TableMove.__proto__ || Object.getPrototypeOf(TableMove)).call(this, props));
+
+    _this.cb = _this.cb.bind(_this);
+    return _this;
+  }
+  //组件卸载时解绑键盘事件
+
+
+  (0, _createClass3.default)(TableMove, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      document.removeEventListener('keydown', this.cb);
+    }
+    //组件挂载时绑定键盘事件
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.addEventListener('keydown', this.cb);
+    }
+  }, {
+    key: 'cb',
+    value: function cb(e) {
+      this.props.cb(e.keyCode);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement('div', null);
+    }
+  }]);
+  return TableMove;
+}(_react.Component); /**
+                      * 这个组件由于处理列表项上移下移的键盘事件绑定与解绑
+                      * @prop {[function]} cb [传入列表项移动的方法，接收一个keyCode参数]
+                      */
+
+exports.default = TableMove;
+module.exports = exports['default'];

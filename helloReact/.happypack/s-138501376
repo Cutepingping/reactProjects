@@ -1,0 +1,55 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+exports.request = request;
+
+var _utils = require('../utils');
+
+var _config = require('./config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _globalScope = require('../utils/globalScope');
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+ * 请求
+ *
+ * @author 苏离
+ * @since 0.5.1
+ */
+//项目统一处理，例如对不同service使用不同host
+/**
+ * @(#)request.js 0.5.1 2017-09-13
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+function request(option) {
+  var autoErrHandleFlag = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var url = option.url;
+
+  if (url.indexOf("http") >= 0) {
+    option.url = url;
+  } else {
+    option.url = _config2.default.baseUrl + url;
+  }
+  option.headers = (0, _extends3.default)({}, option.headers, {
+    orgId: (0, _globalScope.getLocalData)('currentOrg'),
+    unitId: (0, _globalScope.getLocalData)('currentUnitId'),
+    channelId: _jsCookie2.default.get(_config2.default.cookie.userName + '_channel')
+  });
+
+  return (0, _utils.request)(option, autoErrHandleFlag);
+}

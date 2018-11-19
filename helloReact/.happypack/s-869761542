@@ -1,0 +1,2054 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _table = require('antd/lib/table');
+
+var _table2 = _interopRequireDefault(_table);
+
+var _row = require('antd/lib/row');
+
+var _row2 = _interopRequireDefault(_row);
+
+var _cascader = require('antd/lib/cascader');
+
+var _cascader2 = _interopRequireDefault(_cascader);
+
+var _treeSelect = require('antd/lib/tree-select');
+
+var _treeSelect2 = _interopRequireDefault(_treeSelect);
+
+var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _col = require('antd/lib/col');
+
+var _col2 = _interopRequireDefault(_col);
+
+var _input = require('antd/lib/input');
+
+var _input2 = _interopRequireDefault(_input);
+
+var _button = require('antd/lib/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _popconfirm = require('antd/lib/popconfirm');
+
+var _popconfirm2 = _interopRequireDefault(_popconfirm);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _message2 = require('antd/lib/message');
+
+var _message3 = _interopRequireDefault(_message2);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _datePicker = require('antd/lib/date-picker');
+
+var _datePicker2 = _interopRequireDefault(_datePicker);
+
+var _tabs = require('antd/lib/tabs');
+
+var _tabs2 = _interopRequireDefault(_tabs);
+
+var _tree = require('antd/lib/tree');
+
+var _tree2 = _interopRequireDefault(_tree);
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+var _select = require('antd/lib/select');
+
+var _select2 = _interopRequireDefault(_select);
+
+var _checkbox = require('antd/lib/checkbox');
+
+var _checkbox2 = _interopRequireDefault(_checkbox);
+
+var _radio = require('antd/lib/radio');
+
+var _radio2 = _interopRequireDefault(_radio);
+
+require('antd/lib/table/style');
+
+require('antd/lib/row/style');
+
+require('antd/lib/cascader/style');
+
+require('antd/lib/tree-select/style');
+
+require('antd/lib/col/style');
+
+require('antd/lib/input/style');
+
+require('antd/lib/button/style');
+
+require('antd/lib/popconfirm/style');
+
+require('antd/lib/message/style');
+
+require('antd/lib/date-picker/style');
+
+require('antd/lib/tabs/style');
+
+require('antd/lib/tree/style');
+
+require('antd/lib/form/style');
+
+require('antd/lib/select/style');
+
+require('antd/lib/checkbox/style');
+
+require('antd/lib/radio/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _dva = require('dva');
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _lodash = require('lodash');
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _router = require('dva/router');
+
+var _qs = require('qs');
+
+var _qs2 = _interopRequireDefault(_qs);
+
+var _config = require('config/config');
+
+var _request = require('config/request');
+
+var _index = require('./index.less');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _TableMove = require('widget/TableMove/TableMove');
+
+var _TableMove2 = _interopRequireDefault(_TableMove);
+
+var _util = require('utils/util');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 单选按钮组
+
+// 选项卡、表格、弹出确认框
+// React基础组件
+var RadioGroup = _radio2.default.Group;
+// 复选按钮组
+
+// dva 连接组件 - 连接route和model
+var CheckboxGroup = _checkbox2.default.Group;
+// 下拉选项
+var Option = _select2.default.Option;
+// 下拉分组
+var OptGroup = _select2.default.OptGroup;
+// 获取样式类名
+
+// 表单域
+var FormItem = _form2.default.Item;
+// 判断对象是否为空
+
+// 日期处理对象
+
+// 日期格式
+var dateFormat = 'YYYY-MM-DD';
+// 时间格式
+var dateTime = 'HH:mm:ss';
+// 单页应用链接
+
+// 树目录
+var TreeNode = _tree2.default.TreeNode;
+// 选项卡面板
+var TabPane = _tabs2.default.TabPane;
+// 日期组件
+
+var MonthPicker = _datePicker2.default.MonthPicker,
+    RangePicker = _datePicker2.default.RangePicker;
+// 地址栏解析
+
+// 对象字符串互转
+
+// 列表配置
+
+// 引入异步请求
+
+// 引入当前页样式
+
+// 引入路由对象
+
+// 键盘上下移排序
+
+// 获取地址栏参数，?a=1&b=2 转为对象
+
+var ListPage = function (_Component) {
+  (0, _inherits3.default)(ListPage, _Component);
+
+  // 构造函数
+  function ListPage(props, context) {
+    (0, _classCallCheck3.default)(this, ListPage);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (ListPage.__proto__ || Object.getPrototypeOf(ListPage)).call(this, props, context));
+
+    _this.state = {
+      // 地址栏参数
+      query: '',
+      // ---------- 界面部分 ----------
+      ui: {
+        // 查询栏
+        search_bar: {},
+        // 列表表格
+        table: [],
+        // 操作栏
+        action_bar: []
+      },
+
+      // --------- 业务部分 ----------
+      biz: {
+        // 当前选项卡键值
+        currTabKey: '0',
+        // 当前选中行
+        currRow: '',
+
+        // 复选框选中行数据
+        selectedRows: [],
+        // 复选框选中行的键
+        selectedRowKeys: [],
+        // 表格移动对象
+        move: {},
+        // 角标数组
+        badgeList: [],
+        // 查询表单
+        queryForm: {},
+        // 列表数据
+        tableData: {
+          //表头字段
+          columns: [],
+          // 表格数据
+          dataSource: [],
+          // 分页条
+          pagination: {
+            defaultCurrent: 1,
+            defaultPageSize: 10,
+            current: 1,
+            pageSize: 10,
+            total: 0,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            // 针对长安福特的修改, 不少表格要求默认显示5条
+            pageSizeOptions: ['5', '10', '20', '30', '40']
+          }
+        }
+      }
+    };
+    return _this;
+  }
+
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(ListPage, [{
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var oldBiz = (0, _lodash.get)(this.state, 'biz', null);
+      var newBiz = (0, _lodash.get)(nextProps, 'pageProps.biz', null);
+      var currBiz = (0, _lodash.merge)(oldBiz, newBiz);
+
+      // 设置当前选中tab
+      // let tmpKey = this.getPropsTabKey(nextProps)
+      // currBiz.currTabKey = tmpKey
+
+      // 获取配置信息
+
+      var _getCfgData = this.getCfgData(null, nextProps),
+          actions = _getCfgData.actions,
+          fields = _getCfgData.fields,
+          actionProps = _getCfgData.actionProps;
+      // 重新设置表头
+
+
+      currBiz.tableData.columns = this.getListColumns(fields, actions, actionProps);
+      // console.log('Receive')
+      // 同步回状态机
+      this.setState({ biz: currBiz });
+    }
+
+    //组件将被卸载
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var key = (0, _lodash.get)(this.props, 'pageProps.ui.listNamespace', '');
+      if (!!key) {
+        var biz = this.state.biz;
+        var currTabKey = biz.currTabKey,
+            tableData = biz.tableData;
+
+        var tmpObj = {
+          current: tableData.pagination.current,
+          pageSize: tableData.pagination.pageSize,
+          currKey: currTabKey
+        };
+        sessionStorage.setItem(generateMD5(key), JSON.stringify(tmpObj));
+      }
+      if (_config.noTab) {
+        this.onReset();
+      }
+      //重写组件的setState方法，直接返回空
+      this.setState = function (state, callback) {
+        return;
+      };
+    }
+
+    // 获取链接URL
+
+  }, {
+    key: 'getLinkUrl',
+    value: function getLinkUrl(record, linkObj) {
+      var linkUrl = '',
+          linkParams = {},
+          tmpObj = {};
+
+      // 参数转为对象
+      if (!!linkObj.params) {
+        linkParams = _qs2.default.parse(linkObj.params);
+      }
+
+      var tmpVal = '';
+      // 参数合并
+      if (!(0, _lodash.isEmpty)(linkParams)) {
+        Object.keys(linkParams).map(function (key, i) {
+          tmpVal = (0, _lodash.get)(record, '' + key, null);
+          if (!!tmpVal) {
+            tmpObj[key] = tmpVal;
+          } else {
+            tmpObj[key] = linkParams[key];
+          }
+        });
+      }
+
+      // 拼接成完整的URL
+      if (!(0, _lodash.isEmpty)(tmpObj)) {
+        linkUrl = linkObj.url + '?' + _qs2.default.stringify(tmpObj);
+      } else {
+        linkUrl = linkObj.url;
+      }
+      return linkUrl;
+    }
+
+    // 跳转URL
+
+  }, {
+    key: 'goURL',
+    value: function goURL(e, url) {
+      // 作用域提升
+      var self = this;
+
+      if (!!e) {
+        // 阻止冒泡
+        e.preventDefault();
+        e.nativeEvent.stopImmediatePropagation();
+      }
+
+      // 清空表单
+      this.props.form.resetFields();
+      // 跳转到新的路由
+      _router.hashHistory.push(url);
+      return false;
+    }
+
+    // 删除点击
+
+  }, {
+    key: 'onDelete',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(e, item, urlObj) {
+        var self, tmpObj, tmpVal, result;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                // 作用域提升
+                self = this, tmpObj = urlObj.params;
+
+                // 字符串转对象
+
+                if ("[object String]" === "" + Object.prototype.toString.call(urlObj.params)) {
+                  tmpObj = _qs2.default.parse(urlObj.params);
+                }
+
+                tmpVal = '';
+                // 附加动态参数
+
+                if (!(0, _lodash.isEmpty)(tmpObj)) {
+                  Object.keys(tmpObj).map(function (tKey, i) {
+                    tmpVal = (0, _lodash.get)(item, '' + tKey, null);
+                    if (!!tmpVal) {
+                      tmpObj[tKey] = tmpVal;
+                    }
+                  });
+                }
+                // 删除结果
+                _context.next = 6;
+                return self.doBizRequest(urlObj.api_url, tmpObj || {}, urlObj.method || 'GET');
+
+              case 6:
+                result = _context.sent;
+
+
+                // 删除成功，重新加载数据
+                if ('0' === '' + result.resultCode) {
+                  _message3.default.success('操作成功');
+                  self.getListDatas();
+                } else {
+                  // message.error(result.resultMsg || '未知的删除记录异常')
+                }
+
+              case 8:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function onDelete(_x, _x2, _x3) {
+        return _ref.apply(this, arguments);
+      }
+
+      return onDelete;
+    }()
+
+    // 新增按钮点击
+
+  }, {
+    key: 'onButtonClick',
+    value: function onButtonClick(e, url) {
+      // 作用域提升
+      var self = this;
+      // 跳转URL
+      self.goURL(e, url);
+    }
+
+    // 获得新的输入值
+
+  }, {
+    key: 'getNewVal',
+    value: function getNewVal(val) {
+      var newVal = (0, _lodash.cloneDeep)(val);
+      if ('[object String]' === '' + Object.prototype.toString.call(newVal)) {
+        if (-1 !== newVal.indexOf(',')) {
+          newVal = newVal.split(',');
+        }
+      } else if ('[object Array]' === '' + Object.prototype.toString.call(newVal)) {
+        newVal = val;
+      }
+      return newVal;
+    }
+
+    // 查询表单设值
+
+  }, {
+    key: 'setSearchModel',
+    value: function setSearchModel(qFieldName, val, split_keys) {
+      var self = this,
+          biz = self.state.biz,
+          newVal = this.getNewVal(val);
+
+      // 分割的键值
+      if (!!split_keys && split_keys.length > 0) {
+        split_keys.map(function (k, i) {
+          biz.queryForm[k] = newVal[i];
+        });
+      } else {
+        biz.queryForm[qFieldName] = newVal;
+      }
+
+      var syncBackCbf = (0, _lodash.get)(self.props.pageProps, 'biz.syncBackCbf', null);
+      // 设置到状态机，并同步到父组件
+      self.setState({ biz: biz }, function () {
+        if (!!syncBackCbf) {
+          syncBackCbf(biz);
+        }
+      });
+    }
+  }, {
+    key: 'disabledDate',
+    value: function disabledDate(type, value, item) {
+      var result = false;
+      if ((0, _lodash.isEmpty)(item)) {
+        result = false;
+      } else {
+        if (type === 'start') {
+          //如果是开始时间，需要校验结束时间
+          if (item[1]) {
+            result = value.startOf('month').valueOf() >= (0, _moment2.default)(item[1]).valueOf();
+          }
+        } else {
+          //如果是结束时间，需要校验开始时间
+          if (item[0]) {
+            result = value.startOf('month').valueOf() <= (0, _moment2.default)(item[0]).valueOf();
+          }
+        }
+      }
+
+      return result;
+    }
+    // 查询年月组件设值
+
+  }, {
+    key: 'setMonthModel',
+    value: function setMonthModel(qField, val, split_key) {
+      var self = this,
+          biz = self.state.biz,
+          newVal = this.getNewVal(val);
+      // 分割的键值
+      if (!!qField.split_keys && qField.split_keys.length > 0) {
+        qField.split_keys.map(function (k, i) {
+          if (qField.elem_type == 'Month' && split_key == k) {
+            biz.queryForm[k] = newVal;
+          }
+        });
+      }
+      var syncBackCbf = (0, _lodash.get)(self.props.pageProps, 'biz.syncBackCbf', null);
+      // 设置到状态机，并同步到父组件
+      self.setState({ biz: biz }, function () {
+        if (!!syncBackCbf) {
+          syncBackCbf(biz);
+        }
+      });
+    }
+
+    // 查询记录
+
+  }, {
+    key: 'onSearch',
+    value: function onSearch(e) {
+      var self = this;
+      e.preventDefault();
+      self.props.form.validateFieldsAndScroll(function (err, values) {
+        if (!err) {
+          var searchHandler = (0, _lodash.get)(self.props, 'pageProps.ui.search_bar.searchHandler', null);
+          if (!!searchHandler) {
+            searchHandler();
+          }
+          self.getListDatas();
+        }
+      });
+    }
+
+    // 重置查询条件
+
+  }, {
+    key: 'onReset',
+    value: function onReset(e) {
+      var self = this;
+      if (!!e) {
+        e.preventDefault();
+      }
+      // 清空form
+      this.props.form.resetFields();
+      var biz = this.state.biz;
+      biz.queryForm = {};
+      // 清空状态机
+      this.setState({ biz: biz }, function () {
+        var resetHandler = (0, _lodash.get)(self.props, 'pageProps.ui.search_bar.resetHandler', null);
+        if (!!resetHandler) {
+          resetHandler();
+        }
+      });
+    }
+
+    // 删除记录
+
+  }, {
+    key: 'onRemove',
+    value: function onRemove(item) {
+      e.preventDefault();
+    }
+
+    // 展示表格条件 - 避免重复渲染
+
+  }, {
+    key: 'showTable',
+    value: function showTable() {
+      var cLen = (0, _lodash.get)(this.state.biz, 'tableData.columns.length', 0);
+      var dLen = (0, _lodash.get)(this.state.biz, 'tableData.dataSource.length', 0);
+      return cLen > 0 && dLen > 0;
+    }
+
+    // 请求业务系统
+
+  }, {
+    key: 'doBizRequest',
+    value: function doBizRequest(url, params, method, headers) {
+      var self = this;
+      // 返回Promise
+      return (0, _request.request)({
+        url: '' + url,
+        method: '' + (method || 'GET'),
+        data: params
+      }).then(function (result) {
+        // 执行requestHandler函数
+        var requestHandler = (0, _lodash.get)(self.props, 'pageProps.ui.requestHandler', null);
+        if (!!requestHandler) {
+          requestHandler();
+        }
+        // 将从接口请求获得的数据传递下去
+        return result;
+      });
+    }
+
+    // 获取链接数组
+
+  }, {
+    key: 'getListLinks',
+    value: function getListLinks(record, links) {
+      // 作用域提升
+      var self = this;
+      // 链接列表
+      var linkDomArr = [];
+      //  临时链接
+      var tmpLink = null;
+
+      if ((0, _lodash.isArray)(links) && links.length > 0) {
+        links.map(function (link, i) {
+          tmpLink = self.getLinkUrl(record, link);
+
+          if ('onDelete' == '' + link.func_name) {
+            linkDomArr.push(_react2.default.createElement(
+              _popconfirm2.default,
+              { key: 'link1_' + i, Collapse: true, title: '\u786E\u5B9A\u8981\u5220\u9664\u5417\uFF1F', okText: '\u786E\u5B9A', cancelText: '\u53D6\u6D88', onConfirm: function onConfirm(e) {
+                  self.onDelete(e, record, link);
+                } },
+              _react2.default.createElement(
+                _router.Link,
+                null,
+                '\u5220\u9664'
+              )
+            ));
+          } else {
+            if ((0, _lodash.has)(link, 'onClick')) {
+              linkDomArr.push(_react2.default.createElement(
+                'a',
+                { key: 'link1_' + i, href: 'javascript:;', onClick: function onClick(e) {
+                    return link.onClick(e, record);
+                  } },
+                link.label
+              ));
+            } else if ((0, _lodash.has)(link, 'render')) {
+              linkDomArr.push(_react2.default.cloneElement(link.render(record), { key: 'link1_' + i }));
+            } else {
+              linkDomArr.push(_react2.default.createElement(
+                _router.Link,
+                { key: 'link1_' + i, to: tmpLink },
+                link.label
+              ));
+            }
+          }
+          // linkDomArr.push(<Link key={'link1_' + i} to={tmpLink}>{link.label}</Link>)
+          linkDomArr.push(_react2.default.createElement('span', { key: 'link2_' + i, className: (0, _classnames2.default)("ant-divider") }));
+        });
+      }
+      return linkDomArr;
+    }
+
+    // 列表页面操作
+
+  }, {
+    key: 'getListActions',
+    value: function getListActions(actions, actionProps) {
+      // 作用域提升
+      var self = this;
+
+      // 操作栏对象
+      return {
+        title: "操作",
+        width: (0, _lodash.get)(actionProps, 'width', 170),
+        fixed: (0, _lodash.get)(actionProps, 'fixed', false),
+        render: function render(text, record, index) {
+          // 以下jsx语法
+          return _react2.default.createElement(
+            'div',
+            { className: 'tableAction' },
+            self.getListLinks(record, actions)
+          );
+        }
+      };
+    }
+
+    // 获取列表页面表头
+
+  }, {
+    key: 'getListColumns',
+    value: function getListColumns(fields, actions, actionProps) {
+      // 作用域提升
+      var self = this;
+      // 表头字段数组
+      var list_columns = [];
+      // 空值判断
+      if (!fields || 0 === fields.length) return [];
+      // 临时字段对象
+      var tmpFieldObj = null,
+          pickObj = {},
+          exKeys = ['en_name', 'zh_name'];
+      // 遍历列表字段
+      fields.map(function (lFiels, i) {
+        tmpFieldObj = {
+          title: lFiels.zh_name || '',
+          dataIndex: lFiels.en_name || '',
+          key: lFiels.en_name || ''
+        };
+
+        Object.keys(lFiels).map(function (key, j) {
+          if (!(0, _lodash.includes)(exKeys, key)) {
+            tmpFieldObj[key] = lFiels[key];
+          }
+        });
+
+        if (!!lFiels.is_link) {
+          tmpFieldObj.render = function (text, record, index) {
+            if (!!record.url) {
+              return _react2.default.createElement(
+                _router.Link,
+                { to: record.url },
+                text
+              );
+            } else {
+              return _react2.default.createElement(
+                'span',
+                null,
+                text
+              );
+            }
+          };
+        }
+        list_columns.push(tmpFieldObj);
+      });
+
+      if (actions.length > 0) {
+        // 附加操作链接
+        list_columns.push(self.getListActions(actions, actionProps));
+      }
+
+      // 返回表头
+      return list_columns;
+    }
+
+    // 获取组件项内容
+
+  }, {
+    key: 'getCmptItemsObj',
+    value: function getCmptItemsObj(bizResult) {
+      var cmptDatas = [],
+          cmptItemsObj = {},
+          searchBarFields = (0, _lodash.get)(this.props.pageProps, 'ui.search_bar.fields', []);
+
+      if (!bizResult || '0' !== '' + bizResult.resultCode) {
+        return cmptItemsObj;
+      }
+
+      if (searchBarFields.length > 0) {
+        searchBarFields.map(function (qField, i) {
+          if (!!qField.cmpt_field_name) {
+            // 取出组件项内容
+            cmptDatas = (0, _lodash.get)(bizResult, 'data.' + qField.cmpt_field_name, []);
+            cmptItemsObj[qField.cmpt_field_name] = cmptDatas;
+          }
+        });
+      }
+      return cmptItemsObj;
+    }
+
+    // 补充表格数组
+
+  }, {
+    key: 'fillTableItems',
+    value: function fillTableItems(tableItems) {
+      if (0 === tableItems.length) return [];
+      // 数组的情况，则需要遍历，填充后面的元素
+      if (tableItems.length > 1) {
+        var tmpItems = {},
+            copyTableItems = (0, _lodash.cloneDeep)(tableItems),
+            cArr = ['actions', 'fields', 'move'];
+        // 遍历表格配置
+        copyTableItems.map(function (cItem, i) {
+          if (0 === i) {
+            tmpItems = cItem;
+          } else {
+            // 拷贝第一个元素的值到后面的元素
+            cArr.map(function (cKey, j) {
+              if (!(0, _lodash.has)(cItem, cKey)) {
+                cItem[cKey] = tmpItems[cKey];
+              }
+            });
+          }
+        });
+        return copyTableItems;
+      } else {
+        return tableItems;
+      }
+    }
+
+    // 获取黄色角标内容
+
+  }, {
+    key: 'getBadgeNum',
+    value: function getBadgeNum(tableItems, bizResult) {
+      if (!bizResult || '0' !== '' + bizResult.resultCode) {
+        return [];
+      }
+
+      if (!(0, _lodash.isArray)(tableItems)) {
+        return [];
+      }
+
+      if (0 === tableItems.length) {
+        return [];
+      }
+
+      var badgeList = [];
+
+      tableItems.map(function (tItem, i) {
+        // 用户自定义角标数字
+        if ((0, _lodash.has)(tItem, 'badge_num')) {
+          // 取出角标内容
+          badgeList.push({
+            badge_field_name: tItem.badge_num
+          });
+
+          // 从后台接口读取角标数字
+        } else if ((0, _lodash.has)(tItem, 'badge_field_name')) {
+          // 取出角标内容
+          badgeList.push({
+            badge_field_name: (0, _lodash.get)(bizResult, 'data.' + tItem.badge_field_name, '')
+          });
+        }
+      });
+      return badgeList;
+    }
+
+    // 获取页面需要的字段、链接、表格配置
+
+  }, {
+    key: 'getCfgData',
+    value: function getCfgData(currKey, currProps) {
+      var self = this;
+      var tmpProps = !currProps ? self.props.pageProps : currProps.pageProps;
+      // 表格配置
+      var tableItems = (0, _lodash.get)(tmpProps, 'ui.table', []),
+          actions = [],
+          fields = [],
+          move = {},
+          statusParams = '',
+          statusParamsObj = {},
+          pagination = null,
+          actionProps = null,
+          scroll = null;
+
+      var tIdx = !!currKey ? currKey : self.state.biz.currTabKey;
+
+      // 若是数组，则取出对应索引号的自己的字段和操作
+      if ((0, _lodash.isArray)(tableItems)) {
+        // 填充表格配置
+        tableItems = self.fillTableItems(tableItems);
+        statusParams = (0, _lodash.get)(tableItems, '[' + tIdx + '].status_params', []);
+        statusParamsObj = _qs2.default.parse(statusParams);
+
+        actions = (0, _lodash.get)(tableItems, '[' + tIdx + '].actions', []);
+        fields = (0, _lodash.get)(tableItems, '[' + tIdx + '].fields', []);
+        move = (0, _lodash.get)(tableItems, '[' + tIdx + '].move', []);
+        pagination = (0, _lodash.get)(tableItems, '[' + tIdx + '].pagination', null);
+        actionProps = (0, _lodash.get)(tableItems, '[' + tIdx + '].action_props', null);
+        scroll = (0, _lodash.get)(tableItems, '[' + tIdx + '].scroll', null);
+
+        // 若是对象，则直接取出
+      } else {
+        actions = (0, _lodash.get)(tableItems, 'actions', []);
+        fields = (0, _lodash.get)(tableItems, 'fields', []);
+        move = (0, _lodash.get)(tableItems, 'move', {});
+        pagination = (0, _lodash.get)(tableItems, 'pagination', null);
+        actionProps = (0, _lodash.get)(tableItems, 'action_props', null);
+        scroll = (0, _lodash.get)(tableItems, 'scroll', null);
+      }
+
+      return { tableItems: tableItems, actions: actions, fields: fields, move: move, statusParamsObj: statusParamsObj, tIdx: tIdx, pagination: pagination, actionProps: actionProps, scroll: scroll };
+    }
+
+    // 获取列表数据，是否设置列表
+
+  }, {
+    key: 'getListDatas',
+    value: function () {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(isColumns, currNo, currSize, currKey) {
+        var _this2 = this;
+
+        var self, _self$getReqParams, url, method, params, headers, mockData, data_field_name, _self$getCfgData, tableItems, actions, fields, move, statusParams, statusParamsObj, tIdx, pagination, actionProps, scroll, biz, newBiz, queryForm, queryParams, cloneParams, bizResult, dataList, current, pageSize, total, cmptItemsObj, badgeList, syncBackCbf;
+
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                // 作用域提升
+                self = this;
+                _context2.prev = 1;
+
+                // 请求参数
+                _self$getReqParams = self.getReqParams(), url = _self$getReqParams.url, method = _self$getReqParams.method, params = _self$getReqParams.params, headers = _self$getReqParams.headers, mockData = _self$getReqParams.mockData, data_field_name = _self$getReqParams.data_field_name;
+                // 获取配置信息
+
+                _self$getCfgData = self.getCfgData(currKey, null), tableItems = _self$getCfgData.tableItems, actions = _self$getCfgData.actions, fields = _self$getCfgData.fields, move = _self$getCfgData.move, statusParams = _self$getCfgData.statusParams, statusParamsObj = _self$getCfgData.statusParamsObj, tIdx = _self$getCfgData.tIdx, pagination = _self$getCfgData.pagination, actionProps = _self$getCfgData.actionProps, scroll = _self$getCfgData.scroll;
+
+                // 业务表格数据
+
+                biz = self.state.biz;
+                // 新的数据
+
+                newBiz = (0, _lodash.get)(self.props.pageProps, 'biz', null);
+
+                biz = (0, _lodash.merge)(biz, newBiz);
+
+                // 查询条件
+                queryForm = biz.queryForm;
+                // 默认等于页面中的查询条件
+
+                queryParams = queryForm || {};
+                // 传过来的参数合并属性上用户输入的值
+
+                if (!!params) {
+                  queryParams = (0, _lodash.merge)(_qs2.default.parse(params), queryForm);
+                }
+
+                // 合并状态参数到params对象中
+                if (!(0, _lodash.isEmpty)(statusParamsObj)) {
+                  queryParams = (0, _lodash.merge)(queryParams, statusParamsObj);
+                }
+
+                // 如果传入了页码，则覆盖
+                if (!!currNo) {
+                  queryParams.pageNum = currNo;
+                }
+                // 如果传入了每页条数，则覆盖
+                if (!!currSize) {
+                  queryParams.pageSize = currSize;
+                }
+
+                // 克隆的参数
+                cloneParams = (0, _lodash.cloneDeep)(queryParams);
+                // 遍历所有的值
+
+                Object.keys(cloneParams).map(function (qKey, i) {
+                  // 如果是数组，则变成逗号分割的字符串
+                  if ('[object Array]' === '' + Object.prototype.toString.call(cloneParams[qKey])) {
+                    cloneParams[qKey] = cloneParams[qKey].join(',');
+                  }
+                });
+
+                // 业务数据查询
+                bizResult = null;
+
+                if (!mockData) {
+                  _context2.next = 20;
+                  break;
+                }
+
+                bizResult = mockData;
+                _context2.next = 23;
+                break;
+
+              case 20:
+                _context2.next = 22;
+                return self.doBizRequest(url, cloneParams, method, headers);
+
+              case 22:
+                bizResult = _context2.sent;
+
+              case 23:
+
+                // 业务数据列表
+                dataList = (0, _lodash.get)(bizResult, 'data.' + data_field_name, []);
+                // 当前页号 - 默认第1页
+
+                current = (0, _lodash.get)(bizResult, 'data.pageNum', 1);
+                // 每页记录数 - 默认10条每页
+
+                pageSize = (0, _lodash.get)(bizResult, 'data.pageSize', 10);
+                // 总记录数 - 默认0
+
+                total = (0, _lodash.get)(bizResult, 'data.total', 0);
+
+
+                if ((0, _lodash.isUndefined)(pagination) || (0, _lodash.isNull)(pagination)) {
+                  biz.tableData.pagination.current = current;
+                  biz.tableData.pagination.pageSize = pageSize;
+                  biz.tableData.pagination.total = total;
+
+                  biz.tableData.pagination.showTotal = function (e) {
+                    return '\u5171 ' + total + ' \u6761';
+                  };
+                  biz.tableData.pagination.onChange = function (page) {
+                    var oldPageSize = (0, _lodash.get)(self.state, 'tableData.pagination.pageSize', pageSize);
+                    self.getListDatas(false, page, oldPageSize);
+                  };
+                  biz.tableData.pagination.onShowSizeChange = function (page, size) {
+                    self.getListDatas(false, page, size);
+                  };
+
+                  if (0 !== dataList.length) {
+                    dataList.map(function (item, i) {
+                      item.key = i + parseInt((current - 1) * pageSize, 10) + 1;
+                    });
+                  }
+                } else {
+                  if (0 !== dataList.length) {
+                    dataList.map(function (item, i) {
+                      item.key = ++i;
+                    });
+                  }
+                  biz.tableData.pagination = false;
+                }
+
+                // 设置表格数据
+                biz.tableData.dataSource = dataList || [];
+                biz.tableData.scroll = scroll;
+                biz.currTabKey = tIdx;
+                biz.move = move;
+
+                // 获取表头字段 - 并设置到状态机
+                if (!!isColumns) {
+                  biz.tableData.columns = self.getListColumns(fields, actions, actionProps);
+                }
+
+                // 获取查询栏 - 组件内容项
+                cmptItemsObj = self.getCmptItemsObj(bizResult);
+
+                if (!(0, _lodash.isEmpty)(cmptItemsObj)) {
+                  biz = (0, _lodash.merge)(biz, cmptItemsObj);
+                }
+
+                // 设置角标数组
+                badgeList = self.getBadgeNum(tableItems, bizResult);
+
+                if (0 !== badgeList.length) {
+                  biz.badgeList = badgeList;
+                }
+
+                // 拉数据时清空掉选中的复选框
+                biz.selectedRows = [];
+                biz.selectedRowKeys = [];
+                // 列表刷新方法注册
+                biz.refreshListDatas = function () {
+                  var stayCurrent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+                  // stayCurrent为刷新后停留在本页标志位, 为ture时停留在本页
+                  if (stayCurrent) {
+                    var _biz = _this2.state.biz;
+                    var _biz$tableData$pagina = _biz.tableData.pagination,
+                        _pageSize = _biz$tableData$pagina.pageSize,
+                        _current = _biz$tableData$pagina.current;
+
+                    self.getListDatas('', _current, _pageSize);
+                  } else {
+                    self.getListDatas();
+                  }
+                };
+                // 清空查询条件
+                biz.clearSearchConds = function () {
+                  self.onReset();
+                };
+
+                // 设置到状态机，并同步到父组件
+                // self.setState({ biz })
+                // console.log('get list datas')
+                syncBackCbf = (0, _lodash.get)(self.props.pageProps, 'biz.syncBackCbf', null);
+                // 设置到状态机，并同步到父组件
+
+                self.setState({ biz: biz }, function () {
+                  if (!!syncBackCbf) {
+                    syncBackCbf(biz);
+                  }
+                });
+
+                _context2.next = 48;
+                break;
+
+              case 45:
+                _context2.prev = 45;
+                _context2.t0 = _context2['catch'](1);
+
+                _message3.default.error(_context2.t0 || '未知的请求异常');
+
+              case 48:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[1, 45]]);
+      }));
+
+      function getListDatas(_x4, _x5, _x6, _x7) {
+        return _ref2.apply(this, arguments);
+      }
+
+      return getListDatas;
+    }()
+
+    // 获取请求参数
+
+  }, {
+    key: 'getReqParams',
+    value: function getReqParams(currPageProps) {
+      var self = this;
+      // 页面属性
+      var pageProps = currPageProps;
+      // 如果不传入页面属性，则从父组件传进来的属性获取
+      if (!currPageProps) {
+        pageProps = self.props.pageProps;
+      }
+
+      // 页面接口地址
+      var url = (0, _lodash.get)(pageProps, 'ui.api_url', '');
+      var method = (0, _lodash.get)(pageProps, 'ui.method', 'GET');
+      var params = (0, _lodash.get)(pageProps, 'ui.params', {});
+      var headers = (0, _lodash.get)(pageProps, 'ui.headers', { 'Content-type': 'application/x-www-form-urlencoded' });
+      var data_field_name = (0, _lodash.get)(pageProps, 'ui.data_field_name', 'list');
+      var mockData = (0, _lodash.get)(pageProps, 'ui.mockData', null);
+      // 返回请求参数
+      return { url: url, method: method, params: params, headers: headers, mockData: mockData, data_field_name: data_field_name };
+    }
+
+    // 获取传进来的key值
+
+  }, {
+    key: 'getPropsTabKey',
+    value: function getPropsTabKey(props) {
+      //let currTabKey = get(props? props: this.props, 'pageProps.ui.curr_tab_key', '0')
+      var currTabKey = (0, _util.getParams)(String(location)).curr_tab_key;
+      return currTabKey;
+    }
+
+    // 获取已有分页数据
+
+  }, {
+    key: 'getPageParamsFormStorage',
+    value: function getPageParamsFormStorage(key) {
+      var value = sessionStorage.getItem(key);
+      var pageObj = !!value ? JSON.parse(value) : null;
+      return pageObj;
+    }
+
+    // 已插入真实DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function () {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+        var self, biz, tmpKey, key, pageObj;
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                self = this, biz = self.state.biz, tmpKey = self.getPropsTabKey();
+                // biz.currTabKey = tmpKey
+
+                if (!!(0, _lodash.get)(this.props, 'pageProps.ui.listNamespace', '')) {
+                  key = generateMD5(this.props.pageProps.ui.listNamespace);
+                  pageObj = this.getPageParamsFormStorage(key);
+
+                  if (!!pageObj) {
+                    self.getListDatas(true, pageObj.current, pageObj.pageSize, pageObj.currKey);
+                  } else {
+                    self.getListDatas(true, null, null, tmpKey);
+                  }
+                } else {
+                  self.getListDatas(true, null, null, tmpKey);
+                }
+
+              case 2:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function componentDidMount() {
+        return _ref3.apply(this, arguments);
+      }
+
+      return componentDidMount;
+    }()
+
+    // 获取下拉框、复选框列表
+
+  }, {
+    key: 'getBoxList',
+    value: function getBoxList(qField) {
+      var items = [],
+          self = this;
+
+      // 若设置了内容项，则直接取内容项
+      if (!!qField.cmpt_items) {
+        items = qField.cmpt_items;
+      }
+
+      // 若设置了结果集中的内容字段
+      if (!!qField.cmpt_field_name) {
+        items = (0, _lodash.get)(self.state.biz, '' + qField.cmpt_field_name, []);
+      }
+
+      return items;
+    }
+
+    //  获取扩展属性
+
+  }, {
+    key: 'getExtProps',
+    value: function getExtProps(obj, exKeys) {
+      var tmpObj = {},
+          keys = [];
+      // 键名数组
+      keys = Object.keys(obj);
+
+      if (keys.length > 0) {
+        keys.map(function (key, i) {
+          // 排除自定义的属性名，返回antd的属性名
+          if (!(0, _lodash.includes)(exKeys, key)) {
+            tmpObj[key] = obj[key];
+          }
+        });
+      }
+      return tmpObj;
+    }
+
+    // 搜索栏组件的扩展属性
+
+  }, {
+    key: 'getSearchBarProps',
+    value: function getSearchBarProps(qField) {
+      var exKeys = ['en_name', 'zh_name', 'elem_type', 'elem_valid_type', 'cmpt_items', 'cmpt_field_name', 'split_keys', 'format'];
+      return this.getExtProps(qField, exKeys);
+    }
+
+    // 操作栏的扩展属性
+
+  }, {
+    key: 'getActionBarProps',
+    value: function getActionBarProps(actObj) {
+      var self = this;
+      var exKeys = ['func_name', 'url', 'label'];
+      var obj = (0, _lodash.cloneDeep)(this.getExtProps(actObj, exKeys));
+      if ((0, _lodash.has)(actObj, 'onClick')) {
+        obj.onClick = function (e) {
+          actObj.onClick(e, self.state.biz.selectedRows);
+        };
+      }
+      return obj;
+    }
+
+    // 渲染子组件
+
+  }, {
+    key: 'renderChildren',
+    value: function renderChildren() {
+      var self = this;
+      return _react2.default.createElement(
+        'div',
+        null,
+        ' ',
+        self.props.children,
+        ' '
+      );
+    }
+
+    // 设置当前选项卡
+
+  }, {
+    key: 'setCurrTabKey',
+    value: function setCurrTabKey(currKey) {
+      this.getListDatas(null, null, null, currKey);
+    }
+
+    // 获取选中行的值
+
+  }, {
+    key: 'getSortVal',
+    value: function getSortVal(record) {
+      var sortFieldName = (0, _lodash.get)(this.state, 'biz.move.sort_field_name', '');
+      var tmpVal = (0, _lodash.get)(record, '' + sortFieldName, '');
+      return tmpVal;
+    }
+
+    // 选中行
+
+  }, {
+    key: 'selectRow',
+    value: function selectRow(record) {
+      var biz = this.state.biz,
+          tmpVal = this.getSortVal(record);
+      if ('' + biz.currRow !== '' + tmpVal) {
+        biz.currRow = '' + tmpVal;
+      } else {
+        biz.currRow = '';
+      }
+      this.setState({ biz: biz });
+    }
+
+    // 获取选中行的样式
+
+  }, {
+    key: 'getRowClassName',
+    value: function getRowClassName(record) {
+      var tmpVal = this.getSortVal(record);
+      if (!tmpVal) {
+        return '';
+      }
+      return '' + tmpVal === '' + this.state.biz.currRow ? 'tableTrOn' : '';
+    }
+
+    // 表格上下移动处理
+
+  }, {
+    key: 'onTableMove',
+    value: function () {
+      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(code) {
+        var self, move, _get, api_url, _get$params, params, _get$method, method, _get$headers, headers, paramsObj, dataSource, rowData, tmpVal, currVal, moveResult;
+
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                self = this;
+
+                if (this.state.biz.currRow) {
+                  _context4.next = 3;
+                  break;
+                }
+
+                return _context4.abrupt('return', false);
+
+              case 3:
+                move = (0, _lodash.get)(this.state, 'biz.move', {});
+
+                if (!(0, _lodash.isEmpty)(move)) {
+                  _context4.next = 6;
+                  break;
+                }
+
+                return _context4.abrupt('return', false);
+
+              case 6:
+                _get = (0, _lodash.get)(move, '' + code), api_url = _get.api_url, _get$params = _get.params, params = _get$params === undefined ? {} : _get$params, _get$method = _get.method, method = _get$method === undefined ? 'GET' : _get$method, _get$headers = _get.headers, headers = _get$headers === undefined ? {} : _get$headers;
+
+                if (api_url) {
+                  _context4.next = 9;
+                  break;
+                }
+
+                return _context4.abrupt('return', false);
+
+              case 9:
+                paramsObj = {};
+
+                if (!!params) {
+                  paramsObj = _qs2.default.parse(params);
+                }
+
+                // 返回已选中那一行的数据
+                dataSource = (0, _lodash.get)(this.state, 'biz.tableData.dataSource', []), rowData = [], tmpVal = '', currVal = void 0;
+
+                if (dataSource.length > 0) {
+                  rowData = dataSource.filter(function (item, idx) {
+                    currVal = self.getSortVal(item);
+                    return '' + currVal === '' + (0, _lodash.get)(self.state, 'biz.currRow', null);
+                  });
+                }
+
+                // 填充键值
+                if (0 !== rowData.length) {
+                  Object.keys(paramsObj).map(function (key, i) {
+                    tmpVal = (0, _lodash.get)(rowData, '[0].' + key, '');
+                    if (!!tmpVal) {
+                      paramsObj[key] = tmpVal;
+                    }
+                  });
+                }
+
+                _context4.next = 16;
+                return this.doBizRequest(api_url, paramsObj, method, headers);
+
+              case 16:
+                moveResult = _context4.sent;
+
+                if (!('0' !== '' + moveResult.resultCode)) {
+                  _context4.next = 20;
+                  break;
+                }
+
+                _message3.default.error(moveResult.resultMsg || '未知的移动表格异常');
+                return _context4.abrupt('return', false);
+
+              case 20:
+
+                if ('0' === '' + moveResult.resultCode) {
+                  _message3.default.success('操作成功');
+                  this.getListDatas();
+                }
+
+              case 21:
+              case 'end':
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function onTableMove(_x9) {
+        return _ref4.apply(this, arguments);
+      }
+
+      return onTableMove;
+    }()
+
+    // 获取表格扩展属性
+
+  }, {
+    key: 'getTableExtProps',
+    value: function getTableExtProps() {
+      if (this.getRowSelectionCount() > 0) {
+        return {
+          rowSelection: this.getRowSelection()
+        };
+      } else {
+        return {};
+      }
+    }
+
+    // 获取表格其他属性配置
+
+  }, {
+    key: 'getTableProps',
+    value: function getTableProps() {
+      var tableProps = (0, _lodash.get)(this.props, 'pageProps.ui.table', null),
+          table_extProps = null;
+      if ((0, _lodash.isArray)(tableProps)) {
+        table_extProps = (0, _lodash.get)(tableProps[0], 'extProps', null);
+      } else {
+        table_extProps = (0, _lodash.get)(tableProps, 'extProps', null);
+      }
+      if (!!table_extProps) {
+        return table_extProps;
+      } else {
+        return {};
+      }
+    }
+
+    // 获取操作栏rowSelection的个数
+
+  }, {
+    key: 'getRowSelectionCount',
+    value: function getRowSelectionCount() {
+      // 操作栏
+      var action_bar = (0, _lodash.get)(this.props, 'pageProps.ui.action_bar', []),
+          rowSelectionCount = 0;
+      // 遍历操作栏，如果有rowSelection属性，则返回有复选框
+      action_bar.map(function (act, i) {
+        if ((0, _lodash.has)(act, 'rowSelection')) {
+          rowSelectionCount++;
+        }
+      });
+      return rowSelectionCount;
+    }
+
+    // 表格复选框选择属性 - onSelect onSelectAll底层都是基于onChange实现
+
+  }, {
+    key: 'getRowSelection',
+    value: function getRowSelection() {
+      var _this3 = this;
+
+      var self = this;
+      var biz = self.state.biz;
+
+      return {
+        selectedRowKeys: (0, _lodash.get)(biz, 'selectedRowKeys', []),
+        onChange: function onChange(selectedRowKeys, selectedRows) {
+          biz.selectedRows = selectedRows;
+          biz.selectedRowKeys = selectedRowKeys;
+          biz.refreshListDatas = function () {
+            var stayCurrent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+            // stayCurrent为刷新后停留在本页标志位, 为ture时停留在本页
+            if (stayCurrent) {
+              var _biz2 = _this3.state.biz;
+              var _biz2$tableData$pagin = _biz2.tableData.pagination,
+                  pageSize = _biz2$tableData$pagin.pageSize,
+                  current = _biz2$tableData$pagin.current;
+
+              self.getListDatas('', current, pageSize);
+            } else {
+              self.getListDatas();
+            }
+          };
+          self.setState({ biz: biz });
+        },
+        onSelect: function onSelect(record, selected, selectedRows) {},
+        onSelectAll: function onSelectAll(selected, selectedRows, changeRows) {}
+      };
+    }
+
+    // 自定义日期范围的约束函数
+
+  }, {
+    key: 'disabledStartDate',
+    value: function disabledStartDate(startValue, endName, format) {
+      var biz = this.state.biz;
+
+      var endDateString = (0, _lodash.get)(biz, 'queryForm[' + endName + ']', '');
+      var endValue = (0, _moment2.default)(endDateString, format);
+      if (!startValue || !endValue) {
+        return false;
+      }
+      return startValue.valueOf() > endValue.valueOf();
+    }
+  }, {
+    key: 'disabledEndDate',
+    value: function disabledEndDate(endValue, startName, format) {
+      var biz = this.state.biz;
+
+      var startDateString = (0, _lodash.get)(biz, 'queryForm[' + startName + ']', '');
+      var startValue = (0, _moment2.default)(startDateString, format);
+      if (!endValue || !startValue) {
+        return false;
+      }
+      return endValue.valueOf() <= startValue.valueOf();
+    }
+
+    // 表格滚动扩展属性
+
+  }, {
+    key: 'getTableScrollProps',
+    value: function getTableScrollProps() {
+      var tmpPageSize = (0, _lodash.get)(this.state.biz, 'tableData.pagination.pageSize', 10);
+      var cloneScroll = (0, _lodash.get)(this.state.biz, 'tableData.scroll', {});
+      if (tmpPageSize > 20) {
+        if (!!cloneScroll) {
+          // cloneScroll.y = 653
+        }
+      }
+      return cloneScroll;
+    }
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render(ReactElement, DOMElement, callback) {
+      var _this4 = this;
+
+      // console.log('list page render')
+      // 操作栏
+      var action_bar = (0, _lodash.get)(this.props, 'pageProps.ui.action_bar', []);
+      // 查询栏字段
+      var searchBarFields = (0, _lodash.get)(this.props, 'pageProps.ui.search_bar.fields', []);
+      // 查询栏操作
+      var searchBarActions = (0, _lodash.get)(this.props, 'pageProps.ui.search_bar.actions', []);
+      // 表格列表配置项
+      var tableBarItems = (0, _lodash.get)(this.props, 'pageProps.ui.table', []);
+      // 表单校验器
+      var getFieldDecorator = this.props.form.getFieldDecorator;
+      // 移动属性
+
+      var move = (0, _lodash.get)(this.state, 'biz.move', {});
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'public_listMain' },
+        action_bar.length > 0 && _react2.default.createElement(
+          'div',
+          { className: 'functionButton' },
+          action_bar.map(function (act, i) {
+            var tmpKey = 'action_bar_' + i;
+            if (!!act.render) {
+              return _react2.default.cloneElement(act.render(), { key: '' + tmpKey });
+            } else {
+              return _react2.default.createElement(
+                _button2.default,
+                (0, _extends3.default)({ key: 'act_' + i, type: act.type, icon: act.icon }, _this4.getActionBarProps(act)),
+                act.label
+              );
+            }
+          })
+        ),
+        searchBarFields.length > 0 && _react2.default.createElement(
+          'div',
+          { className: 'boxShadow listSearchBox' },
+          _react2.default.createElement(
+            _form2.default,
+            { onSubmit: function onSubmit(e) {
+                _this4.onSearch(e);
+              } },
+            _react2.default.createElement(
+              _row2.default,
+              null,
+              searchBarFields.map(function (qField, i) {
+                // 文本输入框
+                if ('Input' === '' + qField.elem_type) {
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: _this4.state.biz.queryForm[qField.en_name],
+                        rules: [{
+                          required: qField.required, message: '请输入' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(_input2.default, (0, _extends3.default)({ placeholder: '请输入' + qField.zh_name }, _this4.getSearchBarProps(qField), { onChange: function onChange(e) {
+                          return _this4.setSearchModel(qField.en_name, e.target.value);
+                        } })))
+                    )
+                  );
+
+                  // 下拉框
+                } else if ('Select' === '' + qField.elem_type) {
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      _react2.default.createElement(_input2.default, { type: 'hidden' }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: _this4.state.biz.queryForm[qField.en_name],
+                        rules: [{
+                          required: qField.required, message: '请选择' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(
+                        _select2.default,
+                        (0, _extends3.default)({ placeholder: '请选择' + qField.zh_name, onChange: function onChange(e) {
+                            return _this4.setSearchModel(qField.en_name, e, qField.split_keys);
+                          } }, _this4.getSearchBarProps(qField)),
+                        _this4.getBoxList(qField).map(function (item, j) {
+                          return _react2.default.createElement(
+                            Option,
+                            { key: qField.en_name + '_' + j, value: '' + item.value },
+                            item.label
+                          );
+                        })
+                      ))
+                    )
+                  );
+
+                  // 复选框
+                } else if ('Checkbox' === '' + qField.elem_type) {
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      _react2.default.createElement(CheckboxGroup, (0, _extends3.default)({ defaultValue: _this4.state.biz.queryForm[qField.en_name], options: _this4.getBoxList(qField) }, _this4.getSearchBarProps(qField), { onChange: function onChange(e) {
+                          return _this4.setSearchModel(qField.en_name, e);
+                        } }))
+                    )
+                  );
+
+                  // 日期框
+                } else if ('Date' === '' + qField.elem_type) {
+
+                  var dateVal = (0, _lodash.get)(_this4.state.biz, 'queryForm[' + qField.en_name + ']', null);
+                  var cloneDateVal = [],
+                      tmpDate = null;
+                  var format = (0, _lodash.get)(qField, 'format', 'YYYY/MM/DD');
+                  // query_format属性控制最后查询的
+                  var queryFormat = (0, _lodash.get)(qField, 'query_format', format);
+                  // double属性为true时, 日期框布局宽度为原有的两倍
+                  var layout = (0, _lodash.get)(qField, 'double', false) ? {
+                    searchCol: {
+                      xs: { span: 24 },
+                      md: { span: 24 },
+                      lg: { span: 16 },
+                      xl: { span: 12 }
+                    },
+                    searchFormItem: { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
+                  } : _config.listConfig;
+                  if (dateVal && dateVal.length > 0) {
+                    dateVal.map(function (d, i) {
+                      if (d) {
+                        tmpDate = (0, _moment2.default)(d, format);
+                      }
+                      cloneDateVal.push(tmpDate);
+                    });
+                  }
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, layout.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, layout.searchFormItem, { label: qField.zh_name }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: cloneDateVal,
+                        rules: [{
+                          required: qField.required, message: '请选择' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(RangePicker, (0, _extends3.default)({ style: { width: "100%" }
+                      }, _this4.getSearchBarProps(qField), {
+                        allowClear: false,
+                        ranges: { '今天': [(0, _moment2.default)(), (0, _moment2.default)()], '这个月': [(0, _moment2.default)(), (0, _moment2.default)().endOf('month')] },
+                        format: (0, _lodash.get)(qField, 'format', 'YYYY/MM/DD'),
+                        onChange: function onChange(value, dateString) {
+                          var queryString = value.map(function (e) {
+                            return e.format(queryFormat);
+                          });
+                          _this4.setSearchModel(qField.en_name, queryString, qField.split_keys);
+                        }
+                      })))
+                    )
+                  );
+                  // 拆分为两个日期框
+                } else if ('SplitDate' === '' + qField.elem_type) {
+
+                  var _format = (0, _lodash.get)(qField, 'format', 'YYYY/MM/DD');
+                  // 取出开始时间和结束时间的标签
+
+                  var _ref5 = Object.prototype.toString.call(qField.zh_name) === "[object Array]" ? qField.zh_name : [qField.zh_name + '\u5F00\u59CB\u65F6\u95F4', qField.zh_name + '\u7ED3\u675F\u65F6\u95F4'],
+                      _ref6 = (0, _slicedToArray3.default)(_ref5, 2),
+                      startLabel = _ref6[0],
+                      endLabel = _ref6[1];
+
+                  // 取出开始和结束的key
+
+
+                  var _ref7 = Object.prototype.toString.call(qField.en_name) === "[object Array]" ? qField.en_name : [qField.en_name + 'Start', qField.en_name + 'End'],
+                      _ref8 = (0, _slicedToArray3.default)(_ref7, 2),
+                      startName = _ref8[0],
+                      endName = _ref8[1];
+
+                  // 取出开始和结束的value
+
+
+                  var startDateString = (0, _lodash.get)(_this4.state.biz, 'queryForm[' + qField.startName + ']', null);
+                  var endDateString = (0, _lodash.get)(_this4.state.biz, 'queryForm[' + qField.endName + ']', null);
+                  var startValue = startDateString ? (0, _moment2.default)(startDateString, _format) : null;
+                  var endValue = endDateString ? (0, _moment2.default)(endDateString, _format) : null;
+
+                  return _react2.default.createElement(
+                    'div',
+                    { key: 'qField_' + i },
+                    _react2.default.createElement(
+                      _col2.default,
+                      (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i + '1' }),
+                      _react2.default.createElement(
+                        FormItem,
+                        (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: startLabel }),
+                        getFieldDecorator(startName, {
+                          initialValue: startValue,
+                          rules: [{
+                            required: qField.required, message: '请选择' + startLabel
+                          }]
+                        })(_react2.default.createElement(_datePicker2.default, (0, _extends3.default)({
+                          style: { width: "100%" }
+                        }, _this4.getSearchBarProps(qField), {
+                          disabledDate: function disabledDate(date) {
+                            return _this4.disabledStartDate(date, endName, _format);
+                          },
+                          showTime: qField.showTime,
+                          format: _format,
+                          placeholder: '请选择' + startLabel,
+                          onChange: function onChange(value, dateString) {
+                            _this4.setSearchModel(startName, dateString);
+                          }
+                        })))
+                      )
+                    ),
+                    _react2.default.createElement(
+                      _col2.default,
+                      (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i + '2' }),
+                      _react2.default.createElement(
+                        FormItem,
+                        (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: endLabel }),
+                        getFieldDecorator(endName, {
+                          initialValue: endValue,
+                          rules: [{
+                            required: qField.required, message: '请选择' + endLabel
+                          }]
+                        })(_react2.default.createElement(_datePicker2.default, (0, _extends3.default)({
+                          style: { width: "100%" }
+                        }, _this4.getSearchBarProps(qField), {
+                          disabledDate: function disabledDate(date) {
+                            return _this4.disabledEndDate(date, startName, _format);
+                          },
+                          showTime: qField.showTime,
+                          format: _format,
+                          placeholder: '请选择' + endLabel,
+                          onChange: function onChange(value, dateString) {
+                            _this4.setSearchModel(endName, dateString);
+                          }
+                        })))
+                      )
+                    )
+                  );
+                  // 下拉树目录
+                } else if ('TreeSelect' === '' + qField.elem_type) {
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: _this4.state.biz.queryForm[qField.en_name],
+                        rules: [{
+                          required: qField.required, message: '请选择' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(_treeSelect2.default, {
+                        style: { width: "100%" },
+                        dropdownStyle: { maxHeight: 400, overflow: 'auto' },
+                        treeData: _this4.getBoxList(qField),
+                        placeholder: '\u8BF7\u9009\u62E9',
+                        treeDefaultExpandAll: true,
+                        onChange: function onChange(e) {
+                          return _this4.setSearchModel(qField.en_name, e);
+                        }
+                      }))
+                    )
+                  );
+
+                  // 下拉框分组
+                } else if ('GroupSelect' === '' + qField.elem_type) {
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: _this4.state.biz.queryForm[qField.en_name],
+                        rules: [{
+                          required: qField.required, message: '请选择' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(
+                        _select2.default,
+                        {
+                          style: { width: '100%' },
+                          onChange: function onChange(e) {
+                            return _this4.setSearchModel(qField.en_name, e);
+                          },
+                          placeholder: '\u8BF7\u9009\u62E9'
+                        },
+                        _this4.getBoxList(qField).map(function (item, j) {
+                          return _react2.default.createElement(
+                            OptGroup,
+                            { key: 'opt_group_' + qField.en_name + '_' + j, label: item.label, value: item.value },
+                            item.children && item.children.map(function (iChild, k) {
+                              return _react2.default.createElement(
+                                Option,
+                                { key: 'opt_option_' + qField.en_name + '_' + k, value: iChild.value },
+                                ' ',
+                                iChild.label,
+                                ' '
+                              );
+                            })
+                          );
+                        })
+                      ))
+                    )
+                  );
+
+                  // 级联组件
+                } else if ('Cascader' === '' + qField.elem_type) {
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: '',
+                        rules: [{
+                          required: qField.required, message: '请选择' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(_cascader2.default, {
+                        style: { width: '100%' },
+                        options: _this4.getBoxList(qField),
+                        placeholder: '\u8BF7\u9009\u62E9',
+                        onChange: function onChange(e) {
+                          return _this4.setSearchModel(qField.en_name, e, qField.split_keys);
+                        }
+                      }))
+                    )
+                  );
+
+                  // 数字范围组件
+                } else if ('NumberRange' === '' + qField.elem_type) {
+                  var startKey = (0, _lodash.get)(qField, 'split_keys[0]', qField.en_name);
+                  var endKey = (0, _lodash.get)(qField, 'split_keys[1]', qField.en_name);
+
+                  var startVal = (0, _lodash.get)(_this4.state.biz.queryForm, '' + startKey, '');
+                  var endVal = (0, _lodash.get)(_this4.state.biz.queryForm, '' + endKey, '');
+
+                  return _react2.default.createElement(
+                    _col2.default,
+                    (0, _extends3.default)({}, _config.listConfig.searchCol, { key: 'qField_' + i }),
+                    _react2.default.createElement(
+                      FormItem,
+                      (0, _extends3.default)({}, _config.listConfig.searchFormItem, { label: qField.zh_name }),
+                      getFieldDecorator(qField.en_name, {
+                        initialValue: '',
+                        rules: [{
+                          required: qField.required, message: '请选择' + qField.zh_name
+                        }]
+                      })(_react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement(_input2.default, (0, _extends3.default)({ placeholder: '\u8BF7\u8F93\u5165', value: '' + startVal }, _this4.getSearchBarProps(qField), { onChange: function onChange(e) {
+                            return _this4.setSearchModel(startKey, e.target.value);
+                          }, className: _index2.default.inputRange })),
+                        _react2.default.createElement(
+                          'span',
+                          null,
+                          ' ~ '
+                        ),
+                        _react2.default.createElement(_input2.default, (0, _extends3.default)({ placeholder: '\u8BF7\u8F93\u5165', value: '' + endVal }, _this4.getSearchBarProps(qField), { onChange: function onChange(e) {
+                            return _this4.setSearchModel(endKey, e.target.value);
+                          }, className: _index2.default.inputRange }))
+                      ))
+                    )
+                  );
+                }
+              }),
+              _react2.default.createElement(
+                _col2.default,
+                _config.listConfig.searchCol,
+                _react2.default.createElement(
+                  _button2.default,
+                  { type: 'primary', htmlType: 'submit' },
+                  (0, _lodash.get)(this.props, 'pageProps.ui.search_bar.search_btn_label', '搜索')
+                ),
+                _react2.default.createElement(
+                  _button2.default,
+                  { type: 'default', htmlType: 'button', onClick: function onClick(e) {
+                      return _this4.onReset(e);
+                    } },
+                  '\u91CD\u7F6E'
+                ),
+                searchBarActions.map(function (sba, i) {
+                  var tmpKey = 'search_act_' + i;
+                  if (!!sba.render) {
+                    return _react2.default.cloneElement(sba.render(), { key: tmpKey });
+                  } else {
+                    return _react2.default.createElement(
+                      'a',
+                      { key: tmpKey, href: 'javascript:;', onClick: function onClick(e) {
+                          sba.onClick(e, _this4.biz.selectedRows);
+                        }, className: _index2.default.mg2r },
+                      sba.label
+                    );
+                  }
+                })
+              )
+            ),
+            this.renderChildren()
+          )
+        ) // end searchBarFields length loop
+        ,
+        _react2.default.createElement(
+          'div',
+          { className: 'boxShadow' },
+          (0, _lodash.isArray)(tableBarItems) && _react2.default.createElement(
+            _tabs2.default,
+            { /*tabPosition="buttom"*/activeKey: this.state.biz.currTabKey, onChange: function onChange(e) {
+                return _this4.setCurrTabKey(e);
+              }, type: 'line' },
+            tableBarItems.map(function (tbi, i) {
+              var badgeVal = (0, _lodash.get)(_this4.state.biz, 'badgeList[' + i + '].badge_field_name', '');
+              return _react2.default.createElement(TabPane, { tab: (0, _lodash.has)(tbi, 'badge_field_name') ? _react2.default.createElement(
+                  'span',
+                  { className: 'badge' },
+                  tbi.status_text,
+                  _react2.default.createElement(
+                    'span',
+                    null,
+                    badgeVal
+                  )
+                ) : tbi.status_text, key: '' + i });
+            })
+          ),
+          _react2.default.createElement(_table2.default, (0, _extends3.default)({
+            columns: this.state.biz.tableData.columns,
+            scroll: (0, _extends3.default)({}, this.getTableScrollProps()),
+            dataSource: this.state.biz.tableData.dataSource,
+            pagination: this.state.biz.tableData.pagination,
+            onRowClick: function onRowClick(record, index) {
+              return _this4.selectRow(record);
+            },
+            rowClassName: function rowClassName(record, index) {
+              return _this4.getRowClassName(record);
+            }
+          }, this.getTableExtProps(), this.getTableProps()))
+        ),
+        !(0, _lodash.isEmpty)(move) && _react2.default.createElement(_TableMove2.default, { cb: function cb(keyCode) {
+            _this4.onTableMove(keyCode);
+          } })
+      );
+    }
+  }]);
+  return ListPage;
+}(_react.Component);
+
+exports.default = _form2.default.create()(ListPage);
+module.exports = exports['default'];

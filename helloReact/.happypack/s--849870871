@@ -1,0 +1,17 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _utils = require('../../utils');
+
+// 给文档body加样式
+var bodyClass = function bodyClass() {
+  if (!_utils.selector.hasClass('skinProgramme_1')) {
+    _utils.selector.addClass(document.body, 'skinProgramme_1');
+  }
+};
+
+exports.default = bodyClass;
+module.exports = exports['default'];

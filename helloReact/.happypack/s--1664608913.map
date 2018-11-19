@@ -1,0 +1,1 @@
+{"version":3,"sources":["src\\widget\\ScrollBar\\utils\\returnFalse.js"],"names":["returnFalse"],"mappings":";;;;;kBAAwBA,W;AAAT,SAASA,WAAT,GAAuB;AAClC,WAAO,KAAP;AACH","file":"returnFalse.js","sourceRoot":"C:/Users/liu.ping/helloReact","sourcesContent":["export default function returnFalse() {\r\n    return false;\r\n}\r\n"]}

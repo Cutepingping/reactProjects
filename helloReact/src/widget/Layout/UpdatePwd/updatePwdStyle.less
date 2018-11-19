@@ -1,0 +1,36 @@
+@import "../../../css/basic.less";
+@import "../../../css/common.less";
+
+.login_info_content {
+  margin: 20px;
+  width: 400px;
+}
+
+.updatePwd1{
+  font-size: 12px;
+  font-weight: normal;
+  height: 32px;
+  background: #FBFBFB;
+  width: 92px;
+  border-radius: 3px;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1.5;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  position: relative;
+  color: #666;
+  border: 1px solid #D7E0F1;
+  cursor: pointer;
+  outline: none;
+}
+
+.updatePwd1:hover{
+  box-shadow: 0 3px 6px 0 #DFE6F4;
+  color: #666;
+}
+
+.updatePwd1[disabled="disabled"]{
+  cursor: default;
+  background-color: #eee;
+  color: #aaa;
+}

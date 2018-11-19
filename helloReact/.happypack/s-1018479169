@@ -1,0 +1,697 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _index = require('./index.less');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _ContextMenu = require('../ContextMenu/ContextMenu');
+
+var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
+
+var _lodash = require('lodash');
+
+var _router = require('dva/router');
+
+var _HeaderView = require('../Layout/Header/HeaderView');
+
+var _HeaderView2 = _interopRequireDefault(_HeaderView);
+
+var _FooterView = require('../Layout/Footer/FooterView');
+
+var _FooterView2 = _interopRequireDefault(_FooterView);
+
+var _AppStyle = require('../Layout/App/AppStyle.less');
+
+var _AppStyle2 = _interopRequireDefault(_AppStyle);
+
+var _bus = require('../../utils/bus');
+
+var _bus2 = _interopRequireDefault(_bus);
+
+var _Bread = require('../Layout/Bread/Bread');
+
+var _Bread2 = _interopRequireDefault(_Bread);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 选项卡组件
+
+// CSS过度
+// import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+
+// import * as Layout from '../../widget/Layout'
+
+// 显示多个样式类名
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.onTabRemove = function (targetKey, e, cbf) {
+      if (!!e) {
+        // 阻止事件冒泡
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+      }
+      // 如果关闭的是当前tab, 要激活哪个tab
+
+      // 首先尝试激活左边的, 再尝试激活右边的
+      var nextTabKey = _this.state.currentTabKey;
+
+      if ('' + _this.state.currentTabKey === '' + targetKey) {
+
+        var currentTabIndex = -1;
+        _this.state.tabPanes.forEach(function (pane, i) {
+          if (pane.key === targetKey) {
+            currentTabIndex = i;
+          }
+        });
+
+        // 如果当前tab左边还有tab, 就激活左边的
+        if (currentTabIndex > 0) {
+          nextTabKey = _this.state.tabPanes[currentTabIndex - 1].key;
+        }
+        // 否则就激活右边的tab
+        else if (currentTabIndex === 0 && _this.state.tabPanes.length > 1) {
+            nextTabKey = _this.state.tabPanes[currentTabIndex + 1].key;
+          }
+        // 其实还有一种情况, 就是只剩最后一个tab, 但这里不用处理
+      }
+      // location的值
+      var location = (0, _lodash.get)(_this.state.locationMap, '[' + nextTabKey + ']', _this.state.location);
+      // 过滤panes
+      var newTabPanes = _this.state.tabPanes.filter(function (pane) {
+        return pane.key !== targetKey;
+      });
+      // 放入状态机
+      _this.setState({ tabPanes: newTabPanes, currentTabKey: '' + nextTabKey, location: location }, function () {
+        if (!e) {
+          cbf && cbf();
+        } else {
+          // 无页签时，跳转到默认首页
+          if (0 === newTabPanes.length) {
+            // hashHistory.push('/')
+            _router.hashHistory.push('/home');
+          }
+        }
+      });
+    };
+
+    _this.state = {
+      isDva: false,
+      isReload: false,
+      headerProps: {},
+      location: {},
+      locationMap: {},
+      currentTabKey: '',
+      currTabTitle: '',
+      tabPanes: [],
+      menuList: [],
+      tabWid: '1px',
+      maxTabCount: 20
+    };
+    return _this;
+  }
+
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {}
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (!nextProps.tabProps) return false;
+      this.onAddTabs(nextProps);
+    }
+
+    // // 组件是否被渲染 - 解决页签里的组件重复渲染问题
+    // shouldComponentUpdate(nextProps, nextState) {
+    //   // 如果旧组件的key和新组件的一致，则不重新渲染
+    //   if('' + this.props.location.key === '' + nextProps.location.key){
+    //     // key值一样时，如果是刷新页面或首次打开，则需要渲染
+    //     if('' + this.state.isReload !==  '' + nextState.isReload){
+    //       return true
+    //     }else{
+    //       return false
+    //     }
+    //   }else{
+    //     return true
+    //   }
+    // }
+
+    // 选项卡切换
+
+  }, {
+    key: 'onTabChange',
+    value: function onTabChange(activeKey, e) {
+      // 阻止事件冒泡
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      var _state = this.state,
+          locationMap = _state.locationMap,
+          isReload = _state.isReload;
+
+      this.setState({ currentTabKey: activeKey, location: locationMap['' + activeKey], isReload: !isReload });
+      return false;
+    }
+
+    // 全部关闭
+
+  }, {
+    key: 'closeAll',
+    value: function closeAll() {
+      var self = this;
+      var tabPanes = self.state.tabPanes;
+
+      if (0 === tabPanes.length) return false;
+      self.setState({
+        tabPanes: []
+      }, function () {
+        // 跳转到默认目录
+        // hashHistory.push('/')
+        _router.hashHistory.push('/home');
+      });
+    }
+
+    // 初始化菜单
+
+  }, {
+    key: 'loadMenuList',
+    value: function loadMenuList() {
+      // 作用域提升
+      var self = this;
+      var _self$state = self.state,
+          menuList = _self$state.menuList,
+          tabPanes = _self$state.tabPanes;
+
+      if (0 !== menuList.length) {
+        return;
+      }
+      // 菜单项
+      menuList = [
+        // {
+        //   text: '刷新页面',
+        //   handleClick: (e) => {
+        //     console.log('刷新页面', e)
+        //   }
+        // },
+        // {
+        //   text: '全部关闭',
+        //   handleClick: (e) => {
+        //     if(0 === tabPanes.length) return false
+        //     tabPanes.map((tab, i) => {
+        //       // 销毁内存，回收对象
+        //       tab = null
+        //     })
+        //     // 全部清空
+        //     remove(tabPanes, () => {return 1 === 1})
+        //     self.setState({tabPanes: []})
+        //   }
+        // }
+      ];
+      self.setState({ menuList: menuList });
+    }
+
+    // 限制页签个数
+
+  }, {
+    key: 'limitTabCount',
+    value: function limitTabCount() {
+      // 作用域提升
+      var self = this;
+      // 是否继续往下
+      var flag = false;
+
+      var currTabCount = this.state.tabPanes.length;
+
+      // 页签的个数超过一定数量，则不再追加页签，中断执行
+      if (currTabCount > 0 && currTabCount > this.state.maxTabCount) {
+        this.state.tabPanes[0].content = null;
+        // 第一个元素的内存释放
+        this.state.tabPanes[0] = null;
+        // 临时数组，用于存放页签
+        var tmpArr = this.state.tabPanes;
+        // 移除第一个元素
+        tmpArr.splice(0, 1);
+        // 放回状态机
+        self.setState({ tabPanes: tmpArr });
+        // 中断执行
+        flag = false;
+
+        // 页签小于限制范围，则继续往下走
+      } else {
+        flag = true;
+      }
+      return flag;
+    }
+
+    // 追加标签页
+
+  }, {
+    key: 'onAddTabs',
+    value: function onAddTabs(payload) {
+      // 作用域提升
+      var self = this;
+      // 取出地址映射
+      var locationMap = this.state.locationMap;
+      // 选项卡属性、头部属性、路由属性
+
+      var tabProps = payload.tabProps,
+          headerProps = payload.headerProps,
+          location = payload.location,
+          currTabTitle = payload.currTabTitle;
+
+      // 是否DVA
+
+      var isDva = !tabProps.props ? false : true;
+      // 是否重新加载
+      var isReload = isDva;
+
+      self.setState({ isDva: isDva, headerProps: headerProps, location: location, isReload: isReload });
+
+      /* 路由列表
+       * 普通的React使用props.routes
+       * DVA无状态组件使用props.props.routes
+      */
+      var routes = !isDva ? tabProps.routes : tabProps.props.routes;
+      // 路由对象
+      var routeObj = routes[routes.length - 1];
+      // react-router传入的key
+      var key = routeObj.path;
+
+      // 如果key无值
+      if (!key) {
+        this.state.tabPanes.length = 0;
+        return;
+      }
+
+      if (-1 === key.indexOf('home/')) {
+        key = 'home/' + key;
+      }
+
+      // 克隆的key
+      var cloneKey = key;
+      // 路由中文名 - 页签标题
+      var name = routeObj.name;
+
+      // 选项卡个数
+      if (!this.tabCount) {
+        this.tabCount = 0;
+      }
+
+      // this.tabCount ++
+
+      // 若允许同一路由可以重复打开，则放开注释
+      // key = key + this.tabCount
+
+      // 设置路由对象
+      locationMap['' + key] = location;
+      self.setState({ locationMap: locationMap });
+
+      // 加载右键菜单
+      self.loadMenuList();
+
+      // 更新当前选中的tab的key
+      this.state.currentTabKey = key;
+
+      // 当前key对应的tab是否已显示
+      var exist = false;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.state.tabPanes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var pane = _step.value;
+
+          if ('' + pane.key === '' + key) {
+            exist = true;
+            break;
+          }
+        }
+
+        // 当前标题
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      var currTitle = currTabTitle.title || name;
+      // 当前key
+      var currKey = self.getCurrKey(currTabTitle);
+
+      /*
+       * 添加选项卡到列表
+       * DVA无状态组件使用props
+       * 普通的React使用props.children
+      */
+      if (!exist) {
+        var tmpArr = this.state.tabPanes;
+        if ('' + key === '' + currKey) {
+          if (currTabTitle && currTabTitle.title) {
+            name = currTabTitle.title;
+          }
+        }
+        tmpArr.push({
+          key: key,
+          title: name,
+          content: isDva ? tabProps : tabProps.children
+        });
+        this.setState({ tabPanes: tmpArr }, function () {
+          self.limitTabCount();
+          self.setMaxTabWidth();
+        });
+      } else {
+        self.setTabTitle(currKey, currTitle);
+      }
+    }
+
+    // 获取当前key
+
+  }, {
+    key: 'getCurrKey',
+    value: function getCurrKey(currTabTitle) {
+      if (!currTabTitle) return false;
+      var pathname = currTabTitle.location.pathname;
+      var currKey = pathname.slice(1);
+      return currKey;
+    }
+
+    // 设置页签标题
+
+  }, {
+    key: 'setTabTitle',
+    value: function setTabTitle(currKey, currTitle) {
+      // 作用域提升
+      var self = this;
+      // 克隆一份
+      var cloneTabPanes = (0, _lodash.cloneDeep)(this.state.tabPanes);
+      // 为空，则中断执行
+      if (0 === cloneTabPanes.length) return false;
+      // 查找到当前key
+      cloneTabPanes.map(function (tab, i) {
+        if ('' + currKey === '' + tab.key) {
+          tab.title = currTitle;
+          return;
+        }
+      });
+      // 设置回状态机
+      self.setState({ tabPanes: cloneTabPanes });
+    }
+
+    // 关闭tab时的回调
+
+  }, {
+    key: 'componentDidMount',
+
+
+    // 已插入真实DOM
+    value: function componentDidMount() {
+      var self = this;
+
+      // 监听页签关闭事件
+      _bus2.default.on('closeTab', function (e) {
+        var key = e.key;
+        if (!key) {
+          throw new Error('The key of closeTab event is not empty');
+        }
+        if ((0, _lodash.startsWith)(key, '/')) {
+          key = key.substring(1);
+        }
+        self.onTabRemove(key, null, e.cbf);
+      });
+
+      // 监听页签全部关闭事件
+      _bus2.default.on('closeAllTab', function (e) {
+        self.closeAll();
+      });
+
+      if (!self.props.tabProps) return false;
+
+      self.onAddTabs(self.props);
+    }
+
+    // 获得tab的最大宽度
+
+  }, {
+    key: 'setMaxTabWidth',
+    value: function setMaxTabWidth() {
+      var self = this;
+      if (!!self.refs.tabDomList) {
+        var totalWidth = 0;
+        var tabDomObj = self.refs.tabDomList;
+        var tabDomWidth = tabDomObj.offsetWidth;
+
+        var ulObj = tabDomObj.children[0];
+        var liArr = ulObj.children;
+
+        if (liArr.length > 0) {
+          var i = 0,
+              len = liArr.length;
+          for (; i < len; i++) {
+            totalWidth += liArr[i].offsetWidth + 6;
+          }
+        }
+
+        // 页签总宽度大于容器总宽度，则向右滑动
+        if (totalWidth >= tabDomWidth - 138) {
+          self.swipeRight();
+        }
+      }
+    }
+
+    // 选项卡左滑
+
+  }, {
+    key: 'swipeLeft',
+    value: function swipeLeft() {
+      var self = this;
+      self.refs.tabDomList.scrollLeft -= 138;
+    }
+
+    // 选项卡右滑
+
+  }, {
+    key: 'swipeRight',
+    value: function swipeRight() {
+      var self = this;
+      self.refs.tabDomList.scrollLeft += 138;
+    }
+
+    // 渲染选项卡
+
+  }, {
+    key: 'renderTabNav',
+    value: function renderTabNav() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        'div',
+        { ref: 'tabDomContainer', className: _index2.default.tabContainer },
+        _react2.default.createElement(
+          'div',
+          { className: _index2.default.tabListContainer },
+          _react2.default.createElement(
+            'div',
+            { ref: 'tabDomList', className: _index2.default.tabList },
+            _react2.default.createElement(
+              'ul',
+              null,
+              this.state.tabPanes && this.state.tabPanes.map(function (pan, i) {
+                return _react2.default.createElement(
+                  'li',
+                  { key: 'nav_' + i, className: (0, _classnames2.default)(_index2.default.tabItems, '' + _this2.state.currentTabKey === '' + pan.key ? _index2.default.active : '') },
+                  0 === _this2.state.menuList.length && _react2.default.createElement(
+                    'a',
+                    { className: _index2.default.link, href: 'javascript:;', onClick: function onClick(e) {
+                        return _this2.onTabChange('' + pan.key, e);
+                      } },
+                    _react2.default.createElement(
+                      'span',
+                      { className: _index2.default.title },
+                      ' ',
+                      pan.title,
+                      ' '
+                    ),
+                    _react2.default.createElement('i', { className: (0, _classnames2.default)('iconfont', 'icon-close', _index2.default.icon), onClick: function onClick(e) {
+                        _this2.onTabRemove('' + pan.key, e);
+                      } })
+                  ),
+                  0 !== _this2.state.menuList.length && _react2.default.createElement(
+                    _ContextMenu2.default,
+                    { menuList: _this2.state.menuList },
+                    _react2.default.createElement(
+                      'a',
+                      { className: _index2.default.link, href: 'javascript:;', onClick: function onClick(e) {
+                          return _this2.onTabChange('' + pan.key, e);
+                        } },
+                      _react2.default.createElement(
+                        'span',
+                        { className: _index2.default.title },
+                        ' ',
+                        pan.title,
+                        ' '
+                      ),
+                      _react2.default.createElement('i', { className: (0, _classnames2.default)('iconfont', 'icon-close', _index2.default.icon), onClick: function onClick(e) {
+                          _this2.onTabRemove('' + pan.key, e);
+                        } })
+                    )
+                  )
+                );
+              })
+            )
+          )
+        )
+      );
+    }
+
+    // 渲染选项卡内容
+
+  }, {
+    key: 'renderContent',
+    value: function renderContent() {
+      var _this3 = this;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.state.tabPanes && this.state.tabPanes.map(function (pan, i) {
+          if (_this3.state.currentTabKey === '' + pan.key) {
+            // window.CURR_TAB_KEY = '' + pan.key
+            window.CURR_TAB_KEY = '/' + pan.key;
+          }
+          return _react2.default.createElement(
+            'div',
+            { key: 'content_' + i, className: (0, _classnames2.default)(_index2.default.fade, '' + _this3.state.currentTabKey === '' + pan.key ? _index2.default.in : '') },
+            _react2.default.createElement(
+              'div',
+              null,
+              '' + _this3.state.currentTabKey === '' + pan.key ? pan.content : ''
+            )
+          );
+        })
+      );
+    }
+  }, {
+    key: 'renderBody',
+    value: function renderBody() {
+      var _this4 = this;
+
+      // 如果是DVA的场景
+      if (this.state.isDva) {
+        return _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            _HeaderView2.default,
+            (0, _extends3.default)({}, this.state.headerProps, { doGoLeft: function doGoLeft() {
+                return _this4.swipeLeft();
+              }, doGoRight: function doGoRight() {
+                return _this4.swipeRight();
+              }, doCloseAll: function doCloseAll() {
+                return _this4.closeAll();
+              } }),
+            this.renderTabNav()
+          ),
+          this.state.tabPanes && this.state.tabPanes.length > 0 && _react2.default.createElement(_Bread2.default, { location: this.state.location }),
+          _react2.default.createElement(
+            'div',
+            { name: 'tabContainer', className: _AppStyle2.default.container },
+            _react2.default.createElement(
+              'div',
+              { className: _AppStyle2.default.content, key: this.state.location.pathname },
+              this.renderContent()
+            )
+          ),
+          _react2.default.createElement(_FooterView2.default, null)
+        );
+      }
+
+      // React原生组件的场景
+      if (0 === this.state.tabPanes.length) {
+        return _react2.default.createElement(
+          'div',
+          null,
+          '\xA0'
+        );
+      }
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.renderTabNav(),
+        this.renderContent()
+      );
+    }
+
+    // 渲染函数
+
+  }, {
+    key: 'render',
+    value: function render() {
+      return this.renderBody();
+    }
+  }]);
+  return _default;
+}(_react.Component);
+
+// 引入头部等组件
+
+// 当前组件样式
+// 引入React库
+
+
+exports.default = _default;
+module.exports = exports['default'];

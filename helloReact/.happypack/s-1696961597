@@ -1,0 +1,38 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getGlobalData = getGlobalData;
+exports.setGlobalData = setGlobalData;
+exports.getLocalData = getLocalData;
+exports.setLocalData = setLocalData;
+
+var _storejs = require('storejs');
+
+var _storejs2 = _interopRequireDefault(_storejs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.bjfn || (window.bjfn = {});
+var _window = window,
+    bjfn = _window.bjfn;
+function getGlobalData(key) {
+  return bjfn[key];
+}
+
+function setGlobalData(data) {
+  bjfn = Object.assign(bjfn, data);
+}
+
+function getLocalData(key) {
+  var data = (0, _storejs2.default)(key);
+  try {
+    data = JSON.parse(data);
+  } catch (e) {}
+  return data;
+}
+
+function setLocalData(key, value) {
+  localStorage.setItem(key, value ? JSON.stringify(value) : null);
+}

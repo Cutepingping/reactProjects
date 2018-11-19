@@ -1,0 +1,339 @@
+@import "../config/basic";
+
+:global {
+  .mg1 {
+    margin: 8px;
+  }
+  .mg2 {
+    margin: 16px;
+  }
+  .pad1 {
+    padding: 8px;
+  }
+  .pad2 {
+    padding: 16px;
+  }
+  .pad1t {
+    padding-top: 8px;
+  }
+
+  .mg1l {
+    margin-left: 8px;
+  }
+  .mg2l {
+    margin-left: 16px;
+  }
+  .mg3l {
+    margin-left: 24px;
+  }
+
+  .mg1r {
+    margin-right: 8px;
+  }
+  .mg2r {
+    margin-right: 16px;
+  }
+  .mg3r {
+    margin-right: 24px;
+  }
+
+  .mg1t {
+    margin-top: 8px;
+  }
+  .mg2t {
+    margin-top: 16px;
+  }
+
+  .mg3t {
+    margin-top: 24px;
+  }
+
+  .mg5t {
+    margin-top: 40px;
+  }
+  .mg7t {
+    margin-top: 56px;
+  }
+
+  .mg1b {
+    margin-bottom: 8px;
+  }
+
+  .mg2b {
+    margin-bottom: 16px;
+  }
+
+  .mg3b {
+    margin-bottom: 24px;
+  }
+
+  .width50 {
+    width: 50px;
+  }
+
+  .width80 {
+    width: 80px;
+  }
+
+  .width100 {
+    width: 100px;
+  }
+
+  .width120 {
+    width: 120px;
+  }
+
+  .width150 {
+    width: 150px;
+  }
+  .width175 {
+    width: 175px;
+  }
+
+  .width200 {
+    width: 200px;
+  }
+
+  .width240 {
+    width: 240px;
+  }
+  .width360 {
+    width: 360px;
+  }
+
+  .width450 {
+    width: 450px;
+  }
+
+  .fleft {
+    float: left;
+  }
+
+  .fright {
+    float: right;
+  }
+
+  .txtright {
+    text-align: right;
+  }
+
+  .txtleft {
+    text-align: left;
+  }
+
+  .txtcenter {
+    text-align: center;
+  }
+
+  .lheight40 {
+    line-height: 40px;
+  }
+
+  .iblock {
+    display: inline-block;
+  }
+
+  .iflex {
+    display: flex;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .fsize2 {
+    font-size: 16px;
+  }
+
+  .fsize14 {
+    font-size: 14px;
+  }
+
+  .fbold {
+    font-weight: bold;
+  }
+
+  .text-normal {
+    .fontColor_2
+  }
+
+  .text-info {
+    .fontColor_3
+  }
+
+  // 页面标题字号
+
+  .fzTitle {
+    font-family: PingFangSC-Medium;
+    font-size: 22px;
+    color: #262626;
+    line-height: 22px;
+  }
+
+  // 全局隐藏元素
+  .displayHide{
+    display: none;
+  }
+
+  // 全局显示元素
+  .displayShow{
+    display: block;
+  }
+
+  .lheight30 {
+    line-height: 30px;
+  }
+  //checkbox自动换行
+  .checkboxWrap {
+    white-space:normal;
+  }
+
+  /* use css to set position of modal */
+  .vertical-center-modal {
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .vertical-center-modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    width: 0;
+  }
+
+  .vertical-center-modal .ant-modal {
+    display: inline-block;
+    vertical-align: middle;
+    top: 0;
+    text-align: left;
+  }
+  .menuLeft {
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+    }
+  }
+
+  .bodyAnimations-appear {
+    opacity: 0.01;
+    margin-right: 100%;
+  }
+
+  .bodyAnimations-appear.bodyAnimations-appear-active {
+    margin-right: 0px;
+    opacity: 1;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+  }
+
+  .lineAnimations-appear {
+    width: 0;
+  }
+
+  .lineAnimations-appear.lineAnimations-appear-active {
+    width: 100%;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+  }
+
+  .detail-content {
+    width: 100%;
+    padding: 30px;
+  }
+
+  //解决浏览器自动填充账号和密码
+  .hiddenInput{
+    visibility: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  //表单
+  .customForm {
+    border-bottom: 1px solid @uiColor_7;
+    div.ant-form-item {
+      margin-bottom: 0;
+      border-top: 1px solid @uiColor_7;
+      display: flex;
+      height: 100%;
+    }
+    .ant-form-item-label, .ant-form-item-control-wrapper {
+      .fontColor_2;
+      padding: 8px;
+    }
+    div.ant-form-item-label {
+      max-width: 100px;
+      background-color: @uiColor_8;
+    }
+    div.ant-form-item-control-wrapper {
+      width: calc(~"100% - 100px");
+      word-break: break-all;
+    }
+    .ant-row {
+      display: flex;
+    }
+  }
+  .fixedForm {
+    div.ant-form-item-label {
+      max-width: 100px;
+    }
+    div.ant-form-item-control-wrapper {
+      width: calc(~"100% - 100px");
+    }
+  }
+
+  //form表单数据自动换行
+  .auto-wrap {
+    .ant-form-item-control-wrapper, .ant-table-tbody .ant-table-row td {
+      word-wrap: break-word;
+      white-space: normal;
+    }
+  }
+  //弹窗标题
+  .modal-title {
+    font-weight: bold;
+    font-size: 24px;
+    .fontColor_1;
+  }
+  //下划线
+  .underline {
+    text-decoration: underline;
+  }
+  //显示省略符号
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+//角色名称
+.shopkeeper-role {
+  .roleButton1 {
+    display: show !important;
+  }
+  .roloButton2 {
+    display: none !important;
+  }
+}
+
+.netsystem-role {
+  .roleButton1 {
+    display: none !important;
+  }
+  .roloButton2 {
+    display: show !important;
+  }
+}
+
+hr {
+  display: block;
+  clear: both;
+  padding: 0;
+  border: 0;
+  height: 0;
+  border-top: 1px solid #eee;
+}

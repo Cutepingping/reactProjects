@@ -1,0 +1,1019 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _input = require('antd/lib/input');
+
+var _input2 = _interopRequireDefault(_input);
+
+require('antd/lib/icon/style');
+
+require('antd/lib/input/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _router = require('dva/router');
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _lodash = require('lodash');
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _SiderStyle = require('./SiderStyle.less');
+
+var _SiderStyle2 = _interopRequireDefault(_SiderStyle);
+
+var _SiderServ = require('./SiderServ');
+
+var _utils = require('../../../utils');
+
+var _menu = require('../../../config/menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
+var _notification = require('../../../utils/notification');
+
+var _permissionControl = require('../../../utils/permission-control');
+
+var _globalScope = require('../../../utils/globalScope');
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _index = require('../../ScrollBar/index');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Search = _input2.default.Search;
+
+// 存储左侧菜单展开、折叠状态
+
+//自定义滚动条（解决ie、firefox自带滚动条难看的问题）
+var setSiderFold = function setSiderFold(siderFold) {
+  sessionStorage.setItem('IS_SIDER_FOLD', siderFold);
+};
+
+// 获取左侧菜单展开、折叠状态
+var getSiderFold = function getSiderFold() {
+  return '' + sessionStorage.getItem('IS_SIDER_FOLD') === 'true';
+};
+
+// 存储左侧菜单打开的项
+var setOpenKey = function setOpenKey(key) {
+  sessionStorage.setItem('SIDER_OPEN_KEY', key);
+};
+
+// 获取左侧菜单打开的项
+var getOpenKey = function getOpenKey() {
+  return sessionStorage.getItem('SIDER_OPEN_KEY');
+};
+
+// 存储左侧菜单选中的项
+var setSelectedKey = function setSelectedKey(key) {
+  sessionStorage.setItem('SIDER_SELECTED_KEY', key);
+};
+
+// 存储左侧菜单选中的项
+var getSelectedKey = function getSelectedKey() {
+  return sessionStorage.getItem('SIDER_SELECTED_KEY');
+};
+
+// 递归查询菜单
+var getMenus = function getMenus(menuArray) {
+  var parentPath = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '/';
+
+
+  // 遍历菜单列表
+  return menuArray.map(function (item) {
+    var linkTo = parentPath + item.key;
+    var copyLinkTo = linkTo;
+
+    // 菜单节点，有叶子节点，则递归遍历叶子
+    if (item.child) {
+      return _react2.default.createElement(
+        'li',
+        { key: copyLinkTo, 'data-link': item.key, className: 'ant-menu-submenu-inline ant-menu-submenu' },
+        _react2.default.createElement(
+          'div',
+          { className: 'ant-menu-submenu-title', style: { 'paddingLeft': '24px' } },
+          _react2.default.createElement(
+            'span',
+            null,
+            _react2.default.createElement('i', { className: 'iconfont icon-Packup' }),
+            item.name
+          )
+        ),
+        _react2.default.createElement(
+          'ul',
+          { className: 'ant-menu ant-menu-inline ant-menu-sub ant-menu-hidden', role: 'menu' },
+          getMenus(item.child, linkTo + '/')
+        )
+      );
+      // 最后一级节点，无叶子节点，附加资源ID，用于权限操作
+    }
+    // 最后一级节点，直接渲染
+    return _react2.default.createElement(
+      'li',
+      { key: copyLinkTo, 'data-link': item.key, className: 'ant-menu-item', role: 'menuitem', style: { 'paddingLeft': '45px' } },
+      _react2.default.createElement(
+        'a',
+        { href: 'javascript:;', 'data-to': '/home' + linkTo },
+        _react2.default.createElement(
+          'span',
+          null,
+          _react2.default.createElement('i', { className: 'iconfont ' + item.icon }),
+          item.name
+        )
+      )
+    );
+  });
+};
+
+// 递归查询菜单
+var getMenusExt = function getMenusExt(menuArray) {
+  var parentPath = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '/';
+
+
+  // 遍历菜单列表
+  return menuArray.map(function (item) {
+    var linkTo = parentPath + item.key;
+    var copyLinkTo = linkTo;
+
+    // 菜单节点，有叶子节点，则递归遍历叶子
+    if (item.child) {
+      return _react2.default.createElement(
+        'li',
+        { key: copyLinkTo, 'data-link': item.key, className: 'ant-menu-submenu-vertical ant-menu-submenu' },
+        _react2.default.createElement(
+          'div',
+          { className: 'ant-menu-submenu-title' },
+          _react2.default.createElement(
+            'span',
+            null,
+            _react2.default.createElement('i', { className: 'iconfont ' + item.icon })
+          )
+        ),
+        _react2.default.createElement(
+          'ul',
+          { className: 'ant-menu ant-menu-vertical ant-menu-sub ant-menu-hidden', role: 'menu' },
+          getMenusExt(item.child, linkTo + '/')
+        )
+      );
+      // 最后一级节点，无叶子节点，附加资源ID，用于权限操作
+    }
+    // 最后一级节点，直接渲染
+    return _react2.default.createElement(
+      'li',
+      { key: copyLinkTo, 'data-link': item.key, className: 'ant-menu-item', role: 'menuitem' },
+      _react2.default.createElement(
+        'a',
+        { href: 'javascript:;', 'data-to': '/home' + linkTo },
+        _react2.default.createElement(
+          'span',
+          null,
+          _react2.default.createElement('i', { className: 'iconfont ' + item.icon }),
+          item.name
+        )
+      )
+    );
+  });
+};
+
+// 导出组件
+
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      // 菜单配置列表
+      menuConfig: [],
+      loadedSuccess: false
+    };
+    return _this;
+  }
+
+  // 渲染菜单项
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'renderMenuItems',
+    value: function renderMenuItems(siderFold) {
+      if (!this.state.menuConfig || 0 === this.state.menuConfig.length) return false;
+
+      if (!siderFold) {
+        return getMenus(this.state.menuConfig);
+      } else {
+        return getMenusExt(this.state.menuConfig);
+      }
+    }
+
+    // 是否触发render函数
+
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      var self = this;
+      // 若已渲染过，则不重新渲染
+      if (self.state.loadedSuccess) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    // 请求登录菜单权限
+
+  }, {
+    key: 'getMenuList',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        var result, menuList;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return (0, _SiderServ.queryAuthPath)({ applicationId: _utils.config.applicationId });
+
+              case 3:
+                result = _context.sent;
+
+                // 返回菜单列表
+                menuList = [];
+
+                if (!('0' === '' + result.resultCode)) {
+                  _context.next = 10;
+                  break;
+                }
+
+                menuList = result.data ? result.data.child : [];
+                return _context.abrupt('return', Promise.resolve(menuList));
+
+              case 10:
+                return _context.abrupt('return', Promise.reject(result.resultMsg || '未知的查询菜单错误'));
+
+              case 11:
+                _context.next = 16;
+                break;
+
+              case 13:
+                _context.prev = 13;
+                _context.t0 = _context['catch'](0);
+                return _context.abrupt('return', Promise.reject(_context.t0 || '未知的查询菜单权限异常'));
+
+              case 16:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 13]]);
+      }));
+
+      function getMenuList() {
+        return _ref.apply(this, arguments);
+      }
+
+      return getMenuList;
+    }()
+    //企业中心需区分经销商、分销商菜单
+
+  }, {
+    key: 'filterMenu',
+    value: function filterMenu(menuConfig) {
+      var result = menuConfig;
+
+      if (_utils.config.sysType === 'entCenter') {
+        var _menuFilter = function _menuFilter(menu) {
+          var data = [];
+          menu && menu.forEach(function (d) {
+            var result = _filteredMenusKeys.includes(d.key);
+            if (!result) {
+              if (d.child) {
+                var child = _menuFilter(d.child);
+                if (child && child.length) {
+                  d.child = child;
+                  data.push(d);
+                }
+              } else {
+                data.push(d);
+              }
+            }
+          });
+          return data;
+        };
+
+        var _filteredMenusKeys = ['distrOrderMgmt', 'myAfterSale', 'backBottleList', 'myAssets', 'invoiceInfo', 'distributorMgmt', 'billingAccountMgmt'];
+        //1：经销商 2：分销商
+        var userType = (0, _lodash.get)((0, _globalScope.getLocalData)(_utils.config.userInfoKey), 'data.type', '');
+        if (userType == 2) {
+          result = _menuFilter(menuConfig);
+        }
+      }
+
+      return result;
+    }
+
+    // 查询登录菜单权限
+
+  }, {
+    key: 'getAuthPath',
+    value: function () {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
+        var self, auth, resp, menuList, isStaticMenu;
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                self = this;
+                auth = '';
+
+                if (_utils.config.isB2bLogin) {
+                  //企业中心中，判断是否存在auth，没有则跳转至门户
+                  auth = (0, _lodash.get)((0, _globalScope.getLocalData)(_utils.config.userInfoKey), 'auth', '');
+                  auth || (window.location.href = _utils.config.redirectLoginUrl);
+                } else {
+                  auth = _jsCookie2.default.get(_utils.config.cookie.auth);
+                }
+                // 没有登录，则中断执行
+
+                if (auth) {
+                  _context2.next = 5;
+                  break;
+                }
+
+                return _context2.abrupt('return', false);
+
+              case 5:
+                _context2.prev = 5;
+
+                // 查询结果
+                resp = null;
+                // 返回的菜单列表
+
+                menuList = [];
+                isStaticMenu = (0, _lodash.get)(_utils.config, 'isStaticMenu', false);
+                // 设置了固定数据
+
+                if (!isStaticMenu) {
+                  _context2.next = 14;
+                  break;
+                }
+
+                resp = { "resultCode": 0, "status": "success", "resultMsg": "OK", "data": _utils.config.defaultAuthMenu };
+                menuList = _menu2.default;
+                _context2.next = 17;
+                break;
+
+              case 14:
+                _context2.next = 16;
+                return self.getMenuList();
+
+              case 16:
+                menuList = _context2.sent;
+
+              case 17:
+                return _context2.abrupt('return', new Promise(function (resolve, reject) {
+                  // 设置到祖状态机
+                  self.setState({
+                    menuConfig: menuList,
+                    loadedSuccess: menuList && 0 === menuList.length ? false : true
+                  }, function () {
+                    resolve(menuList);
+                  });
+                }));
+
+              case 20:
+                _context2.prev = 20;
+                _context2.t0 = _context2['catch'](5);
+
+                (0, _notification.messageInform)(_context2.t0 || '未知的请求菜单权限异常', 'error');
+                return _context2.abrupt('return', Promise.reject(_context2.t0));
+
+              case 24:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[5, 20]]);
+      }));
+
+      function getAuthPath() {
+        return _ref2.apply(this, arguments);
+      }
+
+      return getAuthPath;
+    }()
+
+    // 已插入DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function () {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+        var self;
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                self = this;
+                _context3.next = 3;
+                return self.getAuthPath();
+
+              case 3:
+
+                if (getSiderFold()) {
+                  (0, _jquery2.default)('#layoutCont').addClass('fold');
+                } else {
+                  (0, _jquery2.default)('#layoutCont').removeClass('fold');
+                }
+
+                // 是否折叠菜单
+                self.toggleSiderTree(getSiderFold());
+                // 展开菜单事件监听
+                self.onInlineMenuEvtListen();
+                // 折叠菜单事件监听
+                self.onVerticalMenuEvtListen();
+
+                self.initDefaultMenu(getSiderFold());
+
+                // 加载完成
+                console.log('render ok loadedSuccess');
+
+              case 9:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function componentDidMount() {
+        return _ref3.apply(this, arguments);
+      }
+
+      return componentDidMount;
+    }()
+
+    // 设置菜单状态
+
+  }, {
+    key: 'setMenuStatus',
+    value: function setMenuStatus(elem, siderFold) {
+      var openKey = getOpenKey();
+      var selectedKey = getSelectedKey();
+
+      // 菜单或叶子
+      var hasRole = (0, _jquery2.default)(elem).attr('role');
+      if (!hasRole) {
+
+        if ('' + openKey === '' + (0, _jquery2.default)(elem).data('link')) {
+          (0, _jquery2.default)(elem).addClass('ant-menu-submenu-open');
+          // 菜单的子节点 - 显示、隐藏
+          if ('menu' === '' + (0, _jquery2.default)(elem).find('ul').attr('role')) {
+            (0, _jquery2.default)(elem).find('ul').removeClass('ant-menu-hidden');
+          }
+
+          // 三角形角标 - 展开、折叠
+          if (!siderFold) {
+            (0, _jquery2.default)(elem).find('.ant-menu-submenu-title i').removeClass('icon-Packup').addClass('icon-show');
+          }
+        }
+      } else {
+        if ('' + selectedKey === '' + (0, _jquery2.default)(elem).data('link')) {
+          // 兄弟节点取消选中
+          (0, _jquery2.default)(elem).siblings().removeClass('ant-menu-item-selected');
+          // 当前叶子选中
+          (0, _jquery2.default)(elem).addClass('ant-menu-item-selected');
+        }
+      }
+    }
+
+    // 打开默认的菜单和选中的项
+
+  }, {
+    key: 'initDefaultMenu',
+    value: function initDefaultMenu(siderFold) {
+      var self = this;
+
+      if (!siderFold) {
+        (0, _jquery2.default)('#MenuJsxInline ul.ant-menu-root').find('li').each(function (idx, elem) {
+          self.setMenuStatus(elem, siderFold);
+        });
+      } else {
+        (0, _jquery2.default)('#MenuJsxVertical ul.ant-menu-root').find('li').each(function (idx, elem) {
+          self.setMenuStatus(elem, siderFold);
+        });
+      }
+    }
+
+    // 展开菜单事件监听
+
+  }, {
+    key: 'onInlineMenuEvtListen',
+    value: function onInlineMenuEvtListen() {
+      var self = this;
+      (0, _jquery2.default)('#MenuJsxInline ul.ant-menu-root').find('li').on({
+
+        // 菜单项点击
+        click: function click(e) {
+          // 阻止事件冒泡
+          e.preventDefault();
+          e.stopPropagation();
+          // 菜单或叶子
+          var hasRole = (0, _jquery2.default)(this).attr('role');
+
+          // 菜单点击
+          if (!hasRole) {
+            setOpenKey((0, _jquery2.default)(this).data('link'));
+
+            var siblingsObj = (0, _jquery2.default)(this).siblings();
+            siblingsObj.find('ul').hide();
+            siblingsObj.find('.ant-menu-submenu-title i').removeClass('icon-show').addClass('icon-Packup');
+            siblingsObj.removeClass('ant-menu-submenu-active');
+
+            // 菜单的子节点 - 显示、隐藏
+            if ('menu' === '' + (0, _jquery2.default)(this).find('ul').attr('role')) {
+              (0, _jquery2.default)(this).find('ul').slideToggle(150);
+            }
+            // 三角形角标 - 展开、折叠
+            var iconObj = (0, _jquery2.default)(this).find('.ant-menu-submenu-title i');
+            if (iconObj.hasClass('icon-Packup')) {
+              iconObj.removeClass('icon-Packup').addClass('icon-show');
+            } else {
+              iconObj.removeClass('icon-show').addClass('icon-Packup');
+            }
+            // 菜单目录 - 展开、折叠
+            (0, _jquery2.default)(this).toggleClass('ant-menu-submenu-open');
+            // 叶子点击
+          } else {
+            setSelectedKey((0, _jquery2.default)(this).data('link'));
+            // 清空其它叶子的样式
+            (0, _jquery2.default)('#MenuJsxInline ul.ant-menu-root').find('li').removeClass('ant-menu-item-selected');
+            // 兄弟节点取消选中
+            (0, _jquery2.default)(this).siblings().removeClass('ant-menu-item-selected');
+            // 当前叶子选中
+            (0, _jquery2.default)(this).addClass('ant-menu-item-selected');
+            // 取到跳转的链接
+            var linkTo = (0, _jquery2.default)(this).find('a').data('to');
+            // 跳转
+            _router.hashHistory.push(linkTo);
+          }
+          //折叠或展开时，重新计算菜单滚动条
+          if (self.scrollbar) {
+            setTimeout(function () {
+              self.scrollbar.update();
+            }, 300);
+          }
+        },
+        // 鼠标移入
+        mouseover: function mouseover(e) {
+          // 阻止事件冒泡
+          e.preventDefault();
+          e.stopPropagation();
+          // 菜单或叶子
+          var hasRole = (0, _jquery2.default)(this).attr('role');
+          // 菜单移入
+          if (!hasRole) {
+            (0, _jquery2.default)(this).siblings().removeClass('ant-menu-submenu-active');
+            (0, _jquery2.default)(this).addClass('ant-menu-submenu-active');
+
+            // 叶子节点移入
+          } else {
+            (0, _jquery2.default)(this).siblings().removeClass('ant-menu-item-active');
+            (0, _jquery2.default)(this).addClass('ant-menu-item-active');
+          }
+        },
+        // 鼠标移出
+        mouseout: function mouseout(e) {
+          // 阻止事件冒泡
+          e.preventDefault();
+          e.stopPropagation();
+          // 菜单或叶子
+          var hasRole = (0, _jquery2.default)(this).attr('role');
+          // 菜单移出
+          if (!hasRole) {
+            (0, _jquery2.default)(this).removeClass('ant-menu-submenu-active');
+
+            // 叶子节点移出
+          } else {
+            (0, _jquery2.default)(this).removeClass('ant-menu-item-active');
+          }
+        }
+
+      });
+    }
+
+    // 折叠菜单事件监听
+
+  }, {
+    key: 'onVerticalMenuEvtListen',
+    value: function onVerticalMenuEvtListen() {
+      (0, _jquery2.default)('#MenuJsxVertical ul.ant-menu-root').find('li').on({
+        // 菜单项点击
+        click: function click(e) {
+          // 阻止事件冒泡
+          e.preventDefault();
+          e.stopPropagation();
+          // 菜单或叶子
+          var hasRole = (0, _jquery2.default)(this).attr('role');
+          if (!hasRole) {
+            setOpenKey((0, _jquery2.default)(this).data('link'));
+          } else {
+            setSelectedKey((0, _jquery2.default)(this).data('link'));
+            // 清空其它叶子的样式
+            (0, _jquery2.default)('#MenuJsxVertical ul.ant-menu-root').find('li').removeClass('ant-menu-item-selected');
+            // 关闭所有子菜单
+            (0, _jquery2.default)('#MenuJsxVertical ul.ant-menu-root').find('ul').addClass('ant-menu-hidden');
+            // 兄弟节点取消选中
+            (0, _jquery2.default)(this).siblings().removeClass('ant-menu-item-selected');
+            // 当前叶子选中
+            (0, _jquery2.default)(this).addClass('ant-menu-item-selected');
+            // 取到跳转的链接
+            var linkTo = (0, _jquery2.default)(this).find('a').data('to');
+            // 跳转
+            _router.hashHistory.push(linkTo);
+          }
+        },
+        // 鼠标移入
+        mouseenter: function mouseenter(e) {
+          // 阻止事件冒泡
+          e.preventDefault();
+          e.stopPropagation();
+          // 菜单或叶子
+          var hasRole = (0, _jquery2.default)(this).attr('role');
+          if (!hasRole) {
+            (0, _jquery2.default)(this).addClass('ant-menu-submenu-open ant-menu-submenu-active');
+            (0, _jquery2.default)(this).find('ul').removeClass('ant-menu-hidden');
+          }
+          // 叶子节点移入
+          else {
+              (0, _jquery2.default)(this).siblings().removeClass('ant-menu-item-active');
+              (0, _jquery2.default)(this).addClass('ant-menu-item-active');
+            }
+        },
+        // 鼠标移出
+        mouseleave: function mouseleave(e) {
+          // 阻止事件冒泡
+          e.preventDefault();
+          e.stopPropagation();
+          // 菜单或叶子
+          var hasRole = (0, _jquery2.default)(this).attr('role');
+          if (!hasRole) {
+            (0, _jquery2.default)(this).removeClass('ant-menu-submenu-open ant-menu-submenu-active');
+            (0, _jquery2.default)(this).find('ul').addClass('ant-menu-hidden');
+          }
+          // 叶子节点移出
+          else {
+              (0, _jquery2.default)(this).removeClass('ant-menu-item-active');
+            }
+        }
+      });
+    }
+
+    // 切换菜单树
+
+  }, {
+    key: 'toggleSiderTree',
+    value: function toggleSiderTree(siderFold) {
+      console.log('siderFold:', siderFold);
+      if (!siderFold) {
+        (0, _jquery2.default)('#MenuJsxInline').removeClass('displayHide').addClass('displayShow');
+        (0, _jquery2.default)('#MenuJsxVertical').removeClass('displayShow').addClass('displayHide');
+      } else {
+        (0, _jquery2.default)('#MenuJsxVertical').removeClass('displayHide').addClass('displayShow');
+        (0, _jquery2.default)('#MenuJsxInline').removeClass('displayShow').addClass('displayHide');
+      }
+    }
+
+    // 展开折叠
+
+  }, {
+    key: 'toggleFold',
+    value: function toggleFold(e) {
+      // 阻止事件冒泡
+      e.preventDefault();
+      e.stopPropagation();
+
+      var layoutCont = (0, _jquery2.default)('#layoutCont');
+      layoutCont.toggleClass('fold');
+
+      // 菜单是否折叠
+      var hasFold = !getSiderFold();
+
+      // 展开、折叠
+      var siderFold = hasFold;
+      // 存储到sessionStorage
+      setSiderFold(siderFold);
+      // 切换菜单树
+      this.toggleSiderTree(siderFold);
+    }
+
+    // 菜单上下滑
+
+  }, {
+    key: 'menuUpDown',
+    value: function menuUpDown(e, oper) {
+      // 阻止事件冒泡
+      e.preventDefault();
+      e.stopPropagation();
+
+      var top = parseInt((0, _jquery2.default)('#MenuJsx').css('top'));
+      var lastChildTop = (0, _jquery2.default)('#MenuJsx > li:last-child').offset().top;
+
+      if (oper == 'up') {
+        if (lastChildTop > 442) {
+          (0, _jquery2.default)('#MenuJsx').css('top', top - 48 + 'px');
+        }
+        console.log('上滑');
+      } else if (oper == 'down') {
+        if (top < 60) {
+          (0, _jquery2.default)('#MenuJsx').css('top', top + 48 + 'px');
+        } else {
+          (0, _jquery2.default)('#MenuJsx').css('top', 97 + 'px');
+        }
+        console.log('下滑');
+      }
+    }
+
+    // 展示搜索结果 keys要展示的键名
+
+  }, {
+    key: 'showSearchHandler',
+    value: function showSearchHandler(keys, isShowAll) {
+      // console.log('isShowAll:', isShowAll)
+      // 节点的key值
+      var elemKey = '';
+      // 隐藏的对象
+      var hideObj = null;
+      // 检索所有菜单
+      (0, _jquery2.default)('#MenuJsxInline ul.ant-menu-root').find('li').each(function (idx, elem) {
+        elemKey = '' + (0, _jquery2.default)(elem).data('link');
+
+        // 非检索结果菜单处理
+        if (!(0, _lodash.includes)(keys, elemKey)) {
+          hideObj = (0, _jquery2.default)(elem)[0];
+          // 如果是菜单才隐藏
+          if ((0, _jquery2.default)(hideObj).hasClass('ant-menu-submenu')) {
+            (0, _jquery2.default)(hideObj).hide();
+          }
+
+          // 检索到的结果
+        } else {
+          // 仅展示搜索的结果
+          if (!isShowAll) {
+            // 当前菜单打开状态
+            (0, _jquery2.default)(elem).addClass('ant-menu-submenu-open');
+            // 菜单的子节点 - 显示、隐藏
+            if ('menu' === '' + (0, _jquery2.default)(elem).find('ul').attr('role')) {
+              (0, _jquery2.default)(elem).find('ul').removeClass('ant-menu-hidden');
+            }
+            // 三角形角标 - 展开、折叠
+            (0, _jquery2.default)(elem).find('.ant-menu-submenu-title i').removeClass('icon-Packup').addClass('icon-show');
+            // 显示当前菜单
+            (0, _jquery2.default)(elem).show();
+
+            // 展示所有，则所有节点折叠
+          } else {
+            // 当前菜单关闭状态
+            (0, _jquery2.default)(elem).removeClass('ant-menu-submenu-open');
+            // 隐藏菜单的子节点
+            if ('menu' === '' + (0, _jquery2.default)(elem).find('ul').attr('role')) {
+              (0, _jquery2.default)(elem).find('ul').addClass('ant-menu-hidden');
+            }
+            // 三角形角标 - 展开、折叠
+            (0, _jquery2.default)(elem).find('.ant-menu-submenu-title i').removeClass('icon-show').addClass('icon-Packup');
+            // 显示当前菜单
+            (0, _jquery2.default)(elem).show();
+          }
+        }
+      });
+    }
+
+    // 获取搜索结果
+
+  }, {
+    key: 'getSearchResult',
+    value: function getSearchResult(tmpArr, val) {
+      var result = [],
+          self = this;
+
+      // 过滤包含key值的节点
+      tmpArr.map(function (m, i) {
+        if (m.child) {
+          m.child.map(function (mc, j) {
+            if (('' + mc.name).indexOf('' + val) > -1) {
+              result.push(m);
+            }
+          });
+        }
+        if (('' + m.name).indexOf('' + val) > -1) {
+          result.push(m);
+        }
+      });
+      return result;
+    }
+
+    // 获取所有结果的keys
+
+  }, {
+    key: 'getSearchKeys',
+    value: function getSearchKeys(tmpArr, val) {
+      // 菜单列表
+      var keys = [],
+          result = [];
+
+      // 菜单为空，则不执行
+      if (0 === tmpArr.length) return false;
+
+      // 不输入，则检索所有节点
+      if (!val) {
+        result = tmpArr;
+        // 输入，则根据关键字检索
+      } else {
+        // 过滤包含key值的节点
+        result = this.getSearchResult(tmpArr, val);
+      }
+
+      // 如果过滤后的节点有值，则取出key值
+      if (result && result.length > 0) {
+        result.map(function (res, i) {
+          keys.push(res.key);
+        });
+      }
+      // 返回过滤后菜单节点的keys
+      return keys;
+    }
+
+    // 点击搜索处理
+
+  }, {
+    key: 'onSearchHandler',
+    value: function onSearchHandler(val) {
+      var tmpArr = this.state.menuConfig;
+      var keys = this.getSearchKeys(tmpArr, val);
+      var isShowAll = !val ? true : false;
+
+      if (0 !== keys.length && keys.length === tmpArr.length) {
+        this.showSearchHandler(keys, isShowAll);
+      } else {
+        this.showSearchHandler(keys, isShowAll);
+      }
+    }
+
+    // 折叠菜单时
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      console.log('sider render');
+
+      if (0 === this.state.menuConfig.length) {
+        return _react2.default.createElement('div', null);
+      } else {
+        return _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { id: 'MenuJsxInline', className: 'siderBlueSkin' },
+            _react2.default.createElement(
+              'div',
+              { className: 'changeFold' },
+              _react2.default.createElement(
+                'div',
+                { className: _SiderStyle2.default.button, onClick: function onClick(e) {
+                    _this2.toggleFold(e);
+                  } },
+                _react2.default.createElement('i', { className: 'iconfont icon-menufold' })
+              ),
+              _utils.config.sysType === 'entCenter' || _react2.default.createElement(
+                'div',
+                { className: 'siderSearchBtn' },
+                _react2.default.createElement(Search, {
+                  placeholder: '\u641C\u7D22',
+                  style: { width: 178 },
+                  onSearch: function onSearch(value) {
+                    return _this2.onSearchHandler(value);
+                  }
+                })
+              )
+            ),
+            _react2.default.createElement(
+              'ul',
+              { className: 'ant-menu ant-menu-inline menuLeft ant-menu-dark ant-menu-root ' + (_utils.config.sysType === 'entCenter' ? '' : _SiderStyle2.default.fixScrollHeight), role: 'menu', 'aria-activedescendant': '' },
+              _react2.default.createElement(
+                _index.Scrollbars,
+                {
+                  ref: function ref(e) {
+                    _this2.scrollbar = e;
+                  },
+                  renderTrackVertical: function renderTrackVertical(props) {
+                    return _react2.default.createElement('div', (0, _extends3.default)({}, props, { className: _SiderStyle2.default.trackVertical }));
+                  },
+                  renderThumbVertical: function renderThumbVertical(props) {
+                    return _react2.default.createElement('div', (0, _extends3.default)({}, props, { className: _SiderStyle2.default.thumbVertical }));
+                  }
+                },
+                this.renderMenuItems(false),
+                _react2.default.createElement('li', { className: 'ant-menu-item', role: 'menuitem', 'aria-selected': 'false', style: { 'cursor': 'default', 'paddingLeft': '24px' } })
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { id: 'MenuJsxVertical', className: 'siderBlueSkin siderBlueFold displayHide' },
+            _react2.default.createElement(
+              'div',
+              { className: 'changeFold' },
+              _react2.default.createElement(
+                'div',
+                { className: 'button', onClick: function onClick(e) {
+                    _this2.toggleFold(e);
+                  } },
+                _react2.default.createElement('i', { className: 'iconfont icon-menufold' })
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'button', onClick: function onClick(e) {
+                    _this2.menuUpDown(e, 'up');
+                  } },
+                _react2.default.createElement(_icon2.default, { type: 'up', style: { fontSize: '18px' } })
+              )
+            ),
+            _react2.default.createElement(
+              'ul',
+              { className: 'ant-menu ant-menu-vertical menuLeft ant-menu-dark ant-menu-root', role: 'menu', 'aria-activedescendant': '', id: 'MenuJsx' },
+              this.renderMenuItems(true),
+              _react2.default.createElement('li', { className: 'ant-menu-item', role: 'menuitem', 'aria-selected': 'false', style: { 'cursor': 'default' } })
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'button down', onClick: function onClick(e) {
+                  _this2.menuUpDown(e, 'down');
+                } },
+              _react2.default.createElement(_icon2.default, { type: 'down', style: { fontSize: '18px' } })
+            )
+          )
+        );
+      }
+    }
+  }]);
+  return _default;
+}(_react.Component);
+
+exports.default = _default;
+module.exports = exports['default'];

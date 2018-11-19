@@ -1,0 +1,109 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _dva = require('dva');
+
+var _PopUpSelect = require('widget/PopUpSelect/PopUpSelect');
+
+var _PopUpSelect2 = _interopRequireDefault(_PopUpSelect);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var sellerTableColumn = [{ title: '分销商编号', width: 200, dataIndex: 'code', key: 'code' }, { title: "分销商名称", dataIndex: 'sellerName', key: 'sellerName' }];
+var sellerQueryList = [{ name: '分销商编码', type: 'text', key: 'code', value: '' }, { name: '分销商名称', type: 'text', key: 'sellerName', value: '' }];
+var sellerSelectedColumn = [{ title: '分销商编码', width: 120, dataIndex: 'code', key: 'code' }, { title: '分销商名称', dataIndex: 'sellerName', key: 'sellerName' }];
+
+var _default = function (_React$Component) {
+  (0, _inherits3.default)(_default, _React$Component);
+
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      showModel: false,
+      sellerList: []
+    };
+    return _this;
+  }
+
+  (0, _createClass3.default)(_default, [{
+    key: 'updateModal',
+    value: function updateModal(status) {
+      this.setState({ showModel: status });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var _state = this.state,
+          showModel = _state.showModel,
+          sellerList = _state.sellerList;
+
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'boxShadow' },
+        _react2.default.createElement(
+          'a',
+          { onClick: function onClick() {
+              return _this2.updateModal(true);
+            } },
+          '\u6253\u5F00\u591A\u9009\u5F39\u6846'
+        ),
+        _react2.default.createElement(_PopUpSelect2.default, {
+          idKey: 'sellerId',
+          respListKey: 'sellers',
+          tableColumn: sellerTableColumn,
+          selectedColumn: sellerSelectedColumn,
+          selectedTableScroll: { x: 420 },
+          queryList: sellerQueryList,
+          visible: showModel,
+          closeCbk: function closeCbk(e) {
+            return _this2.updateModal(false);
+          },
+          confirmCbk: function confirmCbk(v) {
+            return console.log('确认返回:', v);
+          },
+          isSave: true,
+          isSingle: false,
+          onItem: sellerList,
+          defaultReqParams: { sellerStatus: 1 },
+          status: '1',
+          requestUrl: '/yundt/mgmt/shop/seller/list-by-page',
+          title: '\u9009\u62E9\u5206\u9500\u5546'
+        })
+      );
+    }
+  }]);
+  return _default;
+}(_react2.default.Component);
+
+exports.default = _default;
+module.exports = exports['default'];

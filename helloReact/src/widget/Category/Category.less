@@ -1,0 +1,76 @@
+/**
+ * @(#)Category.less 0.5.1 2017-09-13
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+@color-grey: #e5e5e5;
+@import '../../config/basic';
+
+.tree {
+  overflow: auto;
+}
+
+.conetentLeft {
+  border-right: 1px solid @color-grey;
+  background: #FBFBFB;
+  :global {
+    .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
+      background: #FBFBFB;
+    }
+    .ant-tree.ant-tree-show-line li span.ant-tree-switcher.ant-tree-switcher-noop:after {
+      font-family: "iconfont" !important;
+      content: "\e6be";
+      font-size: 16px;
+    }
+  }
+  .area1 {
+    padding: 16px;
+    border-bottom: 1px solid @color-grey;
+  }
+  .area2 {
+    padding: 16px;
+  }
+}
+
+.conetentRight {
+  padding: 16px;
+}
+
+.content {
+  border: 1px solid @color-grey;
+  border-radius: 4px;
+  background: white;
+}
+
+.btnContent {
+  .btnFirst {
+    //border-right: none;
+    //border-radius: 4px;
+  }
+  .btn {
+    width: 100%;
+    //border-radius: 0px 4px 4px 0;
+  }
+  :global {
+    .ant-btn {
+      height: 24px;
+      padding: 0 4px;
+      width: 100%;
+    }
+    .anticon {
+      margin-right: 5px;
+      &:before {
+        margin-left: 4px;
+      }
+    }
+    i {
+      color: @uiColor_1;
+    }
+  }
+}
+
+.pagination {
+  :global ul.ant-pagination {
+    margin-right: 0;
+  }
+}

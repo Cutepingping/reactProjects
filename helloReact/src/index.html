@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="assets/iconfont/iconfont.css"/>
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_389542_wle9cc2fi7wrk9.css" />
+  <style>
+    .ant-form-item-control-wrapper{ z-index: 1;}
+  </style>
+  <!--[if lte IE 10]>
+      <script
+        src="https://as.alipayobjects.com/g/component/??console-polyfill/0.2.2/index.js,media-match/2.0.2/media.match.min.js"></script>
+  <![endif]-->
+  <!--  搞定地图 -->
+  <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.4&key=7f00f16316ef98a8f322b0cc01bf3e22&plugin=AMap.TruckDriving"></script>
+  <!-- 搞定地图 -->
+
+  <!--  kindEditor -->
+  <script type="text/javascript" src="assets/kindEditor/kindeditor-all.js"></script>
+  <!--  kindEditor -->
+</head>
+
+<body>
+  <div id="root"></div>
+  <%if("loc" !== "" + htmlWebpackPlugin.options.W_ENV){%>
+  <script src="./dll/vendor.dll.js"></script>
+  <%}%>
+</body>
+
+</html>

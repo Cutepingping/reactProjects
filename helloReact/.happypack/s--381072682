@@ -1,0 +1,396 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+exports.getParams = getParams;
+exports.getParamValues = getParamValues;
+exports.setPathname = setPathname;
+exports.checkAuth = checkAuth;
+exports.clearAllCookie = clearAllCookie;
+exports.generateUuid = generateUuid;
+exports.encrypt = encrypt;
+exports.decrypt = decrypt;
+exports.convertToTree = convertToTree;
+exports.convertToCascader = convertToCascader;
+exports.generateBarcode = generateBarcode;
+exports.generateQRCode = generateQRCode;
+exports.updatePageSize = updatePageSize;
+exports.treeDataConvertor = treeDataConvertor;
+
+var _lodash = require('lodash');
+
+var _menu = require('../config/menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
+var _globalScope = require('./globalScope');
+
+var _router = require('dva/router');
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _jsMd = require('js-md5');
+
+var _jsMd2 = _interopRequireDefault(_jsMd);
+
+var _qrcode = require('qrcode');
+
+var _qrcode2 = _interopRequireDefault(_qrcode);
+
+var _jsbarcode = require('jsbarcode');
+
+var _jsbarcode2 = _interopRequireDefault(_jsbarcode);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//获取url的参数
+function getParams() {
+  var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  var urlSplit = url.split('?'),
+      args = {}; // 保存参数数据的对象
+  if ((0, _lodash.isEmpty)(urlSplit) || urlSplit.length === 1) {
+    return args;
+  }
+  // 获取url中"?"符后的字串
+  var qs = urlSplit[1].replace(/#\/$/, ''),
+      items = qs.length ? qs.split("&") : [],
+      // 取得每一个参数项,
+  item = null,
+      len = items.length;
+
+  for (var i = 0; i < len; i++) {
+    item = items[i].split("=");
+    var name = decodeURIComponent(item[0]),
+        value = decodeURIComponent(item[1]);
+    if (name) {
+      args[name] = value;
+    }
+  }
+  return args;
+}
+
+//获取url的参数值
+function getParamValues() {
+  var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  var urlSplit = url.split('?'),
+      args = []; // 保存参数数据的对象
+  if ((0, _lodash.isEmpty)(urlSplit) || urlSplit.length === 1) {
+    return args;
+  }
+  // 获取url中"?"符后的字串
+  var qs = urlSplit[1].replace(/#\/$/, ''),
+      items = qs.length ? qs.split("&") : [],
+      // 取得每一个参数项,
+  item = null,
+      len = items.length;
+
+  for (var i = 0; i < len; i++) {
+    item = items[i].split("=");
+    var value = decodeURIComponent(item[1]);
+    args.push(value);
+  }
+  return args;
+}
+
+//不同权限角色登录的默认页
+function setPathname(permissions) {
+  function findKey(value) {
+    var key = (0, _lodash.difference)(sortList, list).find(function (item) {
+      return item.startsWith(value);
+    });
+    list.push(key);
+    if (key) {
+      findKey(key);
+    }
+  }
+
+  var list = [],
+      pathname = '/',
+      obj = void 0;
+  var sortList = (0, _lodash.sortBy)(permissions);
+  list.push(sortList[0]);
+  findKey(sortList[0]);
+  list = (0, _lodash.compact)(list);
+
+  var _loop = function _loop(i) {
+    if (i === 0) {
+      obj = _menu2.default.find(function (item) {
+        return item.value === list[i];
+      });
+      pathname = '' + pathname + obj.key;
+    } else if (!(0, _lodash.isEmpty)(obj.child)) {
+      obj = obj.child.find(function (item) {
+        return item.value === list[i];
+      });
+      pathname = pathname + '/' + obj.key;
+    }
+  };
+
+  for (var i = 0; i < list.length; i++) {
+    _loop(i);
+  }
+  return pathname;
+}
+
+//校验直接输入的地址是否超出权限
+function checkAuth() {
+  var path = null,
+      obj = {},
+      result = '';
+  var allAuthPaths = (0, _globalScope.getGlobalData)('authPaths');
+  var dataSourceId = (0, _globalScope.getGlobalData)('dataSourceId');
+  var authPaths = allAuthPaths ? allAuthPaths[dataSourceId] : [];
+
+  if (ENV === 'development') {
+    path = location.pathname;
+  } else {
+    path = location.hash.slice(2, location.hash.indexOf('?'));
+  }
+  path = (0, _lodash.compact)(path.split('/'));
+
+  var _loop2 = function _loop2(i) {
+    if (i === 0) {
+      obj = _menu2.default.find(function (item) {
+        return item.key === path[i];
+      });
+      result = authPaths.find(function (item) {
+        return item === obj.value;
+      });
+    } else if (obj && !(0, _lodash.isEmpty)(obj.child)) {
+      obj = obj.child.find(function (item) {
+        return item.key === path[i];
+      });
+      result = authPaths.find(function (item) {
+        return item === obj.value;
+      });
+    }
+    if ((0, _lodash.isEmpty)(result)) {
+      if (ENV === 'development') {
+        _router.browserHistory.push('/');
+      } else {
+        _router.hashHistory.push('/');
+      }
+    }
+  };
+
+  for (var i = 0; i < path.length; i++) {
+    _loop2(i);
+  }
+}
+
+//清除所有cookie
+function clearAllCookie() {
+  var cookies = _jsCookie2.default.get();
+  Object.keys(cookies).forEach(function (key) {
+    return _jsCookie2.default.remove(key);
+  });
+}
+
+//生成uuid
+function generateUuid() {
+  var s = [];
+  var hexDigits = "0123456789abcdef";
+  for (var i = 0; i < 36; i++) {
+    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+  }
+  s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+  s[19] = hexDigits.substr(s[19] & 0x3 | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+  s[8] = s[13] = s[18] = s[23] = "-";
+
+  var uuid = s.join("");
+  return uuid;
+}
+
+//加密
+function encrypt(str) {
+  //固定加密串
+  var pwd = 'oottbb';
+  if (pwd == null || pwd.length <= 0) {
+    return null;
+  }
+  var prand = "";
+  for (var i = 0; i < pwd.length; i++) {
+    prand += pwd.charCodeAt(i).toString();
+  }
+  var sPos = Math.floor(prand.length / 5);
+  var mult = parseInt(prand.charAt(sPos) + prand.charAt(sPos * 2) + prand.charAt(sPos * 3) + prand.charAt(sPos * 4) + prand.charAt(sPos * 5));
+  var incr = Math.ceil(pwd.length / 2);
+  var modu = Math.pow(2, 31) - 1;
+  if (mult < 2) {
+    return null;
+  }
+  var salt = Math.round(Math.random() * 1000000000) % 100000000;
+  prand += salt;
+  while (prand.length > 10) {
+    prand = (parseInt(prand.substring(0, 10)) + parseInt(prand.substring(10, prand.length))).toString();
+  }
+  prand = (mult * prand + incr) % modu;
+  var enc_chr = "";
+  var enc_str = "";
+  for (var i = 0; i < str.length; i++) {
+    enc_chr = parseInt(str.charCodeAt(i) ^ Math.floor(prand / modu * 255));
+    if (enc_chr < 16) {
+      enc_str += "0" + enc_chr.toString(16);
+    } else enc_str += enc_chr.toString(16);
+    prand = (mult * prand + incr) % modu;
+  }
+  salt = salt.toString(16);
+  while (salt.length < 8) {
+    salt = "0" + salt;
+  }enc_str += salt;
+  return enc_str;
+}
+//解密
+function decrypt(str) {
+  //固定加密串
+  var pwd = 'oottbb';
+  if (str == null || str.length < 8) {
+    return '';
+  }
+  if (pwd == null || pwd.length <= 0) {
+    return '';
+  }
+  var prand = "";
+  for (var i = 0; i < pwd.length; i++) {
+    prand += pwd.charCodeAt(i).toString();
+  }
+  var sPos = Math.floor(prand.length / 5);
+  var mult = parseInt(prand.charAt(sPos) + prand.charAt(sPos * 2) + prand.charAt(sPos * 3) + prand.charAt(sPos * 4) + prand.charAt(sPos * 5));
+  var incr = Math.round(pwd.length / 2);
+  var modu = Math.pow(2, 31) - 1;
+  var salt = parseInt(str.substring(str.length - 8, str.length), 16);
+  str = str.substring(0, str.length - 8);
+  prand += salt;
+  while (prand.length > 10) {
+    prand = (parseInt(prand.substring(0, 10)) + parseInt(prand.substring(10, prand.length))).toString();
+  }
+  prand = (mult * prand + incr) % modu;
+  var enc_chr = "";
+  var enc_str = "";
+  for (var i = 0; i < str.length; i += 2) {
+    enc_chr = parseInt(parseInt(str.substring(i, i + 2), 16) ^ Math.floor(prand / modu * 255));
+    enc_str += String.fromCharCode(enc_chr);
+    prand = (mult * prand + incr) % modu;
+  }
+  return enc_str;
+}
+
+//将[{id: myid, name: myname, pId: mypid }] 转为树形结构 [{id: myid, name: myname, children: [] }]
+function convertToTree(data, parentKey) {
+  var firstLevelId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '0';
+
+  // 删除 所有 children,以防止多次调用
+  data.forEach(function (item) {
+    delete item.children;
+  });
+  // 将数据存储为 以Id为 KEY 的 map 索引数据列
+  var map = {};
+  data.forEach(function (item) {
+    map[item.id] = item;
+  });
+  var list = [],
+      result = [];
+  data.forEach(function (item) {
+    // 以当前遍历项的parentCategoryId,去map对象中找到索引的id
+    var parent = map[item[parentKey]];
+    // 如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item);
+    } else {
+      //如果没有在map中找到对应的索引ID,那么直接把 当前的item添加到list中，作为顶级
+      list.push(item);
+    }
+  });
+  list.forEach(function (item) {
+    return (item[parentKey] === firstLevelId || item[parentKey] === null) && result.push(item);
+  });
+  return result;
+}
+
+//将[{id: myid, name: myname, pId: mypid }] 转为树形结构 [{value: myid, label: myname, children: [] }]
+function convertToCascader(data, parentKey) {
+  var firstLevelId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '0';
+
+  // 删除 所有 children,以防止多次调用
+  data.forEach(function (item) {
+    item.value = item.id;
+    item.name = item.name;
+    delete item.children;
+  });
+  // 将数据存储为 以Id为 KEY 的 map 索引数据列
+  var map = {};
+  data.forEach(function (item) {
+    map[item.id] = item;
+  });
+  var list = [],
+      result = [];
+  data.forEach(function (item) {
+    // 以当前遍历项的parentCategoryId,去map对象中找到索引的id
+    var parent = map[item[parentKey]];
+    // 如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item);
+    } else {
+      //如果没有在map中找到对应的索引ID,那么直接把 当前的item添加到list中，作为顶级
+      list.push(item);
+    }
+  });
+  list.forEach(function (item) {
+    return (item[parentKey] === firstLevelId || item[parentKey] === null) && result.push(item);
+  });
+  return result;
+}
+
+//生成条形码
+function generateBarcode(str) {
+  var barcode = document.createElement('img'),
+      options = {
+    fontSize: 18,
+    height: 100,
+    displayValue: true
+  };
+  (0, _jsbarcode2.default)(barcode, str, options);
+  return barcode.src;
+}
+//生成二维码
+function generateQRCode(str) {
+  var result = '';
+  _qrcode2.default.toDataURL(str, { errorCorrectionLevel: 'H' }, function (err, url) {
+    result = url;
+  });
+  return result;
+}
+
+//使用存储在本地的pagesize
+function updatePageSize(path, state) {
+  var storedPageSize = (0, _globalScope.getLocalData)(path);
+  storedPageSize && (state.pageConfig.pageSize = storedPageSize);
+
+  return state;
+}
+
+//树结构数据转换
+function treeDataConvertor(tree, fieldName) {
+  function convert(data) {
+    (0, _lodash.isArray)(data) && (data = data.map(function (item) {
+      item = (0, _extends3.default)({}, item[fieldName], item);
+      delete item[fieldName];
+      item.children = convert(item.children);
+      return item;
+    }));
+    return data;
+  }
+  var copyTree = (0, _lodash.cloneDeep)(tree);
+  copyTree = convert(copyTree);
+  return copyTree;
+}

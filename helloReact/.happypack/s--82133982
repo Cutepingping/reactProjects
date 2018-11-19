@@ -1,0 +1,287 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _router = require('dva/router');
+
+var _appView = require('./widget/Layout/App/appView');
+
+var _appView2 = _interopRequireDefault(_appView);
+
+var _utils = require('./utils');
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _config = require('./config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 全局注入路由路径键值对映射
+window.MODULE_TO_ROUTES = {};
+window.ROUTES_TO_MODEL = {};
+window.CURR_TAB_KEY = '/';
+
+// DVA注册model方法
+var cached = {};
+var registerModel = function registerModel(app, model, routeObj) {
+  var _getPickRouteObj = getPickRouteObj(model, routeObj),
+      namespace = _getPickRouteObj.namespace,
+      path = _getPickRouteObj.path;
+
+  model.pathname = path;
+  if (!cached[namespace]) {
+    if (!!routeObj) {
+      model.namespace = namespace;
+    }
+    app.model(model);
+    cached[namespace] = 1;
+  }
+};
+
+// 修改路由路径
+var getRoutePath = function getRoutePath(routeObj) {
+  var path = '';
+  // 路由字段匹配条件修改，原来的判断条件：-1 === routeObj.path.indexOf('/home')
+  if ('/home' !== routeObj.path) {
+    path = '/home/' + routeObj.path;
+  } else {
+    path = routeObj.path;
+  }
+  return path;
+};
+
+// 获得新的路由对象
+var getPickRouteObj = function getPickRouteObj(model, routeObj) {
+  var obj = {};
+  if (!routeObj) {
+    obj.namespace = model.namespace;
+    obj.path = '';
+  } else {
+    obj.namespace = routeObj.namespace;
+    obj.path = getRoutePath(routeObj);
+  }
+  return obj;
+};
+
+// 设置路径键值对到全局models2Routes
+var setModel2Routes = function setModel2Routes(app, route) {
+  if (!!route.routeObj) {
+    var routeObj = route.routeObj;
+    var copyRouteObj = JSON.parse(JSON.stringify(routeObj));
+    copyRouteObj.path = getRoutePath(copyRouteObj);
+    // app._models[0].state.model2Routes[route.pathKey] = route.path
+    window.MODULE_TO_ROUTES[routeObj.namespace] = routeObj;
+    window.ROUTES_TO_MODEL[copyRouteObj.path] = copyRouteObj;
+  }
+};
+
+// 路由路径键值对映射
+var getPathKeyRoutes = function getPathKeyRoutes(app, routes) {
+  if (0 !== routes.length) {
+    var rootRoute = routes[routes.length - 1];
+    var childRoutes = rootRoute.childRoutes;
+
+
+    if (!childRoutes || 0 === childRoutes.length) {
+      setModel2Routes(app, rootRoute);
+    } else {
+      childRoutes.push(rootRoute);
+      childRoutes.forEach(function (route, i) {
+        setModel2Routes(app, route);
+      });
+    }
+  }
+};
+
+// 进入路由之前的处理，检查是否已登录
+var beforeEnter = function beforeEnter(nextState, replace, next) {
+  //进入路由先解绑所有的排序事件
+  document.onkeydown = "";
+  next();
+};
+
+var Routers = function Routers(_ref) {
+  var history = _ref.history,
+      app = _ref.app;
+
+  var routes = [{
+    path: '/',
+    component: function component() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        ' ',
+        _router.hashHistory.push('/home'),
+        ' '
+      );
+    }
+  }, {
+    path: '/login',
+    name: '登录',
+    getComponent: function getComponent(nextState, cb) {
+      require.ensure([], function (require) {
+        cb(null, require('./widget/Layout/Login/loginView'));
+      }, 'loginView');
+    }
+  }, {
+    path: 'home',
+    name: '默认首页',
+    component: _appView2.default,
+    getIndexRoute: function getIndexRoute(nextState, cb) {
+      require.ensure([], function (require) {
+        var tmpAuth = _jsCookie2.default.get(_config2.default.cookie.auth);
+        if (!tmpAuth) {
+          _router.hashHistory.push('/login');
+          return false;
+        }
+        registerModel(app, require('./pages/default/defaultMod'));
+        cb(null, require('./pages/default/defaultView'));
+      }, 'TableDemo');
+    },
+
+    childRoutes: [
+    // 默认首页
+    {
+      path: 'index',
+      name: '默认首页',
+      routeObj: {
+        namespace: 'defaultModel',
+        path: 'index',
+        urlArray: []
+      },
+      getComponent: function getComponent(nextState, cb) {
+        var self = this;
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/default/defaultMod'), self.routeObj);
+          cb(null, require('./pages/default/defaultView'));
+        }, 'defaultMod');
+      },
+
+      onEnter: beforeEnter
+    }, {
+      path: 'template/popUpSelect',
+      name: '弹框选择',
+      getComponent: function getComponent(nextState, cb) {
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/popUpSelect/popUpSelectMod'));
+          cb(null, require('./pages/popUpSelect/popUpSelectDemo'));
+        }, 'popUpSelectMod');
+      },
+
+      onEnter: beforeEnter
+    }, {
+      path: 'template/kingEditor',
+      name: '富文本',
+      getComponent: function getComponent(nextState, cb) {
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/kingEditor/kingEditorMod'));
+          cb(null, require('./pages/kingEditor/kingEditorDemo'));
+        }, 'kingEditor');
+      },
+
+      onEnter: beforeEnter
+    }, {
+      path: 'template/category',
+      name: '分类',
+      routeObj: {
+        namespace: 'prodCategoryModel',
+        path: 'template/category'
+      },
+      getComponent: function getComponent(nextState, cb) {
+        var self = this;
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/category/prodCategoryMod'), self.routeObj);
+          cb(null, require('./pages/category/prodCategoryView'));
+        }, 'categoryMod');
+      },
+
+      onEnter: beforeEnter
+    }, {
+      path: 'template/myPage',
+      name: '我的页面',
+      routeObj: {
+        namespace: 'myPageModel',
+        path: 'template/myPage'
+      },
+      getComponent: function getComponent(nextState, cb) {
+        var self = this;
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/myPage/myPageMod'), self.routeObj);
+          cb(null, require('./pages/myPage/myPageView'));
+        }, 'myPageMod');
+      },
+
+      onEnter: beforeEnter
+    },
+    // 商品管理 - 商品列表
+    {
+      path: 'goodsMgmt/goodsList',
+      name: '商品列表',
+      routeObj: {
+        namespace: 'goodsListModel',
+        path: 'goodsMgmt/goodsList',
+        urlArray: []
+      },
+      getComponent: function getComponent(nextState, cb) {
+        var self = this;
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/goodsMgmt/goodsList/goodsListMod'), self.routeObj);
+          cb(null, require('./pages/goodsMgmt/goodsList/goodsListView'));
+        }, 'goodsListMod');
+      }
+    },
+    // 商品管理 - 商品详情
+    {
+      path: 'goodsMgmt/goodsDetail',
+      name: '商品列表',
+      routeObj: {
+        namespace: 'goodsDetail',
+        path: 'goodsMgmt/goodsDetail',
+        urlArray: []
+      },
+      getComponent: function getComponent(nextState, cb) {
+        var self = this;
+        require.ensure([], function (require) {
+          registerModel(app, require('./pages/goodsMgmt/goodsDetail/goodsDetailMod'), self.routeObj);
+          cb(null, require('./pages/goodsMgmt/goodsDetail/goodsDetailView'));
+        }, 'goodsDetailMod');
+      }
+    },
+
+    /***********************       首页        ****************************/
+
+    /***********************       错误处理        ****************************/
+    {
+      path: '*',
+      name: 'error',
+      getComponent: function getComponent(nextState, cb) {
+        require.ensure([], function (require) {
+          cb(null, require('./widget/error/'));
+        }, 'error');
+      },
+
+      onEnter: beforeEnter
+    }]
+  }];
+
+  getPathKeyRoutes(app, routes);
+  return _react2.default.createElement(_router.Router, { history: history, routes: routes });
+};
+
+Routers.propTypes = {
+  history: _react.PropTypes.object,
+  app: _react.PropTypes.object
+};
+
+exports.default = Routers;
+module.exports = exports['default'];

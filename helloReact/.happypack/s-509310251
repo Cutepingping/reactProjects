@@ -1,0 +1,73 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.authFilter = exports.checkPermission = undefined;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _window$bjfn$authPath = window.bjfn.authPaths,
+    authPaths = _window$bjfn$authPath === undefined ? [] : _window$bjfn$authPath;
+
+
+var pathSet = new Set(authPaths.map(function (p) {
+  return p.path;
+}));
+var pathAndMethodList = authPaths.map(function (p) {
+  return p.method + ':' + p.path;
+});
+var pathAndMethodSet = new Set(pathAndMethodList);
+
+/*
+ * 检测是否有权限
+ * @param option {string} 授权路径
+ * */
+var checkPermission = exports.checkPermission = function checkPermission(option) {
+  if (_lodash2.default.isString(option)) {
+    // method:path | path
+    // o(1) 判断，比较快
+    if (pathSet.has(option) || pathAndMethodSet.has(option)) {
+      return true;
+    }
+
+    // o(n) 判断，比较慢，建议改成 o(1) 判断
+    return _lodash2.default.some(pathAndMethodList, function (str) {
+      return str.indexOf(option) > -1;
+    });
+  } else if (_lodash2.default.isObject(option)) {
+    return _lodash2.default.find(authPaths, option);
+  } else if (_lodash2.default.isArray(option)) {
+    return option.map(function (opt) {
+      return checkPermission(opt);
+    });
+  } else {
+    throw new Error('not a valid permission to check');
+  }
+};
+
+/*
+ * 过滤权限树
+ * @param authPaths {array} 全部权限
+ * @param userAuthPaths {array} 用户拥有授权
+ * */
+var authFilter = exports.authFilter = function authFilter(authPaths, userAuthPaths) {
+  return _lodash2.default.filter(authPaths, function (d) {
+    if (_lodash2.default.includes(userAuthPaths, d.value)) {
+      return d;
+    } else {
+      if (d.child) {
+        d.child = authFilter(d.child, userAuthPaths);
+        if (!_lodash2.default.isEmpty(d.child)) return d;
+      }
+    }
+  });
+};

@@ -1,0 +1,48 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.queryValidateImg = queryValidateImg;
+exports.reqLogin = reqLogin;
+exports.queryUserDetail = queryUserDetail;
+
+var _utils = require('../../../utils');
+
+var _lodash = require('lodash');
+
+var requestApiUrl = _utils.config.requestApiUrl;
+
+
+// 查询图形验证码
+function queryValidateImg(params) {
+  return (0, _utils.request)({
+    url: requestApiUrl.getValidateImg,
+    method: 'GET',
+    data: params
+  });
+}
+
+// 登录请求
+function reqLogin(params) {
+  // isLogin为false则免登陆
+  if ((0, _lodash.has)(_utils.config, 'isLogin') && 'false' === '' + (0, _lodash.get)(_utils.config, 'isLogin', null)) {
+    var loginRes = { "data": { "auth": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjYTgwY2MyYi0wN2M1LTQxYjUtYTc1NS0zMGUwYzA3YjM1NDQiLCJzdWIiOiJrZXkmX18mbnVza2luJl9fJjYmX18mY2hlbmRhaGFpJl9fJjAmX18mbnVza2luJl9fJnBjJl9fJjAmX18mMSJ9.YVyo_J91EPrAhdBNXaLBehOeA4caJMcU21-F4GuVycZRvcSsXBtWyH5XI7mJEe1ATmTUhSguETu-q6ZgxeNivA" }, "resultCode": 0, "resultMsg": "success" };
+    return Promise.resolve(loginRes);
+  }
+
+  return (0, _utils.request)({
+    url: requestApiUrl.loginUrl,
+    method: 'post',
+    data: params
+  });
+}
+
+// 查询用户详情
+function queryUserDetail(params) {
+  return (0, _utils.request)({
+    url: requestApiUrl.getUserDetail,
+    method: 'GET',
+    data: params
+  });
+}

@@ -1,0 +1,59 @@
+/**
+ * @(#)Grid.less 0.5.1 2017-09-13
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+
+.textNoWrap{
+  thead{
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
+.inputComponent{
+  margin-bottom: 12px;
+  :global .ant-form-item-control-wrapper{
+    :global div.ant-form-item-control{
+      line-height: 31px;
+    }
+  }
+}
+
+.rangePicker {
+  :global {
+    .ant-calendar-range-picker-separator {
+      margin-left: -4px;
+    }
+    .ant-calendar-picker-input {
+      padding: 6px 0;
+    }
+    .ant-calendar-range-picker-input {
+     width: 46%;
+    }
+    .ant-calendar-picker-icon:after{
+      margin-left: 6px;
+    }
+  }
+}
+
+.monthSpliter {
+  width: 6%;
+  text-align: center;
+  display: inline-block;
+}
+
+.table {
+  :global  {
+    .table-thead > tr > th {
+      min-width: auto !important;
+    }
+    .ant-table-thead > tr > th {
+      min-width: auto !important;
+    }
+    .ant-table-fixed-right .ant-table-header{
+      background: white;
+    }
+  }
+
+}

@@ -1,0 +1,28 @@
+/**
+ * @(#)productDetailStyle.less 0.1.0 2017-12-14
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+@import "../../config/basic";
+
+.productMain{
+  :global{
+    .leftName{ width: 165px !important;}
+    .rightCont{ padding-left: 174px !important;}
+    .label{ margin-right: 8px;}
+    .qa{
+      margin-top: 24px;
+      &:nth-child(1){ margin-top: 0;}
+      dt{
+        border: 0; background: none; line-height: inherit; position: relative; padding-left: 34px; margin-bottom: 5px;
+        &:after{content: "Q"; background: @uiColor_1; .fontColor_5; font-size: 16px; position: absolute; left:0; top:-2px; width: 25px; height: 25px; text-align: center; line-height: 25px; border-radius: 4px;}
+      }
+      dd{
+        position: relative; padding-left: 34px; margin-top: 16px; padding-top: 2px;
+        &:after{content: "A"; font-weight: bold; z-index: 10; border: 1px @uiColor_7 solid; font-size: 16px; position: absolute; left:0; top:0; width: 25px; height: 25px; text-align: center; line-height: 25px; border-radius: 4px;}
+      }
+    }
+    .productTableInfo{ display: flex;}
+  }
+}
+.btnDiv{ padding:24px 0; text-align: center;}

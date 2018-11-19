@@ -1,0 +1,178 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _AdvanceSearch = require('./AdvanceSearch.less');
+
+var _AdvanceSearch2 = _interopRequireDefault(_AdvanceSearch);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Component = _react2.default.Component;
+
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      collapse: true
+    };
+    return _this;
+  }
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      this.windowOnResize();
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      window.onresize = function () {
+        return _this2.windowOnResize();
+      };
+    }
+
+    // 屏幕宽度改边触发的函数
+
+  }, {
+    key: 'windowOnResize',
+    value: function windowOnResize() {
+      var winWidth = document.body.offsetWidth;
+      var colNum = 2;
+      var xs = 768,
+          md = 992,
+          lg = 1200,
+          xl = 1600;
+      var isDisplayBtn = false;
+      var colData = this.props.children.props.data;
+
+      //获取一行显示的列数
+      if (winWidth < xs) {
+        colNum = 2;
+      } else if (winWidth >= md && winWidth < lg) {
+        colNum = 2;
+      } else if (winWidth >= lg && winWidth < xl) {
+        colNum = 3;
+      } else if (winWidth >= xl) {
+        colNum = 4;
+      }
+
+      //支持没有使用条件搜索组件的情况，可使用totalColNum代替
+      if (this.props.totalColNum) {
+        this.props.totalColNum > colNum && (isDisplayBtn = true);
+      } else {
+        if (colData && colData.length > colNum) {
+          isDisplayBtn = true;
+        }
+      }
+
+      this.setState({ colNum: colNum, isDisplayBtn: isDisplayBtn });
+    }
+  }, {
+    key: 'changeStatus',
+    value: function changeStatus() {
+      this.setState({ collapse: !this.state.collapse });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      // 获取配置数据
+      var _state = this.state,
+          colNum = _state.colNum,
+          isDisplayBtn = _state.isDisplayBtn;
+
+      // 获取传入的子元素
+
+      var propsChildren = this.props.children;
+      // 获取搜索条件
+      var queryList = propsChildren.props.data;
+
+      return _react2.default.createElement(
+        'div',
+        { className: (0, _classnames2.default)('boxShadow', _AdvanceSearch2.default.searchBox), style: this.props.style ? this.props.style : {} },
+        _react2.default.createElement(
+          'div',
+          { className: this.state.collapse ? _AdvanceSearch2.default.collapse : '' },
+          this.props.children
+        ),
+        queryList.length < colNum ? _react2.default.createElement(
+          'span',
+          { className: _AdvanceSearch2.default.positionBtn },
+          this.props.footer
+        ) : _react2.default.createElement(
+          'div',
+          { className: _AdvanceSearch2.default.btnContent },
+          _react2.default.createElement(
+            'span',
+            { className: 'fright' },
+            this.props.footer
+          ),
+          isDisplayBtn && _react2.default.createElement(
+            'a',
+            { className: (0, _classnames2.default)('txtleft', _AdvanceSearch2.default.collapseBtn), onClick: function onClick() {
+                return _this3.changeStatus();
+              } },
+            this.state.collapse ? _react2.default.createElement(
+              'span',
+              null,
+              '\u9AD8\u7EA7\u641C\u7D22',
+              _react2.default.createElement('i', { className: 'iconfont icon-zhankai mg1l' })
+            ) : _react2.default.createElement(
+              'span',
+              null,
+              '\u7B80\u5355\u641C\u7D22',
+              _react2.default.createElement('i', { className: 'iconfont icon-shouqi mg1l' })
+            )
+          )
+        )
+      );
+    }
+  }]);
+  return _default;
+}(Component);
+
+exports.default = _default;
+module.exports = exports['default'];

@@ -1,0 +1,29 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// 把model中的状态映射到view中
+var mapStateToProps = function mapStateToProps(state) {
+  if (!!window.CURR_TAB_KEY) {
+    // 状态的key数组
+    var keysArr = Object.keys(state);
+    // 当前model的namespace
+    var currKey = window.CURR_TAB_KEY;
+    var currModel = window.ROUTES_TO_MODEL[currKey];
+    var currNameSpace = currModel.namespace;
+    // 注入到view的model对象
+    var obj = {};
+    // 设置固定的两个属性
+    obj.model = {
+      modelObj: state[currNameSpace],
+      namespace: currNameSpace
+      // 返回注入的对象
+    };return obj;
+  } else {
+    return {};
+  }
+};
+
+exports.default = { mapStateToProps: mapStateToProps };
+module.exports = exports["default"];

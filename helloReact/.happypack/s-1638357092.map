@@ -1,0 +1,1 @@
+{"version":3,"sources":["src\\widget\\ScrollBar\\index.js"],"names":["Scrollbars"],"mappings":";;;;;;;AAAA;;;;;;kBACeA,oB;QACNA,U,GAAAA,oB","file":"index.js","sourceRoot":"C:/Users/liu.ping/helloReact","sourcesContent":["import Scrollbars from './Scrollbars';\r\nexport default Scrollbars;\r\nexport { Scrollbars };\r\n"]}

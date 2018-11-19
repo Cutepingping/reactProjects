@@ -1,0 +1,237 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _button = require('antd/lib/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _input = require('antd/lib/input');
+
+var _input2 = _interopRequireDefault(_input);
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _radio = require('antd/lib/radio');
+
+var _radio2 = _interopRequireDefault(_radio);
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+require('antd/lib/button/style');
+
+require('antd/lib/input/style');
+
+require('antd/lib/icon/style');
+
+require('antd/lib/radio/style');
+
+require('antd/lib/form/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _dva = require('dva');
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _prodCategoryView = require('./prodCategoryView.less');
+
+var _prodCategoryView2 = _interopRequireDefault(_prodCategoryView);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _index = require('../../widget/Grid/index');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @(#)departmentManageDetail.jsx 0.5.1 2017-09-13
+ * Copyright (c) 2017, YUNXI. All rights reserved.
+ * YUNXI PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+var FormItem = _form2.default.Item;
+var RadioGroup = _radio2.default.Group;
+var formItemLayout = {
+  labelCol: {
+    span: 4
+  },
+  wrapperCol: {
+    span: 20
+  }
+};
+var formItemFullLayout = {
+  labelCol: {
+    span: 4
+  },
+  wrapperCol: {
+    span: 20
+  }
+};
+
+/*
+ * 产品分类
+ *
+ * @author 苏离
+ * @since 20180621
+ */
+var Detail = function Detail(_ref) {
+  var dispatch = _ref.dispatch,
+      form = _ref.form,
+      data = _ref.data;
+
+  function submit() {
+    validateFields(function (err) {
+      if (_lodash2.default.isEmpty(err)) {
+        dispatch({ type: namespace + '/update', payload: resetFields });
+      }
+    });
+  }
+
+  function inputChange(key, value) {
+    var params = {};
+    params[key] = value;
+    dispatch({
+      type: namespace + '/updateStore', payload: {
+        detailData: (0, _extends3.default)({}, detailData, params)
+      }
+    });
+  }
+  //判断是否最后一层
+  function verifyFinal(orginalData, parentId) {
+    if (parentId == 0) return false;
+    var parent = _lodash2.default.find(orginalData, function (d) {
+      return d.id == parentId;
+    });
+    if (parent && parent.parentId != 0) {
+      var end = _lodash2.default.find(orginalData, function (d) {
+        return d.id == parent.parentId;
+      });
+      if (end && end.parentId == 0) return true;
+    }
+    return false;
+  }
+
+  var getFieldDecorator = form.getFieldDecorator,
+      resetFields = form.resetFields,
+      validateFields = form.validateFields;
+  var detailData = data.detailData,
+      actionType = data.actionType,
+      btnLoading = data.btnLoading,
+      namespace = data.namespace,
+      originalCategoryList = data.originalCategoryList;
+
+  var isFinal = verifyFinal(originalCategoryList, detailData.parentId);
+
+  return _react2.default.createElement(
+    'div',
+    { className: (0, _classnames2.default)(_lodash2.default.isEmpty(detailData) ? '' : _prodCategoryView2.default.detailContent) },
+    _lodash2.default.isEmpty(detailData) ? _react2.default.createElement(
+      'div',
+      { className: (0, _classnames2.default)(_prodCategoryView2.default.noDataInfo, 'text-info', 'txtcenter') },
+      _react2.default.createElement(_icon2.default, { type: 'frown-o', className: 'fsize14' }),
+      '\u8BF7\u9009\u62E9\u5DE6\u4FA7\u4EA7\u54C1\u5206\u7C7B'
+    ) : _react2.default.createElement(
+      _form2.default,
+      { autoComplete: 'off', className: _prodCategoryView2.default.hidePeopleIcon },
+      _react2.default.createElement(
+        _index.CustomCard,
+        { title: '\u5206\u7C7B\u7F16\u8F91' },
+        _react2.default.createElement(
+          FormItem,
+          (0, _extends3.default)({}, formItemLayout, { label: '\u8282\u70B9\u540D\u79F0', hasFeedback: true }),
+          getFieldDecorator('name', {
+            rules: [{
+              required: true, max: 10, message: '请输入节点名称，长度不能超过10!'
+            }, {
+              pattern: /^\S*$/, message: '节点名称不允许包含空字符串'
+            }],
+            initialValue: detailData.name
+          })(_react2.default.createElement(_input2.default, { onChange: function onChange(e) {
+              return inputChange('name', e.target.value);
+            } }))
+        ),
+        _react2.default.createElement(
+          FormItem,
+          (0, _extends3.default)({}, formItemLayout, { label: '\u63CF\u8FF0' }),
+          getFieldDecorator('statement', {
+            rules: [{
+              required: false, max: 50, message: '请输入描述，长度不能超过50!'
+            }],
+            initialValue: detailData.statement
+          })(_react2.default.createElement(_input2.default, { type: 'textarea', style: { height: 50 }, onChange: function onChange(e) {
+              return inputChange('statement', e.target.value);
+            } }))
+        ),
+        _react2.default.createElement(
+          FormItem,
+          (0, _extends3.default)({}, formItemLayout, { label: '\u662F\u5426\u672B\u7EA7\u5206\u7C7B', hasFeedback: true }),
+          isFinal ? '是' : _react2.default.createElement(
+            RadioGroup,
+            { onChange: function onChange(e) {
+                return inputChange('isFinal', e.target.value);
+              }, value: detailData.isFinal + '' },
+            _react2.default.createElement(
+              _radio2.default,
+              { value: 1 + '' },
+              '\u662F'
+            ),
+            _react2.default.createElement(
+              _radio2.default,
+              { value: 0 + '' },
+              '\u5426'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          FormItem,
+          (0, _extends3.default)({}, formItemLayout, { label: '\u72B6\u6001', hasFeedback: true }),
+          _react2.default.createElement(
+            RadioGroup,
+            { onChange: function onChange(e) {
+                return inputChange('status', e.target.value);
+              }, value: detailData.status + '' },
+            _react2.default.createElement(
+              _radio2.default,
+              { value: 1 + '' },
+              '\u542F\u7528'
+            ),
+            _react2.default.createElement(
+              _radio2.default,
+              { value: 0 + '' },
+              '\u7981\u7528'
+            )
+          )
+        )
+      ),
+      actionType === 'detail' || _react2.default.createElement(
+        'div',
+        { className: (0, _classnames2.default)('txtcenter', 'mg2t') },
+        _react2.default.createElement(
+          _button2.default,
+          { type: 'primary', onClick: submit, loading: btnLoading },
+          _react2.default.createElement('i', { className: 'iconfont icon-baocun' }),
+          '\u4FDD\u5B58'
+        )
+      )
+    )
+  );
+};
+
+exports.default = (0, _dva.connect)()(_form2.default.create()(Detail));
+module.exports = exports['default'];

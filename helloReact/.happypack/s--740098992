@@ -1,0 +1,456 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _dropdown = require('antd/lib/dropdown');
+
+var _dropdown2 = _interopRequireDefault(_dropdown);
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _menu = require('antd/lib/menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+require('antd/lib/dropdown/style');
+
+require('antd/lib/icon/style');
+
+require('antd/lib/menu/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _router = require('dva/router');
+
+var _config = require('../../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _notification = require('../../../utils/notification');
+
+var _BannerView = require('./BannerView.less');
+
+var _BannerView2 = _interopRequireDefault(_BannerView);
+
+var _BannerServ = require('./BannerServ');
+
+var _msgListView = require('../MsgList/msgListView');
+
+var _msgListView2 = _interopRequireDefault(_msgListView);
+
+var _orgListView = require('../OrgList/orgListView');
+
+var _orgListView2 = _interopRequireDefault(_orgListView);
+
+var _sellerInfoView = require('../SellerInfo/sellerInfoView');
+
+var _sellerInfoView2 = _interopRequireDefault(_sellerInfoView);
+
+var _updatePwdView = require('../UpdatePwd/updatePwdView');
+
+var _updatePwdView2 = _interopRequireDefault(_updatePwdView);
+
+var _redirect_utils = require('../../../utils/redirect_utils');
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _logo = require('../../../assets/img/logo.png');
+
+var _logo2 = _interopRequireDefault(_logo);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 是否已加载成功
+
+
+// 引入修改密码对话框
+
+// 引入组织机构组件
+
+// 注销登录
+
+// 弹出提示框
+
+// 路由对象
+
+// 加载Component
+var loadedSuccess = false;
+
+// 导出组件
+
+// 登录跳转的方法
+
+// 引入商户信息组件
+
+
+// 引入我的消息组件
+
+
+// 加载当前组件样式
+
+// 站点配置
+
+
+// 引入antd的组件
+
+// Cookie对象
+// 加载React
+
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      updatePwdFlag: false
+    };
+    return _this;
+  }
+
+  // 已插入DOM
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var self = this;
+
+      loadedSuccess = true;
+    }
+
+    // 比较对话框状态，已确保是否需要重新渲染
+
+  }, {
+    key: 'getPwdDlgFlag',
+    value: function getPwdDlgFlag(nextState) {
+      if ('' + this.state.updatePwdFlag === '' + nextState.updatePwdFlag) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    // 是否触发render函数
+
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      var self = this;
+
+      // 若已渲染过，则不重新渲染
+      if (loadedSuccess) {
+        if (self.getPwdDlgFlag(nextState)) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+
+    // 删除Cookie
+
+  }, {
+    key: 'clearCookie',
+    value: function clearCookie() {
+      _jsCookie2.default.remove(_config2.default.cookie.userName);
+      _jsCookie2.default.remove(_config2.default.cookie.auth);
+      localStorage.removeItem('antdAdminSiderFold');
+      sessionStorage.removeItem('SIDER_OPEN_KEY');
+      sessionStorage.removeItem('SIDER_SELECTED_KEY');
+    }
+
+    // 执行退出
+
+  }, {
+    key: 'doLogout',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        var self, _ref2, resultCode, resultMsg;
+
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                self = this;
+
+                if (_config2.default.isLogin) {
+                  _context.next = 6;
+                  break;
+                }
+
+                // 清除Cookie
+                self.clearCookie();
+                // 注销成功提示
+                (0, _notification.messageInform)('注销成功', 'success');
+                // 跳转到登录页
+                _router.hashHistory.push('/login');
+                return _context.abrupt('return', false);
+
+              case 6:
+                _context.next = 8;
+                return (0, _BannerServ.delCacheUser)({});
+
+              case 8:
+                _ref2 = _context.sent;
+                resultCode = _ref2.resultCode;
+                resultMsg = _ref2.resultMsg;
+
+
+                if ('0' === '' + resultCode) {
+                  // 清除Cookie
+                  self.clearCookie();
+                  // 注销成功提示
+                  (0, _notification.messageInform)('注销成功', 'success');
+
+                  // // 跳转到登录页
+                  // hashHistory.push('/login')
+                  (0, _redirect_utils.customLoginRedirect)();
+                }
+
+              case 12:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function doLogout() {
+        return _ref.apply(this, arguments);
+      }
+
+      return doLogout;
+    }()
+
+    // 打开密码对话框
+
+  }, {
+    key: 'showPwdDlg',
+    value: function showPwdDlg(e) {
+      var _this2 = this;
+
+      this.setState({
+        updatePwdFlag: true
+      }, function () {
+        console.log('this.state.updatePwdFlag:', _this2.state.updatePwdFlag);
+      });
+    }
+
+    // 关闭密码对话框
+
+  }, {
+    key: 'hidePwdDlg',
+    value: function hidePwdDlg(e) {
+      this.setState({
+        updatePwdFlag: false
+      });
+    }
+
+    // 下拉菜单点击事件
+
+  }, {
+    key: 'handleClickMenu',
+    value: function handleClickMenu(e) {
+      var self = this;
+      // 点击那一项
+      switch ('' + e.key) {
+        case 'logout':
+          // 退出登录
+          self.doLogout();
+          break;
+        case 'forgetPassword':
+          self.showPwdDlg(e);
+          break;
+        default:
+          console.log('unknown key');
+      }
+    }
+
+    // 点击用户登录信息的下拉菜单
+
+  }, {
+    key: 'getDropDownMenu',
+    value: function getDropDownMenu() {
+      var _this3 = this;
+
+      return _react2.default.createElement(
+        _menu2.default,
+        { onClick: function onClick(e) {
+            return _this3.handleClickMenu(e);
+          } },
+        _react2.default.createElement(
+          _menu2.default.Item,
+          { key: 'forgetPassword' },
+          _react2.default.createElement(
+            'a',
+            { style: { width: 120 } },
+            _react2.default.createElement('i', { className: 'iconfont icon-xiugaimima mg1r' }),
+            '\u4FEE\u6539\u5BC6\u7801'
+          )
+        ),
+        _react2.default.createElement(
+          _menu2.default.Item,
+          { key: 'logout' },
+          _react2.default.createElement(
+            'a',
+            { style: { width: 120 } },
+            _react2.default.createElement('i', { className: 'iconfont icon-zhuxiao mg1r' }),
+            '\u6CE8\u9500'
+          )
+        )
+      );
+    }
+
+    //跳转到经销商门户
+
+  }, {
+    key: 'goToB2bWeb',
+    value: function goToB2bWeb() {
+      location.href = _config2.default.baseURL + '/' + _config2.default.b2bWebHomePath;
+    }
+
+    // 渲染用户信息
+
+  }, {
+    key: 'renderUserInfo',
+    value: function renderUserInfo() {
+      var userName = _jsCookie2.default.get(_config2.default.cookie.userName + '_name');
+      return _react2.default.createElement(
+        'div',
+        { className: (0, _classnames2.default)(_BannerView2.default.user) },
+        _react2.default.createElement('img', { src: 'https://avatars2.githubusercontent.com/u/80?s=400&v=4', alt: '' }),
+        _react2.default.createElement(
+          _dropdown2.default,
+          { overlay: this.getDropDownMenu(), trigger: ['click'], getPopupContainer: function getPopupContainer() {
+              return document.getElementById('routerApp_headRight');
+            } },
+          _react2.default.createElement(
+            'a',
+            { className: 'ant-dropdown-link block', href: '#', title: userName, style: { maxWidth: 240, paddingLeft: 8 } },
+            _react2.default.createElement(
+              'span',
+              { style: { maxWidth: 210 }, className: 'ellipsis iblock' },
+              userName
+            ),
+            _react2.default.createElement(_icon2.default, { type: 'down' })
+          )
+        )
+      );
+    }
+
+    // 渲染内容
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      var imgLogo = '';
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.state.updatePwdFlag && _react2.default.createElement(_updatePwdView2.default, { titleName: '\u4FEE\u6539\u5BC6\u7801', visible: this.state.updatePwdFlag, onClose: function onClose(e) {
+            _this4.hidePwdDlg(e);
+          } }),
+        _react2.default.createElement(
+          'div',
+          { className: _BannerView2.default.tophead },
+          _react2.default.createElement(
+            'div',
+            { className: _BannerView2.default.headLeft },
+            _react2.default.createElement(
+              'span',
+              { className: _BannerView2.default.tableCell },
+              _react2.default.createElement('img', { className: _BannerView2.default.headLogo, src: _logo2.default, alt: '' })
+            ),
+            _react2.default.createElement(
+              'span',
+              { className: _BannerView2.default.tableCell },
+              '|'
+            ),
+            _react2.default.createElement(
+              'span',
+              { className: _BannerView2.default.tableCell },
+              _config2.default.appName || '',
+              _react2.default.createElement(_sellerInfoView2.default, null)
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: _BannerView2.default.headRight, id: 'routerApp_headRight' },
+            _config2.default.sysType === 'entCenter' && _react2.default.createElement(
+              'div',
+              { className: (0, _classnames2.default)(_BannerView2.default.enterpriseInfo, 'fright') },
+              _react2.default.createElement(
+                'a',
+                { className: 'mg2r', style: { color: 'white' }, onClick: function onClick() {
+                    return _this4.goToB2bWeb();
+                  } },
+                '\u95E8\u6237\u9996\u9875'
+              ),
+              _react2.default.createElement(
+                'a',
+                { title: '\u9000\u51FA\u767B\u5F55', style: { color: 'white' } },
+                _react2.default.createElement(_icon2.default, { className: 'mg2r', type: 'poweroff', onClick: function onClick() {
+                    return _this4.handleClickMenu({ key: 'logout' });
+                  } })
+              )
+            ),
+            _react2.default.createElement(_orgListView2.default, null),
+
+            //用户登录信息
+            _config2.default.sysType === 'entCenter' || this.renderUserInfo(),
+            _react2.default.createElement(_msgListView2.default, null)
+          )
+        )
+      );
+    }
+  }]);
+  return _default;
+}(_react.Component);
+
+exports.default = _default;
+module.exports = exports['default'];

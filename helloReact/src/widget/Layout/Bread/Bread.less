@@ -1,0 +1,20 @@
+@import "../../../css/vars.less";
+@import "../../../config/basic.less";
+
+.bread {
+  height: 50px;
+  line-height: 50px;
+  background: #fff;
+  padding: 0 24px;
+
+  :global .ant-breadcrumb > span:last-child{
+    .fontSize_4;
+    .fontColor_2;
+  }
+
+  :global .ant-breadcrumb{
+    position: relative; z-index: 15; width: 330px;
+    .fontColor_3;
+    .fontSize_6;
+  }
+}

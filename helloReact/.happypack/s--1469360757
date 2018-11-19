@@ -1,0 +1,122 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+require('antd/lib/form/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _dva = require('dva');
+
+var _lodash = require('lodash');
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _prodCategoryDetail = require('./prodCategoryDetail');
+
+var _prodCategoryDetail2 = _interopRequireDefault(_prodCategoryDetail);
+
+var _Category = require('../../widget/Category/Category');
+
+var _view_utils = require('../../utils/view_utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Cat = function Cat(_ref) {
+  var dispatch = _ref.dispatch,
+      model = _ref.model,
+      form = _ref.form;
+
+  //选中类目
+  function selectCategory(checkedKeys) {
+    form.resetFields();
+    var data = originalCategoryList.find(function (item) {
+      return item.id + '' === checkedKeys[0];
+    });
+
+    dispatch({
+      type: namespace + '/updateStore', payload: {
+        actionType: 'edit',
+        detailData: data || {},
+        selectedKeys: checkedKeys
+      }
+    });
+  }
+
+  function create(id) {
+    resetFields();
+    //更新店铺列表
+    dispatch({
+      type: namespace + '/getShopList'
+    });
+    dispatch({
+      type: namespace + '/updateStore', payload: {
+        actionType: 'add',
+        detailData: {
+          parentId: id || '0',
+          status: 1,
+          isFinal: 0
+        }
+      }
+    });
+  }
+
+  function deleteItem(id) {
+    dispatch({ type: namespace + '/delete', payload: { id: id } });
+  }
+
+  function sort(id, sort) {
+    dispatch({ type: namespace + '/sort', payload: { catalogId: id, type: sort } });
+  }
+
+  function isFinalNode(item) {
+    return item.isFinal + '' === '0';
+  }
+
+  var modelObj = model.modelObj,
+      namespace = model.namespace;
+  var resetFields = form.resetFields;
+  var searchValue = modelObj.searchValue,
+      autoExpandParent = modelObj.autoExpandParent,
+      detailData = modelObj.detailData,
+      actionType = modelObj.actionType,
+      categoryList = modelObj.categoryList,
+      originalCategoryList = modelObj.originalCategoryList,
+      expandedKeys = modelObj.expandedKeys,
+      btnLoading = modelObj.btnLoading,
+      selectedKeys = modelObj.selectedKeys,
+      pageConfig = modelObj.pageConfig;
+
+  var contentHeight = 550;
+  var categoryProps = {
+    categoryList: categoryList, contentHeight: contentHeight, autoExpandParent: autoExpandParent, searchValue: searchValue, expandedKeys: expandedKeys, dispatch: dispatch, nameSpace: namespace,
+    originalCategoryList: originalCategoryList, selectedKeys: selectedKeys, create: create, deleteItem: deleteItem, pageConfig: pageConfig, selectCategory: selectCategory, sort: sort, isFinalNode: isFinalNode,
+    isSort: true,
+    leftSpan: 6,
+    rightSpan: 18,
+    width: '100%'
+  };
+
+  return _react2.default.createElement(
+    _Category.Category,
+    categoryProps,
+    _react2.default.createElement(_prodCategoryDetail2.default, { data: { detailData: detailData, actionType: actionType, btnLoading: btnLoading, originalCategoryList: originalCategoryList, namespace: namespace } })
+  );
+}; /*
+    * 产品分类
+    *
+    * @author 苏离
+    * @since 20180621
+    */
+exports.default = (0, _dva.connect)(_view_utils.mapStateToProps)(_form2.default.create()(Cat));
+module.exports = exports['default'];

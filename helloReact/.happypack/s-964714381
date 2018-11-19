@@ -1,0 +1,41 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.myList = myList;
+
+var _utils = require('../../../utils');
+
+var requestApiUrl = _utils.config.requestApiUrl;
+
+// 我的消息列表
+
+function myList(params) {
+  return (0, _utils.request)({
+    url: requestApiUrl.mymessageList,
+    method: 'GET',
+    data: params
+  });
+
+  // let data = {
+  //   "data": {
+  //     "total": 1,
+  //     "pages": 1,
+  //     "pageSize": 5,
+  //     "list": [
+  //       {
+  //         "subject": "大甩卖活动",
+  //         "id": 64400,
+  //         "time": "2017-11-17 16:29:28",
+  //         "title": "shoudaolema",
+  //         "content": "范德萨范德萨范德萨范德萨风格的腾飞的回复对光反射V型从富士达富士达"
+  //       }
+  //     ],
+  //     "pageNum": 1
+  //   },
+  //   "resultCode": 0,
+  //   "resultMsg": "success"
+  // }
+  // return Promise.resolve(data)
+}

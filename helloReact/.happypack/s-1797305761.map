@@ -1,0 +1,1 @@
+{"version":3,"sources":["src\\utils\\bus.js"],"names":["AppBus","ReactBus"],"mappings":";;;;;;AAAA;;;;;;AACA,IAAIA,SAAS,IAAIC,mBAAJ,EAAb;kBACeD,M","file":"bus.js","sourceRoot":"C:/Users/liu.ping/helloReact","sourcesContent":["import ReactBus  from './react_bus'\r\nvar AppBus = new ReactBus()\r\nexport default AppBus"]}

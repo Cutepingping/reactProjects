@@ -1,0 +1,38 @@
+.org {
+  float: right;
+  color: white;
+  position: relative;
+  height: 50px;
+  display: table;
+  .tableCell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  a {
+    color: white;
+    &:hover {
+      color: white;
+    }
+  }
+  :global {
+    .ant-select .ant-select-selection--single {
+      color: white;
+      background: transparent;
+      border: none;
+    }
+    .ant-select-arrow {
+      color: white;
+    }
+    .ant-dropdown-link i {
+      padding-top: 6px;
+      margin-right: 5px;
+      float: right;
+    }
+  }
+}
+
+.orgDropdown {
+  right: 30px !important;
+  left: auto !important;
+  width: fit-content;
+}

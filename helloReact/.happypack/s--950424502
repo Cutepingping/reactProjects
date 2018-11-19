@@ -1,0 +1,373 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodash = require('lodash');
+
+var _Editor = require('./Editor.less');
+
+var _Editor2 = _interopRequireDefault(_Editor);
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _jsCookie = require('js-cookie');
+
+var _jsCookie2 = _interopRequireDefault(_jsCookie);
+
+var _config = require('../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+require('assets/kindEditor/kindeditor-all');
+
+require('assets/kindEditor/lang/zh-CN.js');
+
+require('assets/kindEditor/qs.min.js');
+
+require('assets/kindEditor/kindeditor-config');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+ * 富文本（新）
+ *
+ * @author 乐毅、苏离、战龙
+ * @since 2018/06/12
+ */
+
+var Component = _react2.default.Component;
+
+
+function random_string(len) {
+  len = len || 32;
+  var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+  var maxPos = chars.length;
+  var pwd = '';
+  for (var i = 0; i < len; i++) {
+    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+  }
+  return pwd;
+}
+
+function get_suffix(filename) {
+  var pos = filename.lastIndexOf('.');
+  var suffix = '';
+  if (pos != -1) {
+    suffix = filename.substring(pos);
+  }
+  return suffix;
+}
+
+function calculate_object_name(g_dirname, group, filename) {
+  if (!filename) {
+    return '';
+  }
+  var suffix = get_suffix(filename);
+  var g_object_name = g_dirname + random_string(10) + suffix;
+  if (!!group) {
+    if (g_dirname.indexOf('/') == -1) {
+      g_dirname += '/';
+    }
+    g_object_name = decodeURIComponent(g_dirname + group + '/' + random_string(10) + suffix);
+  }
+  return g_object_name;
+}
+
+// 获取OSS上传配置
+function getUploadCfg(policyUrl, auth, file, group) {
+
+  return _jquery2.default.ajax({
+    url: policyUrl,
+    type: "GET",
+    headers: { auth: auth }
+
+  }).then(function (res) {
+    var uploadCfg = {};
+
+    uploadCfg.uploadImgServer = res.data.host;
+    uploadCfg.uploadImgParams = {
+      OSSAccessKeyId: res.data.accessid,
+      policy: res.data.policy,
+      signature: res.data.signature,
+      key: calculate_object_name(res.data.dir, group || 'home', file && file.name),
+      name: file && file.name,
+      size: file && file.size,
+      success_action_status: '200'
+    };
+    uploadCfg.file = file;
+
+    return uploadCfg;
+  }).fail(function (err) {
+    return err;
+  });
+}
+
+// 上传对象到OSS
+function postObject2OSS(uploadCfg, file) {
+  // FormData对象
+  var formData = new FormData();
+
+  // 附加参数
+  var ump = uploadCfg.uploadImgParams;
+  Object.keys(ump).map(function (k, i) {
+    formData.append(k, ump[k]);
+  });
+  formData.append('file', uploadCfg.file);
+
+  // 上传文件
+  return _jquery2.default.ajax({
+    url: uploadCfg.uploadImgServer,
+    type: 'POST',
+    cache: false,
+    data: formData,
+    processData: false,
+    contentType: false
+  }).then(function (res) {
+    var tmpKey = ump.key;
+
+    if (!!file.client_width || !!file.client_height) {
+      tmpKey += '?x-oss-process=image/resize';
+
+      if (!!file.client_width) {
+        tmpKey += ',w_' + file.client_width;
+      }
+
+      if (!!file.client_height) {
+        tmpKey += ',h_' + file.client_height;
+      }
+    }
+    return uploadCfg.uploadImgServer + '/' + tmpKey;
+  }).fail(function (err) {
+    return err;
+  });
+}
+
+// 图片上传前触发
+function beforeUpload(file, attachType) {
+  var defer = _jquery2.default.Deferred();
+  // 限制的大小
+  var limitObj = {
+    'image/jpeg': 2,
+    'video/mp4': 10
+  };
+  var limitKeys = Object.keys(limitObj);
+  // 不支持的格式
+  if (-1 === _jquery2.default.inArray('' + file.type, limitKeys)) {
+    if ('image' === '' + attachType) {
+      defer.reject('你只能上传jpg格式的文件!');
+    } else {
+      defer.reject('你只能上传mp4格式的文件!');
+    }
+  } else {
+    var isLtSize = file.size / 1024 / 1024 < limitObj['' + file.type];
+    if ('image/jpeg' === '' + file.type) {
+      if (!isLtSize) {
+        defer.reject('\u56FE\u7247\u5FC5\u987B\u5C0F\u4E8E' + limitObj['' + file.type] + 'MB!');
+      } else {
+        defer.resolve(true);
+      }
+    } else if ('video/mp4' === '' + file.type) {
+      if (!isLtSize) {
+        defer.reject('mp4\u5FC5\u987B\u5C0F\u4E8E' + limitObj['' + file.type] + 'MB!');
+      } else {
+        defer.resolve(true);
+      }
+    }
+  }
+  // console.log('file.type:', file.type, 'file.size:', file.size)
+
+  // const isJPG = file.type === 'image/jpeg'
+  // if (!isJPG) {
+  //   defer.reject('你只能上传JPG格式的文件!')
+  // }
+  // const isLt2M = file.size / 1024 / 1024 < 2
+  // if (!isLt2M) {
+  //   defer.reject('图片必须小与于2MB!')
+  // }
+  // if(isJPG && isLt2M){
+  //   defer.resolve(true)
+  // }
+  // 返回校验结果
+  return defer;
+}
+
+// 执行上传文件到OSS
+function uploadObject2OSS(policyUrl, auth, file, group, attachType) {
+  return beforeUpload(file, attachType).then(function (flag) {
+    return getUploadCfg(policyUrl, auth, file, group);
+  }).then(function (uploadCfg) {
+    return postObject2OSS(uploadCfg, file);
+  }).fail(function (err) {
+    return err;
+  });
+}
+
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.editItem = null;
+    _this.state = {
+      visible: false,
+      frameWidth: 0
+      // frameHeight: 0
+    };
+    return _this;
+  }
+  //准备：即将被重新渲染，状态未变化
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {}
+
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.editItem && !this.editItem.html() && nextProps.html) {
+        this.editItem && this.editItem.html(nextProps.html);
+      }
+    }
+
+    // 插入真实 DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.initEditor(this.props);
+    }
+  }, {
+    key: 'initEditor',
+    value: function initEditor(props) {
+      var _this2 = this;
+
+      var policy_url = _config2.default.getPolicyUrl;
+      var auth = _jsCookie2.default.get(_config2.default.cookie.auth);
+      var group = 'group1';
+      var key = Math.ceil(Math.random() * 1000000000000000);
+
+      var customConfig = {
+        uploadJson: "http:\/\/www.dtyunx.com",
+        resizeType: 0,
+        allowFileManager: false,
+        allowFlashUpload: true,
+        allowMediaUpload: true,
+        allowFileUpload: false,
+        afterChange: function afterChange() {
+          _this2.editItem && props.inputChange(_this2.editItem.html());
+        },
+        items: KIND_EDITOR_ITEMS_CONFIG,
+        // 自定义上传
+        customUploadImg: function customUploadImg(files, insert, attachType) {
+          var self = _this2;
+          var file = files[0];
+          if (!file) return false;
+          // file 已选择的文件对象
+          // home 文件对象的组名(目录)
+          uploadObject2OSS(policy_url, auth, file, group, attachType).then(function (imgUrl) {
+            // 插入编辑器
+            insert(imgUrl);
+          }).fail(function (err) {
+            if ('401' === '' + err.status) {
+              alert('登录信息失效，请重新登录');
+            } else {
+              try {
+                if ('[object String]' === '' + Object.prototype.toString.call(err)) {
+                  alert(err || '未知的上传图片异常');
+                  self.editItem.hideDialog();
+                } else {
+                  var errorObj = JSON.parse(err.responseText);
+                  alert(errorObj.resultMsg || '未知的上传图片异常');
+                }
+              } catch (e) {
+                console.error(e);
+                alert(e || '未知的上传图片异常');
+                self.editItem.hideDialog();
+              }
+            }
+          });
+        },
+        afterCreate: function afterCreate() {
+          var that = this;
+          that.sync();
+        },
+        beforeSetHtml: function beforeSetHtml() {
+          // console.log('beforeSetHtml')
+          var that = this;
+          that.sync();
+        },
+        afterSetHtml: function afterSetHtml() {
+          console.log('afterSetHtml');
+          var that = this;
+          that.sync();
+        },
+        afterBlur: function afterBlur() {
+          var that = this;
+          that.sync();
+        }
+        // afterChange: function () {
+        //  let that = this
+        //  // that.sync();
+        //  // //富文本输入区域的改变事件，一般用来编写统计字数等判断
+        //  // console.log("最多20000个字符,已输入" + that.count() + "个字符");
+        // },
+      };
+      this.editItem = KindEditor.create('#' + props.id, customConfig);
+    }
+
+    // 初始状态或状态变化会触发render
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var customStyle = this.props.style || { width: '100%', height: 400 };
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement('script', { id: this.props.id, name: 'myContent', type: 'text/plain', style: customStyle })
+      );
+    }
+  }]);
+  return _default;
+}(Component);
+
+exports.default = _default;
+module.exports = exports['default'];

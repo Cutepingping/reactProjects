@@ -1,0 +1,882 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _modal = require('antd/lib/modal');
+
+var _modal2 = _interopRequireDefault(_modal);
+
+var _col = require('antd/lib/col');
+
+var _col2 = _interopRequireDefault(_col);
+
+var _table = require('antd/lib/table');
+
+var _table2 = _interopRequireDefault(_table);
+
+var _row = require('antd/lib/row');
+
+var _row2 = _interopRequireDefault(_row);
+
+var _button = require('antd/lib/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _message2 = require('antd/lib/message');
+
+var _message3 = _interopRequireDefault(_message2);
+
+var _popconfirm = require('antd/lib/popconfirm');
+
+var _popconfirm2 = _interopRequireDefault(_popconfirm);
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _treeSelect = require('antd/lib/tree-select');
+
+var _treeSelect2 = _interopRequireDefault(_treeSelect);
+
+var _select = require('antd/lib/select');
+
+var _select2 = _interopRequireDefault(_select);
+
+var _form = require('antd/lib/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+require('antd/lib/modal/style');
+
+require('antd/lib/col/style');
+
+require('antd/lib/table/style');
+
+require('antd/lib/row/style');
+
+require('antd/lib/button/style');
+
+require('antd/lib/message/style');
+
+require('antd/lib/popconfirm/style');
+
+require('antd/lib/icon/style');
+
+require('antd/lib/tree-select/style');
+
+require('antd/lib/select/style');
+
+require('antd/lib/form/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _router = require('dva/router');
+
+var _PopUpSelect = require('./PopUpSelect.less');
+
+var _PopUpSelect2 = _interopRequireDefault(_PopUpSelect);
+
+var _request = require('../../config/request');
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _lodash = require('lodash');
+
+var _AdvanceSearch = require('../CollapsiblePanels/AdvanceSearch');
+
+var _AdvanceSearch2 = _interopRequireDefault(_AdvanceSearch);
+
+var _Grid = require('../Grid/Grid');
+
+var _config = require('../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+ * 弹框多数据选择器
+ *
+ * @author 啊九
+ * @since 2017/12/21
+ */
+var Component = _react2.default.Component;
+
+var FormItem = _form2.default.Item;
+var Option = _select2.default.Option,
+    OptGroup = _select2.default.OptGroup;
+
+var TreeNode = _treeSelect2.default.TreeNode;
+
+/*
+*
+* 产品选择组件
+*
+*/
+
+var _default = function (_Component) {
+  (0, _inherits3.default)(_default, _Component);
+
+  // 构造函数
+  function _default(props, context) {
+    (0, _classCallCheck3.default)(this, _default);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (_default.__proto__ || Object.getPrototypeOf(_default)).call(this, props, context));
+
+    _this.state = {
+      queryList: (0, _lodash.cloneDeep)(props.queryList),
+      //需要传递的参数
+      visible: _this.props.visible || false, //是否打开
+      isSave: _this.props.isSave || false, //是否保存已选数据
+      onItem: _this.props.onItem || false, //更新已选数据
+      itemIds: _this.props.itemIds || [],
+      extendPropName: _this.props.extendPropName || 'extendPropName', //属性名称字段
+      //组件宽度
+      modalWidth: 1000,
+      //右侧选择框的高度
+      maxHeight: 403,
+      //表格数据加载标志
+      loadingFlag: true,
+      //查询条件
+      search: {
+        catalogId: "", //前端类目
+        groupPropId: "", //扩展属性类型
+        tagId: "", //产品标签
+        propId: "", //产品属性
+        propValueId: '', // 选择子产品属性
+        propShow: '', // 产品属性显示
+        itemCode: "", //产品编号
+        itemName: "" //产品名称
+      },
+      pageNum: 1, //当前页
+      pageSize: 10, //单页条数
+      tableData: [],
+      total: 0,
+      // 已选择的产品
+      selectedProduct: [],
+      // 右侧已选择产品中选择的行
+      selectedRows: [],
+      // 右侧已选择产品中选择的行号
+      selectedRowKeys: [],
+      //关闭按钮  必填
+      closeCbk: function closeCbk() {
+        _this.props.closeCbk();
+      },
+      // 确认回调
+      confirmCbk: function confirmCbk(item) {
+        _this.props.confirmCbk(item);
+      }
+    };
+
+    return _this;
+  }
+
+  //Modal初始化
+
+
+  (0, _createClass3.default)(_default, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.setModalWidth();
+      // 还需新增state初始化
+    }
+
+    //准备：即将被重新渲染，状态未变化
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {
+      var self = this;
+      //浏览器大小改变的时候
+      window.onresize = function () {
+        if (self.state.visible) {
+          self.setModalWidth();
+        }
+      };
+    }
+
+    //完成：正在被重新渲染，状态已变化
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {}
+    // this.getTableHeight()
+
+
+    // 已加载组件，收到新属性时调用
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var _this2 = this;
+
+      // this.state.propsParameter.selArea = nextProps.selArea;
+      // this.setState({});
+      this.state.visible = nextProps.visible;
+      if (this.state.visible == true) {
+        if (nextProps.isSave) {
+          var selectedProduct = (0, _lodash.cloneDeep)(nextProps.onItem).map(function (item) {
+            item.key = item[nextProps.idKey];
+            item.itemName = item.name;
+            return item;
+          });
+          this.setState({
+            selectedProduct: selectedProduct,
+            itemIds: nextProps.itemIds
+          });
+        }
+        this.setState({}, function () {
+          _this2.getProductList();
+        });
+      }
+    }
+
+    // 插入真实 DOM
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {}
+
+    //获取产品列表
+
+  }, {
+    key: 'getProductList',
+    value: function () {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+        var that, _props, respListKey, idKey, _props$defaultReqPara, defaultReqParams, _cloneDeep, pageNum, pageSize, search, queryList, params, _ref2, resultCode, status, resultMsg, data;
+
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                that = this;
+                _props = this.props, respListKey = _props.respListKey, idKey = _props.idKey, _props$defaultReqPara = _props.defaultReqParams, defaultReqParams = _props$defaultReqPara === undefined ? {} : _props$defaultReqPara;
+
+
+                this.setState({
+                  loadingFlag: true
+                });
+                _cloneDeep = (0, _lodash.cloneDeep)(that.state), pageNum = _cloneDeep.pageNum, pageSize = _cloneDeep.pageSize, search = _cloneDeep.search, queryList = _cloneDeep.queryList;
+                //组装接口入参
+
+                params = {};
+
+                queryList.map(function (item) {
+                  params[item.key] = item.value;
+                });
+
+                _context.next = 8;
+                return (0, _request.request)({
+                  url: that.props.requestUrl,
+                  method: 'GET',
+                  data: (0, _extends3.default)({}, defaultReqParams, {
+                    pageNum: pageNum,
+                    pageSize: pageSize
+                  }, params)
+                });
+
+              case 8:
+                _ref2 = _context.sent;
+                resultCode = _ref2.resultCode;
+                status = _ref2.status;
+                resultMsg = _ref2.resultMsg;
+                data = _ref2.data;
+
+                if (resultCode == 0 && resultMsg) {
+                  that.getTableHeight();
+                  data[respListKey].map(function (item, i) {
+                    item.key = item[idKey];
+                  });
+
+                  this.setState({
+                    tableData: data[respListKey],
+                    total: data.total,
+                    loadingFlag: false
+                  });
+                }
+
+              case 14:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function getProductList() {
+        return _ref.apply(this, arguments);
+      }
+
+      return getProductList;
+    }()
+
+    // 设置Modal宽度
+
+  }, {
+    key: 'setModalWidth',
+    value: function setModalWidth() {
+      var windowWidth = document.body.clientWidth;
+      var modalWidth = windowWidth * 0.8 > 1200 ? 1200 : windowWidth * 0.8;
+      this.setState({ modalWidth: modalWidth });
+    }
+
+    // 设置表格内容
+
+  }, {
+    key: 'setTableColumn',
+    value: function setTableColumn() {
+      var _this3 = this;
+
+      var self = this;
+      var _props2 = this.props,
+          idKey = _props2.idKey,
+          isSingle = _props2.isSingle;
+
+
+      return [].concat((0, _toConsumableArray3.default)(this.props.tableColumn), [{
+        title: isSingle ? '操作' : _react2.default.createElement(
+          _router.Link,
+          {
+            onClick: function onClick() {
+              return self.handleSelectAll();
+            }
+          },
+          '\u5168\u9009'
+        ),
+        width: 70,
+        render: function render(item) {
+          var flag = false;
+          _this3.state.selectedProduct.map(function (x, i) {
+            if (x[idKey] == item[idKey]) {
+              flag = true;
+            }
+          });
+          if (_this3.state.itemIds) {
+            _this3.state.itemIds.map(function (x, i) {
+              if (x == item[idKey]) {
+                flag = true;
+              }
+            });
+          }
+          return _react2.default.createElement(
+            'div',
+            { className: 'tableAction' },
+            _react2.default.createElement(
+              _router.Link,
+              { onClick: function onClick() {
+                  _this3.handleSelect(item);
+                }, disabled: flag },
+              flag ? '已选择' : '选择'
+            )
+          );
+        }
+      }]);
+    }
+  }, {
+    key: 'setSelectedColumn',
+    value: function setSelectedColumn() {
+      var _this4 = this;
+
+      return [].concat((0, _toConsumableArray3.default)(this.props.selectedColumn), [{
+        title: "操作",
+        className: _PopUpSelect2.default.del,
+        width: 60,
+        fixed: 'right',
+        render: function render(item) {
+          return _react2.default.createElement(
+            _popconfirm2.default,
+            {
+              title: '\u786E\u5B9A\u8981\u5220\u9664\u5417?',
+              okText: '\u786E\u5B9A',
+              cancelText: '\u53D6\u6D88',
+              onConfirm: function onConfirm() {
+                return _this4.deleteRow(item);
+              }
+            },
+            _react2.default.createElement(_icon2.default, { style: { fontSize: 20 }, type: 'close-circle', onClick: function onClick() {
+                return _this4.deleteRow(item);
+              } })
+          );
+        }
+      }]);
+    }
+
+    //分页发生时所调用的方法
+
+  }, {
+    key: 'pageChangeHandler',
+    value: function pageChangeHandler(page, size) {
+      this.setState({
+        pageNum: page,
+        pageSize: size
+      }, this.getProductList);
+    }
+
+    // 设置分页
+
+  }, {
+    key: 'setPagination',
+    value: function setPagination() {
+      var _this5 = this;
+
+      return {
+        current: parseInt(this.state.pageNum), //当前页
+        pageSize: this.state.pageSize, //单页条数
+        total: this.state.total, //总条数
+        simple: true,
+        showTotal: function showTotal(e) {
+          return '\u5171 ' + _this5.state.total + ' \u6761';
+        },
+        showSizeChanger: true,
+        showQuickJumper: true,
+        onShowSizeChange: function onShowSizeChange(page, size) {
+          _this5.pageChangeHandler(page, size);
+        },
+        onChange: function onChange(page, size) {
+          _this5.pageChangeHandler(page, size);
+        }
+      };
+    }
+
+    //清空组件状态
+
+  }, {
+    key: 'clearSearch',
+    value: function clearSearch(cbk) {
+      if (!!cbk) {
+        this.setState({
+          queryList: (0, _lodash.cloneDeep)(this.props.queryList)
+        }, cbk);
+      } else {
+        this.setState({
+          queryList: (0, _lodash.cloneDeep)(this.props.queryList)
+        });
+      }
+    }
+
+    //弹窗的确定按钮
+
+  }, {
+    key: 'handleConfirm',
+    value: function handleConfirm() {
+      var that = this;
+      var obj = (0, _lodash.cloneDeep)(that.state.selectedProduct);
+      // let returnData = obj.map(item => {
+      //   return {
+      //     id: item[idKey],
+      //     key: item[idKey],
+      //     name: item.itemName
+      //   }
+      // })
+      this.state.confirmCbk(obj);
+      if (!this.state.isSave) {
+        this.setState({
+          selectedProduct: []
+        }, this.clearSearch);
+      } else {
+        this.setState({});
+      }
+
+      this.state.closeCbk();
+    }
+
+    //弹窗的取消按钮
+
+  }, {
+    key: 'handleCancel',
+    value: function handleCancel() {
+      var that = this;
+      this.setState({
+        selectedProduct: [],
+        pageNum: 1,
+        pageSize: 10
+      }, this.clearSearch);
+      this.state.closeCbk();
+    }
+
+    //弹窗的查询按钮
+
+  }, {
+    key: 'handleSearch',
+    value: function handleSearch() {
+      var _this6 = this;
+
+      this.setState({
+        pageNum: 1,
+        pageSize: 10
+      }, function () {
+        _this6.getProductList();
+      });
+    }
+
+    //弹窗的重置按钮
+
+  }, {
+    key: 'handleReset',
+    value: function handleReset() {
+      this.clearSearch(this.getProductList);
+    }
+
+    // 列表的选择按钮
+
+  }, {
+    key: 'handleSelect',
+    value: function handleSelect(item) {
+      var selectedProduct = this.state.selectedProduct;
+      var isSingle = this.props.isSingle;
+
+      if (isSingle) {
+        selectedProduct = [item];
+      } else {
+        selectedProduct.push(item);
+      }
+      this.setState({ selectedProduct: selectedProduct });
+    }
+  }, {
+    key: 'handleSelectAll',
+    value: function handleSelectAll() {
+      var idKey = this.props.idKey;
+      var _state = this.state,
+          tableData = _state.tableData,
+          selectedProduct = _state.selectedProduct;
+
+      tableData.map(function (item) {
+        var flag = false;
+        for (var i = 0; i < selectedProduct.length; i++) {
+          var e = selectedProduct[i];
+          if (e[idKey] === item[idKey]) {
+            flag = true;
+            break;
+          }
+        }
+        if (!flag) {
+          selectedProduct.push(item);
+        }
+      });
+      this.setState({ selectedProduct: selectedProduct });
+    }
+
+    // 右侧已选框中每行的删除
+
+  }, {
+    key: 'deleteRow',
+    value: function deleteRow(item) {
+      var idKey = this.props.idKey;
+
+      var selectedProduct = this.state.selectedProduct;
+      var selectedRows = this.state.selectedRows;
+      selectedProduct.map(function (x, i) {
+        if (item[idKey] == x[idKey]) {
+          selectedProduct.splice(i, 1);
+        }
+      });
+
+      selectedRows.map(function (x, i) {
+        if (item[idKey] == x[idKey]) {
+          selectedRows.splice(i, 1);
+        }
+      });
+      this.setState({ selectedProduct: selectedProduct, selectedRows: selectedRows });
+    }
+    // 右侧已选框上的删除按钮
+
+  }, {
+    key: 'deleteSelected',
+    value: function deleteSelected(type) {
+      var idKey = this.props.idKey;
+
+      var self = this;
+      if (type == 'all') {
+        if (self.state.selectedProduct.length === 0) {
+          _message3.default.warn('已选列表中至少存在一条数据');
+          return;
+        }
+        self.setState({ selectedProduct: [], selectedRows: [] });
+        self.allSelected();
+      } else {
+        var selectedRows = self.state.selectedRows;
+        var selectedProduct = self.state.selectedProduct;
+        var cSelectedProduct = [];
+        var cSelectedRows = [];
+        selectedRows.map(function (x, i) {
+          selectedProduct.map(function (j, y) {
+            if (x[idKey] == j[idKey]) {
+              delete selectedProduct[y];
+              delete selectedRows[i];
+            }
+          });
+        });
+
+        selectedProduct.map(function (x, i) {
+          if (x) {
+            cSelectedProduct.push(x);
+          }
+        });
+
+        selectedRows.map(function (x, i) {
+          if (x) {
+            cSelectedRows.push(x);
+          }
+        });
+        this.setState({ selectedProduct: cSelectedProduct, selectedRows: cSelectedRows });
+      }
+    }
+  }, {
+    key: 'allSelected',
+    value: function allSelected(flag) {
+      var self = this;
+      if (flag) {
+        var selectedProduct = self.state.selectedProduct;
+
+        var allKeys = selectedProduct.map(function (e) {
+          return e.key;
+        });
+        self.setState({ selectedRowKeys: allKeys });
+      } else {
+        self.setState({ selectedRowKeys: [] });
+      }
+    }
+
+    //更新状态值
+
+  }, {
+    key: 'updateModel',
+    value: function updateModel(value, name, modHierarchy) {
+      if (modHierarchy === 'search') {
+        var queryList = this.state.queryList;
+
+        var data = queryList.find(function (item) {
+          return item.key === name;
+        });
+        data.value = value;
+        find(this.state.queryList);
+        this.setState({ queryList: queryList });
+      } else {
+        var obj = modHierarchy ? this.state[modHierarchy] : this.state;
+        obj[name] = value;
+        this.setState((0, _extends3.default)({}, obj));
+      }
+    }
+  }, {
+    key: 'getTableHeight',
+
+
+    //获取左侧表格的高度
+    value: function getTableHeight() {
+      var that = this;
+      var tableDom = (0, _jquery2.default)('#table');
+      setTimeout(function () {
+        that.setState({
+          maxHeight: tableDom.height()
+        });
+      }, 100);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this7 = this;
+
+      var self = this;
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          _modal2.default,
+          {
+            title: this.props.title || '选择',
+            visible: this.props.visible,
+            onOk: this.handleConfirm.bind(this),
+            onCancel: this.handleCancel.bind(this),
+            width: this.state.modalWidth
+          },
+          _react2.default.createElement(
+            _form2.default,
+            { className: 'public_listMain' },
+            _react2.default.createElement(
+              _AdvanceSearch2.default,
+              { footer: _react2.default.createElement(
+                  'span',
+                  null,
+                  _react2.default.createElement(
+                    _button2.default,
+                    { type: 'primary', htmlType: 'button', size: 'large', onClick: this.handleSearch.bind(this) },
+                    '\u641C\u7D22'
+                  ),
+                  _react2.default.createElement(
+                    _button2.default,
+                    { htmlType: 'button', size: 'large', onClick: this.handleReset.bind(this) },
+                    '\u91CD\u7F6E'
+                  )
+                ) },
+              _react2.default.createElement(_Grid.QueryCondition, {
+                data: this.state.queryList,
+                inputChange: function inputChange(key, value) {
+                  return _this7.updateModel(value, key, 'search');
+                }
+              })
+            )
+          ),
+          _react2.default.createElement(
+            _row2.default,
+            { gutter: 16 },
+            _react2.default.createElement(
+              _col2.default,
+              { span: 16 },
+              _react2.default.createElement(
+                'div',
+                { className: 'boxShadow', id: 'table' },
+                _react2.default.createElement(
+                  _row2.default,
+                  { className: _PopUpSelect2.default.emptyTitle },
+                  '\xA0'
+                ),
+                _react2.default.createElement(_table2.default, {
+                  className: _PopUpSelect2.default.table,
+                  columns: this.setTableColumn(),
+                  dataSource: this.state.tableData,
+                  pagination: this.setPagination(),
+                  scroll: (0, _extends3.default)({
+                    y: 310
+                  }, this.props.tableScroll || {})
+                })
+              )
+            ),
+            _react2.default.createElement(
+              _col2.default,
+              { span: 8 },
+              _react2.default.createElement(
+                'div',
+                { className: 'boxShadow ' + _PopUpSelect2.default.selected },
+                _react2.default.createElement(
+                  _row2.default,
+                  { className: _PopUpSelect2.default.title },
+                  _react2.default.createElement(
+                    _col2.default,
+                    { span: 12 },
+                    this.state.selectedRows.length !== 0 ? _react2.default.createElement(
+                      _popconfirm2.default,
+                      {
+                        title: '\u786E\u5B9A\u8981\u5220\u9664\u5417?',
+                        okText: '\u786E\u5B9A',
+                        cancelText: '\u53D6\u6D88',
+                        onConfirm: function onConfirm() {
+                          return _this7.deleteSelected('');
+                        }
+                      },
+                      _react2.default.createElement(
+                        _router.Link,
+                        null,
+                        '\u6279\u91CF\u5220\u9664'
+                      )
+                    ) : _react2.default.createElement(
+                      _router.Link,
+                      { onClick: function onClick(e) {
+                          _message3.default.warn("至少选择一项");
+                        } },
+                      '\u6279\u91CF\u5220\u9664'
+                    )
+                  ),
+                  _react2.default.createElement(
+                    _col2.default,
+                    { span: 12 },
+                    _react2.default.createElement(
+                      _popconfirm2.default,
+                      {
+                        title: '\u786E\u5B9A\u8981\u5220\u9664\u5417?',
+                        okText: '\u786E\u5B9A',
+                        cancelText: '\u53D6\u6D88',
+                        onConfirm: function onConfirm() {
+                          return _this7.deleteSelected('all');
+                        },
+                        onCancel: function onCancel() {
+                          return self.allSelected();
+                        }
+                      },
+                      _react2.default.createElement(
+                        _router.Link,
+                        { onClick: function onClick() {
+                            return self.allSelected(true);
+                          } },
+                        '\u5168\u90E8\u5220\u9664'
+                      )
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  _row2.default,
+                  { className: _PopUpSelect2.default.scroll, style: { maxHeight: this.state.maxHeight } },
+                  _react2.default.createElement(
+                    _col2.default,
+                    null,
+                    _react2.default.createElement(_table2.default, {
+                      className: (0, _classnames2.default)(_PopUpSelect2.default.textNoWrap, _PopUpSelect2.default.table),
+                      columns: this.setSelectedColumn(),
+                      dataSource: this.state.selectedProduct,
+                      pagination: false,
+                      rowSelection: {
+                        selectedRowKeys: self.state.selectedRowKeys,
+                        onChange: function onChange(selectedRowKeys, selectedRows) {
+                          _this7.setState({ selectedRowKeys: selectedRowKeys, selectedRows: selectedRows });
+                        }
+                      },
+                      scroll: (0, _extends3.default)({
+                        y: 310
+                      }, this.props.selectedTableScroll || {})
+                    })
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+  return _default;
+}(Component);
+
+exports.default = _default;
+module.exports = exports['default'];

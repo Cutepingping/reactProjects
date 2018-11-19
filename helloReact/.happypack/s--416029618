@@ -1,0 +1,132 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _icon = require('antd/lib/icon');
+
+var _icon2 = _interopRequireDefault(_icon);
+
+var _breadcrumb = require('antd/lib/breadcrumb');
+
+var _breadcrumb2 = _interopRequireDefault(_breadcrumb);
+
+require('antd/lib/icon/style');
+
+require('antd/lib/breadcrumb/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _router = require('dva/router');
+
+var _Bread = require('./Bread.less');
+
+var _Bread2 = _interopRequireDefault(_Bread);
+
+var _utils = require('../../../utils');
+
+var _config = require('../../../config/config');
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var pathSet = [],
+    fullPath = '';
+var getPathSet = function getPathSet(menuArray, parentPath) {
+  parentPath = parentPath || '';
+  menuArray.forEach(function (item) {
+    fullPath = '/home/' + parentPath + item.key;
+    pathSet[fullPath.replace(/\//g, '-').hyphenToHump()] = {
+      path: fullPath,
+      name: item.name,
+      icon: item.icon || '',
+      clickable: item.clickable === undefined
+    };
+    if (item.child) {
+      getPathSet(item.child, '' + parentPath + item.key + '/');
+    }
+  });
+};
+getPathSet(_utils.menu);
+
+function Bread(_ref) {
+  var location = _ref.location,
+      currTabTitle = _ref.currTabTitle;
+
+  var pathNames = [];
+  location.pathname.substr(1).split('/').forEach(function (item, key) {
+    if (key > 0) {
+      pathNames.push((pathNames[key - 1] + '-' + item).hyphenToHump());
+    } else {
+      pathNames.push(('-' + item).hyphenToHump());
+    }
+  });
+
+  var breadsArray = pathNames.filter(function (item) {
+    return item in pathSet;
+  });
+  var breads = breadsArray.map(function (item, key) {
+    var content =
+    // <span>{pathSet[item].icon
+    //     ? <Icon type={pathSet[item].icon} style={{ marginRight: 4 }} />
+    //     : ''}{pathSet[item].name}</span>
+    _react2.default.createElement(
+      'span',
+      null,
+      pathSet[item].name
+    );
+    return _react2.default.createElement(
+      _breadcrumb2.default.Item,
+      { key: key },
+      content
+    );
+  });
+  //解决当进入左侧菜单中不存在的页面时，面包屑无法显示页面标题的问题
+  if (breads && breads.length < 2 && currTabTitle && currTabTitle.title) {
+    breads.push(_react2.default.createElement(
+      _breadcrumb2.default.Item,
+      { key: '2' },
+      _react2.default.createElement(
+        'span',
+        null,
+        currTabTitle.title,
+        ' '
+      )
+    ));
+  }
+
+  return _react2.default.createElement(
+    'div',
+    { className: _Bread2.default.bread },
+    _react2.default.createElement(
+      _breadcrumb2.default,
+      { separator: '>' },
+      _react2.default.createElement(
+        _breadcrumb2.default.Item,
+        null,
+        _react2.default.createElement(_icon2.default, { type: 'home' }),
+        _react2.default.createElement(
+          'span',
+          null,
+          _react2.default.createElement(
+            _router.Link,
+            { to: '/' },
+            _config2.default.sysType === 'entCenter' ? '企业中心' : '首页'
+          )
+        )
+      ),
+      breads
+    )
+  );
+}
+
+Bread.propTypes = {
+  location: _react.PropTypes.object
+};
+
+exports.default = Bread;
+module.exports = exports['default'];
